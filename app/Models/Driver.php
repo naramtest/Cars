@@ -23,7 +23,7 @@ class Driver extends Model
         "expiration_date",
         "document",
         "license",
-        "license_reference",
+        "reference",
         "notes",
     ];
 

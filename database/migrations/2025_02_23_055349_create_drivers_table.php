@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string("last_name");
             $table->string("email")->unique();
             $table->string("phone_number");
-            $table->enum("gender", Gender::cases());
+            $table->enum("gender", array_column(Gender::cases(), "value"));
             $table->date("birth_date");
             $table->text("address");
             $table->string("license_number")->unique();
@@ -25,7 +25,7 @@ return new class extends Migration {
             $table->date("expiration_date");
             $table->string("document");
             $table->string("license");
-            $table->string("license_reference")->nullable();
+            $table->string("reference")->nullable();
             $table->text("notes")->nullable();
             $table->timestamps();
         });

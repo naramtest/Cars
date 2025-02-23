@@ -3,4 +3,28 @@
 return [
     "Male" => "Male",
     "Female" => "Female",
+    "Reference" => "Reference",
+    "first_name" => "First Name",
+    "last_name" => "Last Name",
+    "email" => "Email Address",
+    "phone_number" => "Phone Number",
+    "gender" => "Gender",
+    "birth_date" => "Date of Birth",
+    "address" => "Address",
+
+    // License Information
+    "license_number" => "License Number",
+    "issue_date" => "Issue Date",
+    "expiration_date" => "Expiration Date",
+    "license" => "License Document",
+
+    // Additional Information
+    "document" => "Additional Document",
+    "reference" => "Reference",
+    "notes" => "Notes",
+
+    // Tab Labels
+    "info" => "Info",
+    "license_tab" => "License",
+    "additional_information" => "Additional Information",
 ];
