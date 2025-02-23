@@ -11,6 +11,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class DriverResource extends Resource
 {
@@ -41,11 +42,11 @@ class DriverResource extends Resource
                                 ->email()
                                 ->required()
                                 ->maxLength(255),
-                            Forms\Components\TextInput::make("phone_number")
+                            PhoneInput::make("phone_number")
                                 ->label(__("dashboard.phone_number"))
-                                ->required()
-                                ->tel()
-                                ->maxLength(255),
+                                ->unique(ignoreRecord: true)
+                                ->required(),
+
                             Forms\Components\Select::make("gender")
                                 ->label(__("dashboard.gender"))
                                 ->options(Gender::class)
