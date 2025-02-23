@@ -31,4 +31,8 @@ return [
 
     "created_at" => "Created",
     "updated_at" => "Last Updated",
+    "System Settings" => "System Settings",
+    "Business Management" => "Business Management",
+    "Driver" => "Driver",
+    "Drivers" => "Drivers",
 ];

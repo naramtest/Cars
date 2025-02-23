@@ -51,4 +51,34 @@ class DriverResource extends Resource
             SoftDeletingScope::class,
         ]);
     }
+
+    public static function getNavigationLabel(): string
+    {
+        return __("dashboard.Drivers");
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __("dashboard.Driver");
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __("dashboard.Drivers");
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __("dashboard.Business Management");
+    }
+
+    public static function getLabel(): ?string
+    {
+        return __("dashboard.Driver");
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __("dashboard.Drivers");
+    }
 }
