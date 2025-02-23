@@ -2,6 +2,7 @@
 
 namespace App\Filament\Tables\Driver;
 
+use App\Filament\Exports\DriverExporter;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Ysfkaya\FilamentPhoneInput\PhoneInputNumberType;
@@ -51,6 +52,9 @@ class DriverTableSchema
                     Tables\Actions\RestoreBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
                 ]),
+                Tables\Actions\ExportBulkAction::make()->exporter(
+                    DriverExporter::class
+                ),
             ]);
     }
 }
