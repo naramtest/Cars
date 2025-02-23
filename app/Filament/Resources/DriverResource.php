@@ -21,9 +21,11 @@ class DriverResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form->schema([
+        return $form->columns(3)->schema([
             Forms\Components\Tabs::make()
-                ->columnSpan(2)
+                ->columnSpan(function (string $operation) {
+                    return $operation == "edit" ? 2 : 3;
+                })
                 ->columns()
                 ->tabs([
                     Forms\Components\Tabs\Tab::make(__("dashboard.info"))
@@ -82,6 +84,8 @@ class DriverResource extends Resource
                                 Forms\Components\FileUpload::make("license")
                                     ->label(__("dashboard.license"))
                                     ->directory("driver-licenses")
+                                    ->downloadable()
+                                    ->previewable()
                                     ->required(),
                             ]),
                         ]),
@@ -94,6 +98,8 @@ class DriverResource extends Resource
                                 Forms\Components\FileUpload::make("document")
                                     ->label(__("dashboard.document"))
                                     ->directory("driver-documents")
+                                    ->downloadable()
+                                    ->previewable()
                                     ->required(),
                                 Forms\Components\TextInput::make("reference")
                                     ->label(__("dashboard.reference"))
@@ -104,6 +110,25 @@ class DriverResource extends Resource
                             ]),
                         ]),
                 ]),
+            Forms\Components\Section::make(__("dashboard.Status"))
+                ->schema([
+                    Forms\Components\Placeholder::make("created_at")
+                        ->label(__("dashboard.created_at"))
+                        ->content(
+                            fn(?Driver $record): string => $record
+                                ? $record->created_at->diffForHumans()
+                                : "-"
+                        ),
+
+                    Forms\Components\Placeholder::make("updated_at")
+                        ->label(__("dashboard.updated_at"))
+                        ->content(
+                            fn(?Driver $record): string => $record
+                                ? $record->updated_at->diffForHumans()
+                                : "-"
+                        ),
+                ])
+                ->columnSpan(1),
         ]);
     }
 

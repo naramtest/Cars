@@ -27,4 +27,8 @@ return [
     "info" => "Info",
     "license_tab" => "License",
     "additional_information" => "Additional Information",
+    "Status" => "Status",
+
+    "created_at" => "Created",
+    "updated_at" => "Last Updated",
 ];
