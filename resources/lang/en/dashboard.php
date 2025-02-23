@@ -24,7 +24,6 @@ return [
     "notes" => "Notes",
 
     // Tab Labels
-    "info" => "Info",
     "license_tab" => "License",
     "additional_information" => "Additional Information",
     "Status" => "Status",
@@ -45,4 +44,25 @@ return [
     "Electric" => "Electric",
     "Gas" => "Gas",
     "Petrol" => "Petrol",
+
+    "Vehicle" => "Vehicle",
+    "Vehicles" => "Vehicles",
+    "name" => "Name",
+    "model" => "Model",
+    "engine_number" => "Engine Number",
+    "engine_type" => "Engine Type",
+    "license_plate" => "License Plate",
+    "registration_expiry_date" => "Registration Expiry Date",
+    "daily_rate" => "Daily Rate",
+    "year_of_first_immatriculation" => "Year of First Immatriculation",
+    "gearbox" => "Gearbox",
+    "fuel_type" => "Fuel Type",
+    "number_of_seats" => "Number of Seats",
+    "kilometer" => "Kilometer",
+    "options" => "Options",
+    "types" => "Types",
+
+    // Tab labels
+    "info" => "Basic Information",
+    "specifications" => "Specifications",
 ];

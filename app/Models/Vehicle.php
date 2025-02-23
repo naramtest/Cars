@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\Vehicle\FuelType;
 use App\Enums\Vehicle\GearboxType;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Storage;
@@ -56,5 +57,10 @@ class Vehicle extends Model
         return $this->morphToMany(Type::class, "typeable")
             ->where("type", "Vehicle")
             ->withTimestamps();
+    }
+
+    public function driver(): BelongsTo
+    {
+        return $this->belongsTo(Driver::class);
     }
 }
