@@ -95,6 +95,8 @@ class DriverFormSchema
             Forms\Components\FileUpload::make("license")
                 ->label(__("dashboard.license"))
                 ->directory("driver-licenses")
+                ->downloadable()
+                ->previewable()
                 ->required(),
         ];
     }
@@ -105,6 +107,8 @@ class DriverFormSchema
             Forms\Components\FileUpload::make("document")
                 ->label(__("dashboard.document"))
                 ->directory("driver-documents")
+                ->downloadable()
+                ->previewable()
                 ->required(),
             Forms\Components\TextInput::make("reference")
                 ->label(__("dashboard.reference"))
@@ -112,20 +116,6 @@ class DriverFormSchema
             Forms\Components\Textarea::make("notes")
                 ->label(__("dashboard.notes"))
                 ->maxLength(65535),
-            Forms\Components\Placeholder::make("created_at")
-                ->label(__("dashboard.created_at"))
-                ->content(
-                    fn(?Driver $record): string => $record
-                        ? $record->created_at->diffForHumans()
-                        : "-"
-                ),
-            Forms\Components\Placeholder::make("updated_at")
-                ->label(__("dashboard.updated_at"))
-                ->content(
-                    fn(?Driver $record): string => $record
-                        ? $record->updated_at->diffForHumans()
-                        : "-"
-                ),
         ];
     }
 
