@@ -41,10 +41,10 @@ class DriverResource extends Resource
                                 ->label(__("dashboard.email"))
                                 ->email()
                                 ->required()
+                                ->unique(ignoreRecord: true)
                                 ->maxLength(255),
                             PhoneInput::make("phone_number")
                                 ->label(__("dashboard.phone_number"))
-                                ->unique(ignoreRecord: true)
                                 ->required(),
 
                             Forms\Components\Select::make("gender")
@@ -69,6 +69,7 @@ class DriverResource extends Resource
                                 )
                                     ->label(__("dashboard.license_number"))
                                     ->required()
+                                    ->unique(ignoreRecord: true)
                                     ->maxLength(255),
                                 Forms\Components\DatePicker::make("issue_date")
                                     ->label(__("dashboard.issue_date"))
