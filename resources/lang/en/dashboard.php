@@ -36,4 +36,13 @@ return [
     "Driver" => "Driver",
     "Drivers" => "Drivers",
     "Created At" => "Created At",
+    "Manual" => "Manual",
+    "Automatic" => "Automatic",
+
+    "Essence" => "Essence",
+    "Diesel" => "Diesel",
+    "Hybrid" => "Hybrid",
+    "Electric" => "Electric",
+    "Gas" => "Gas",
+    "Petrol" => "Petrol",
 ];

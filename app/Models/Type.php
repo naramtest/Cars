@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\TypesEnum;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 
@@ -45,5 +46,13 @@ class Type extends Model
     public function scopeByOrder($query)
     {
         return $query->orderBy("order");
+    }
+
+    public function vehicles(): MorphToMany
+    {
+        return $this->morphedByMany(
+            Vehicle::class,
+            "typeable"
+        )->withTimestamps();
     }
 }
