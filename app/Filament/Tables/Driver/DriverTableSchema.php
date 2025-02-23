@@ -5,11 +5,15 @@ namespace App\Filament\Tables\Driver;
 use App\Filament\Exports\DriverExporter;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 use Ysfkaya\FilamentPhoneInput\PhoneInputNumberType;
 use Ysfkaya\FilamentPhoneInput\Tables\PhoneColumn;
 
 class DriverTableSchema
 {
+    /**
+     * @throws \Exception
+     */
     public static function schema(Table $table): Table
     {
         return $table
@@ -38,8 +42,12 @@ class DriverTableSchema
                     ->sortable(),
             ])
             ->filters([
-                // Add your filters here
+                DateRangeFilter::make("created_at")->label(
+                    __("dashboard.Created At")
+                ),
+                Tables\Filters\TrashedFilter::make(),
             ])
+            ->defaultSort("created_at", "desc")
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

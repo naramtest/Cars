@@ -35,4 +35,5 @@ return [
     "Business Management" => "Business Management",
     "Driver" => "Driver",
     "Drivers" => "Drivers",
+    "Created At" => "Created At",
 ];
