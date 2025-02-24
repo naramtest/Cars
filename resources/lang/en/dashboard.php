@@ -71,4 +71,67 @@ return [
     "Description" => "Description",
     "Title" => "Title",
     "Translatable" => "Translatable",
+    // Booking Core Translations
+    "Booking" => "Booking",
+    "Bookings" => "Bookings",
+    "booking_details" => "Booking Details",
+    "booking_main_info" => "Vehicle, date and time information",
+    "location" => "Location",
+    "Address" => "Address",
+    "extra_services_notes" => "Extra services and notes",
+    "booking_status_info" => "Booking Status Information",
+    "reservation_period" => "Reservation Period",
+
+    // Client Information
+    "client_information" => "Client Information",
+    "client_details_description" =>
+        "Contact details of the person making the booking",
+    "client_name" => "Client Name",
+    "client_email" => "Client Email",
+    "client_phone" => "Client Phone",
+    "status" => "Status",
+    "start_datetime" => "Start Date & Time",
+    "end_datetime" => "End Date & Time",
+    "duration" => "Duration",
+    "total_price" => "Total Price",
+    "currency" => "USD",
+    "days" => "days",
+    "addons" => "Add-ons",
+    "price" => "Price",
+    "description" => "Description",
+
+    // Status Labels
+    "Cancelled" => "Cancelled",
+    "Completed" => "Completed",
+    "On Going" => "On Going",
+    "Pending" => "Pending",
+
+    // Status Actions
+    "mark_as_completed" => "Mark as Completed",
+    "mark_as_ongoing" => "Mark as On Going",
+    "cancel_booking" => "Cancel Booking",
+
+    // Export
+    "export_all" => "Export All",
+    "export_selected" => "Export Selected",
+
+    // Filters
+    "created_from" => "Created From",
+    "created_until" => "Created Until",
+    "date_from" => "Date From",
+    "date_until" => "Date Until",
+
+    // Stats Widget
+    "pending_bookings" => "Pending Bookings",
+    "awaiting_confirmation" => "Awaiting Confirmation",
+    "ongoing_bookings" => "Ongoing Bookings",
+    "in_progress" => "In Progress",
+    "completed_bookings" => "Completed Bookings",
+    "finished_successfully" => "Finished Successfully",
+    "total_revenue" => "Total Revenue",
+    "from_completed_bookings" => "From Completed Bookings",
+    "bookings_this_month" => "Bookings This Month",
+    "increase" => "increase",
+    "decrease" => "decrease",
+    "from_last_month" => "from last month",
 ];
