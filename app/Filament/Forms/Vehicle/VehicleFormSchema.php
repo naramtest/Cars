@@ -102,11 +102,12 @@ class VehicleFormSchema
             Forms\Components\TextInput::make("daily_rate")
                 ->label(__("dashboard.daily_rate"))
                 ->required()
-                ->numeric()
-                ->prefix('$'),
-
-            Forms\Components\DatePicker::make("year_of_first_immatriculation")
+                ->numeric(),
+            Forms\Components\TextInput::make("year_of_first_immatriculation")
+                ->minValue(1900)
                 ->label(__("dashboard.year_of_first_immatriculation"))
+                ->numeric()
+                ->maxValue(now()->year)
                 ->required(),
         ];
     }

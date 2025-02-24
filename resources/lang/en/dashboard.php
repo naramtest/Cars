@@ -61,8 +61,14 @@ return [
     "kilometer" => "Kilometer",
     "options" => "Options",
     "types" => "Types",
+    "type" => "Type",
 
     // Tab labels
     "info" => "Basic Information",
     "specifications" => "Specifications",
+    "Order" => "Order",
+    "Visible" => "Visible",
+    "Description" => "Description",
+    "Title" => "Title",
+    "Translatable" => "Translatable",
 ];

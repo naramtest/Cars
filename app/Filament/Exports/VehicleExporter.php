@@ -46,14 +46,6 @@ class VehicleExporter extends Exporter
                 __("dashboard.number_of_seats")
             ),
             ExportColumn::make("kilometer")->label(__("dashboard.kilometer")),
-            ExportColumn::make("options")
-                ->label(__("dashboard.options"))
-                ->formatStateUsing(
-                    fn(Vehicle $vehicle) => implode(
-                        ", ",
-                        $vehicle->options ?? []
-                    )
-                ),
             ExportColumn::make("notes")->label(__("dashboard.notes")),
             ExportColumn::make("created_at")->label(__("dashboard.created_at")),
             ExportColumn::make("updated_at")->label(__("dashboard.updated_at")),

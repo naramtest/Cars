@@ -10,6 +10,7 @@ use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\SpatieLaravelTranslatablePlugin;
 use Filament\Support\Colors\Color;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -31,6 +32,12 @@ class AdminPanelProvider extends PanelProvider
             ->databaseNotifications()
             ->colors([
                 "primary" => Color::Amber,
+            ])
+            ->plugins([
+                SpatieLaravelTranslatablePlugin::make()->defaultLocales([
+                    "en",
+                    "ar",
+                ]),
             ])
             ->discoverResources(
                 in: app_path("Filament/Resources"),

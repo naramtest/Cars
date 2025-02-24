@@ -24,6 +24,9 @@ class VehicleResource extends Resource
         return $form->columns(3)->schema(VehicleFormSchema::schema());
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function table(Table $table): Table
     {
         return VehicleTableSchema::schema($table);
@@ -70,5 +73,15 @@ class VehicleResource extends Resource
     public static function getNavigationGroup(): ?string
     {
         return __("dashboard.Business Management");
+    }
+
+    public static function getLabel(): ?string
+    {
+        return __("dashboard.Vehicle");
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __("dashboard.Vehicles");
     }
 }
