@@ -3,12 +3,11 @@
 namespace App\Models;
 
 use App\Enums\Addon\BillingType;
-use App\Services\Currency\CurrencyService;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Abstract\MoneyModel;
 use Money\Money;
 use Spatie\Translatable\HasTranslations;
 
-class Addon extends Model
+class Addon extends MoneyModel
 {
     use HasTranslations;
 
@@ -35,7 +34,7 @@ class Addon extends Model
         // Set default currency_code if not provided
         static::creating(function (Addon $addon) {
             if (empty($addon->currency_code)) {
-                $addon->currency_code = config("app.money_currency", "USD");
+                $addon->currency_code = $addon->currencyService->getDefaultCurrency();
             }
         });
     }
@@ -47,21 +46,10 @@ class Addon extends Model
      */
     public function getPriceMoneyAttribute(): Money
     {
-        return $this->currencyService()->money(
+        return $this->currencyService->money(
             $this->price,
-            $this->currency_code ??
-                $this->currencyService()->getDefaultCurrency()
+            $this->currency_code
         );
-    }
-
-    /**
-     * Get the currency service instance
-     *
-     * @return CurrencyService
-     */
-    protected function currencyService(): CurrencyService
-    {
-        return app(CurrencyService::class);
     }
 
     /**
@@ -71,7 +59,7 @@ class Addon extends Model
      */
     public function getPriceDecimalAttribute(): float
     {
-        return $this->currencyService()->convertToDecimal(
+        return $this->currencyService->convertToDecimal(
             $this->price,
             $this->currency_code
         );
@@ -84,7 +72,7 @@ class Addon extends Model
      */
     public function getFormattedPriceAttribute(): string
     {
-        return $this->currencyService()->format($this->price_money);
+        return $this->currencyService->format($this->price_money);
     }
 
     /**
