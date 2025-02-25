@@ -46,8 +46,6 @@ class Vehicle extends Model
         "options" => "array",
     ];
 
-    protected $hidden = ["daily_rate"];
-
     protected $appends = ["formatted_daily_rate", "daily_rate_decimal"];
 
     protected static function booted(): void

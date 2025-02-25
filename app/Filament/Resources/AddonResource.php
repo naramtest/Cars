@@ -8,18 +8,21 @@ use App\Filament\Resources\AddonResource\RelationManagers;
 use App\Filament\Tables\Addon\AddonTableSchema;
 use App\Models\Addon;
 use Filament\Forms\Form;
+use Filament\Resources\Concerns\Translatable;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 
 class AddonResource extends Resource
 {
+    use Translatable;
+
     protected static ?string $model = Addon::class;
 
     protected static ?string $navigationIcon = "heroicon-o-rectangle-stack";
 
     public static function form(Form $form): Form
     {
-        return $form->columns(3)->schema(AddonFormSchema::schema());
+        return $form->schema(AddonFormSchema::schema());
     }
 
     public static function table(Table $table): Table
@@ -62,5 +65,10 @@ class AddonResource extends Resource
     public static function getPluralLabel(): ?string
     {
         return __("dashboard.Addons");
+    }
+
+    public static function getNavigationParentItem(): ?string
+    {
+        return __("dashboard.Bookings");
     }
 }

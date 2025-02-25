@@ -5,9 +5,14 @@ namespace App\Filament\Tables\Addon;
 use App\Enums\Addon\BillingType;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
+use Pelmered\FilamentMoneyField\Tables\Columns\MoneyColumn;
 
 class AddonTableSchema
 {
+    /**
+     * @throws \Exception
+     */
     public static function schema(Table $table): Table
     {
         return $table
@@ -21,13 +26,9 @@ class AddonTableSchema
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make("formatted_price")
+                MoneyColumn::make("price")
                     ->label(__("dashboard.price"))
                     ->sortable("price"),
-
-                Tables\Columns\TextColumn::make("currency")
-                    ->label(__("dashboard.currency"))
-                    ->sortable(),
 
                 Tables\Columns\TextColumn::make("billing_type")
                     ->label(__("dashboard.billing_type"))
@@ -43,16 +44,15 @@ class AddonTableSchema
                     ->label(__("dashboard.is_active"))
                     ->boolean()
                     ->sortable(),
-
                 Tables\Columns\TextColumn::make("created_at")
                     ->label(__("dashboard.created_at"))
-                    ->dateTime()
+                    ->dateTime("M j, Y")
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make("updated_at")
                     ->label(__("dashboard.updated_at"))
-                    ->dateTime()
+                    ->dateTime("M j, Y")
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -64,6 +64,9 @@ class AddonTableSchema
                 Tables\Filters\TernaryFilter::make("is_active")
                     ->label(__("dashboard.is_active"))
                     ->nullable(),
+                DateRangeFilter::make("created_at")->label(
+                    __("dashboard.Created At")
+                ),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

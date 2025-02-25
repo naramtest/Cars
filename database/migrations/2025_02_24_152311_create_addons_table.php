@@ -12,13 +12,13 @@ return new class extends Migration {
     {
         Schema::create("addons", function (Blueprint $table) {
             $table->id();
-            $table->string("name");
+            $table->json("name");
             $table->unsignedBigInteger("price"); // Integer storage for Money
             $table->enum("billing_type", ["daily", "total"]);
             $table
                 ->string("currency_code", 3)
                 ->default(config("app.money_currency"));
-            $table->text("description")->nullable();
+            $table->json("description")->nullable();
             $table->boolean("is_active")->default(true);
             $table->timestamps();
         });

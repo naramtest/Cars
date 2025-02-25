@@ -6,9 +6,14 @@ use App\Enums\Addon\BillingType;
 use App\Services\Currency\CurrencyService;
 use Illuminate\Database\Eloquent\Model;
 use Money\Money;
+use Spatie\Translatable\HasTranslations;
 
 class Addon extends Model
 {
+    use HasTranslations;
+
+    public array $translatable = ["name", "description"];
+
     protected $fillable = [
         "name",
         "price",
@@ -23,18 +28,6 @@ class Addon extends Model
         "is_active" => "boolean",
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = ["price"];
-
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array<int, string>
-     */
     protected $appends = ["formatted_price", "price_decimal"];
 
     protected static function booted(): void
@@ -81,20 +74,6 @@ class Addon extends Model
         return $this->currencyService()->convertToDecimal(
             $this->price,
             $this->currency_code
-        );
-    }
-
-    /**
-     * Set the price from a decimal value.
-     *
-     * @param float|string $value
-     * @return void
-     */
-    public function setPriceAttribute(float|string $value): void
-    {
-        $this->attributes["price"] = $this->currencyService()->convertToInteger(
-            $value,
-            $this->attributes["currency_code"] ?? null
         );
     }
 

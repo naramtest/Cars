@@ -10,10 +10,10 @@ class ManageAddons extends ManageRecords
 {
     protected static string $resource = AddonResource::class;
 
+    use ManageRecords\Concerns\Translatable;
+
     protected function getHeaderActions(): array
     {
-        return [
-            Actions\CreateAction::make(),
-        ];
+        return [Actions\CreateAction::make(), Actions\LocaleSwitcher::make()];
     }
 }
