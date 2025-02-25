@@ -10,17 +10,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create("addons", function (Blueprint $table) {
-            $table->id();
-            $table->string("name");
-            $table->unsignedBigInteger("price"); // Integer storage for Money
-            $table->enum("billing_type", ["daily", "total"]);
+        Schema::table("vehicles", function (Blueprint $table) {
             $table
                 ->string("currency_code", 3)
                 ->default(config("app.money_currency"));
-            $table->text("description")->nullable();
-            $table->boolean("is_active")->default(true);
-            $table->timestamps();
         });
     }
 
@@ -29,6 +22,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists("addons");
+        Schema::table("vehicles", function (Blueprint $table) {
+            //
+        });
     }
 };

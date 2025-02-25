@@ -8,6 +8,7 @@ use App\Enums\Vehicle\GearboxType;
 use App\Models\Driver;
 use App\Models\Vehicle;
 use Filament\Forms;
+use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
 
 class VehicleFormSchema
 {
@@ -99,7 +100,7 @@ class VehicleFormSchema
                 ->label(__("dashboard.registration_expiry_date"))
                 ->required(),
 
-            Forms\Components\TextInput::make("daily_rate")
+            MoneyInput::make("daily_rate")
                 ->label(__("dashboard.daily_rate"))
                 ->required()
                 ->numeric(),

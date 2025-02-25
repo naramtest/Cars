@@ -4,11 +4,13 @@ namespace App\Models;
 
 use App\Enums\Vehicle\FuelType;
 use App\Enums\Vehicle\GearboxType;
+use App\Services\Currency\CurrencyService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Money\Money;
 use Storage;
 
 class Vehicle extends Model
@@ -24,6 +26,7 @@ class Vehicle extends Model
         "license_plate",
         "registration_expiry_date",
         "daily_rate",
+        "currency_code",
         "year_of_first_immatriculation",
         "gearbox",
         "fuel_type",
@@ -39,10 +42,13 @@ class Vehicle extends Model
         "year_of_first_immatriculation" => "date",
         "gearbox" => GearboxType::class,
         "fuel_type" => FuelType::class,
-        "daily_rate" => "decimal:2",
         "kilometer" => "integer",
         "options" => "array",
     ];
+
+    protected $hidden = ["daily_rate"];
+
+    protected $appends = ["formatted_daily_rate", "daily_rate_decimal"];
 
     protected static function booted(): void
     {
@@ -51,6 +57,76 @@ class Vehicle extends Model
                 Storage::disk("public")->delete($vehicle->document);
             }
         });
+
+        // Set default currency_code if not provided
+        static::creating(function (Vehicle $vehicle) {
+            if (empty($vehicle->currency_code)) {
+                $vehicle->currency_code = config("app.money_currency", "USD");
+            }
+        });
+    }
+
+    /**
+     * Get the daily rate as a Money object
+     *
+     * @return Money
+     */
+    public function getDailyRateMoneyAttribute(): Money
+    {
+        return $this->currencyService()->money(
+            $this->daily_rate,
+            $this->currency_code ??
+                $this->currencyService()->getDefaultCurrency()
+        );
+    }
+
+    /**
+     * Get the currency service instance
+     *
+     * @return CurrencyService
+     */
+    protected function currencyService(): CurrencyService
+    {
+        return app(CurrencyService::class);
+    }
+
+    /**
+     * Get the formatted daily rate
+     *
+     * @return string
+     */
+    public function getFormattedDailyRateAttribute(): string
+    {
+        return $this->currencyService()->format($this->daily_rate_money);
+    }
+
+    /**
+     * Get the daily rate as a decimal
+     *
+     * @return float
+     */
+    public function getDailyRateDecimalAttribute(): float
+    {
+        return $this->currencyService()->convertToDecimal(
+            $this->daily_rate,
+            $this->currency_code
+        );
+    }
+
+    /**
+     * Set the daily rate from a decimal value
+     *
+     * @param float|string $value
+     * @return void
+     */
+    public function setDailyRateAttribute(float|string $value): void
+    {
+        $this->attributes[
+            "daily_rate"
+        ] = $this->currencyService()->convertToInteger(
+            $value,
+            $this->attributes["currency_code"] ?? null
+        );
     }
 
     public function types(): MorphToMany

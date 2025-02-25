@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use App\Enums\Booking\BookingStatus;
+use App\Services\Currency\CurrencyService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Money\Money;
 
 class Booking extends Model
 {
@@ -61,21 +64,78 @@ class Booking extends Model
     }
 
     /**
-     * Calculate the total price of the booking.
+     * Calculate the total price of the booking as a Money object.
+     *
+     * @return Money
      */
-    public function getTotalPriceAttribute(): float
+    public function getTotalPriceMoneyAttribute(): Money
     {
-        $dailyRate = $this->vehicle->daily_rate ?? 0;
+        //TODO: add to column and from
+
+        // If there's no vehicle, return zero
+        if (!$this->vehicle) {
+            return $this->currencyService()->money(0);
+        }
+
+        $dailyRateMoney = $this->vehicle->daily_rate_money;
         $duration = $this->duration_in_days;
 
-        $addonsTotal = 0;
+        // Start with the daily rate multiplied by the duration
+        $totalPrice = $dailyRateMoney->multiply($duration);
+
+        // Add addon prices
         if ($this->addons && is_array($this->addons)) {
             foreach ($this->addons as $addon) {
-                $addonsTotal += $addon["price"] ?? 0;
+                //                TODO: convert to money
+                $addonPrice = $addon["price"] ?? 0;
+
+                if ($addonPrice > 0) {
+                    // Convert addon price to Money object in the same currency
+                    $addonMoney = $this->currencyService()->parse(
+                        $addonPrice,
+                        $this->currencyService()->getDefaultCurrency()
+                    );
+
+                    // Add to total
+                    $totalPrice = $totalPrice->add($addonMoney);
+                }
             }
         }
 
-        return $dailyRate * $duration + $addonsTotal;
+        return $totalPrice;
+    }
+
+    /**
+     * Get the currency service instance
+     *
+     * @return CurrencyService
+     */
+    protected function currencyService(): CurrencyService
+    {
+        return app(CurrencyService::class);
+    }
+
+    /**
+     * Get the total price as an integer (for storage or calculations)
+     *
+     * @return int
+     */
+    public function getTotalPriceAttribute(): int
+    {
+        return (int) $this->total_price_money->getAmount();
+    }
+
+    /**
+     * Get the formatted total price.
+     *
+     * @return string
+     */
+    public function getFormattedTotalPriceAttribute(): string
+    {
+        return $this->currencyService()->format(
+            $this->total_price_money,
+            app()->getLocale()
+        );
     }
 
     /**
@@ -97,7 +157,10 @@ class Booking extends Model
         ]);
     }
 
-    public function addons()
+    /**
+     * Get the addons attached to this booking.
+     */
+    public function addons(): BelongsToMany
     {
         return $this->belongsToMany(Addon::class, "booking_addon")
             ->withPivot("quantity")

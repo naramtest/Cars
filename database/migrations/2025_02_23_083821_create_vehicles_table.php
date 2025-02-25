@@ -20,8 +20,8 @@ return new class extends Migration {
             $table->string("engine_type");
             $table->string("license_plate")->unique();
             $table->date("registration_expiry_date");
-            $table->decimal("daily_rate", 10, 2);
-            $table->date("year_of_first_immatriculation");
+            $table->unsignedInteger("daily_rate");
+            $table->unsignedInteger("year_of_first_immatriculation");
             $table->enum(
                 "gearbox",
                 array_column(GearboxType::cases(), "value")
