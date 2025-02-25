@@ -8,6 +8,7 @@ use App\Filament\Exports\VehicleExporter;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
+use Pelmered\FilamentMoneyField\Tables\Columns\MoneyColumn;
 
 class VehicleTableSchema
 {
@@ -36,9 +37,8 @@ class VehicleTableSchema
                     ->label(__("dashboard.license_plate"))
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make("daily_rate")
+                MoneyColumn::make("daily_rate")
                     ->label(__("dashboard.daily_rate"))
-                    ->money()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make("gearbox")
@@ -59,6 +59,9 @@ class VehicleTableSchema
             ->filters([
                 DateRangeFilter::make("registration_expiry_date")->label(
                     __("dashboard.registration_expiry_date")
+                ),
+                DateRangeFilter::make("created_at")->label(
+                    __("dashboard.Created At")
                 ),
 
                 Tables\Filters\SelectFilter::make("gearbox")

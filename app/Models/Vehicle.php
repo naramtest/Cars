@@ -39,7 +39,6 @@ class Vehicle extends Model
 
     protected $casts = [
         "registration_expiry_date" => "date",
-        "year_of_first_immatriculation" => "date",
         "gearbox" => GearboxType::class,
         "fuel_type" => FuelType::class,
         "kilometer" => "integer",
@@ -108,22 +107,6 @@ class Vehicle extends Model
         return $this->currencyService()->convertToDecimal(
             $this->daily_rate,
             $this->currency_code
-        );
-    }
-
-    /**
-     * Set the daily rate from a decimal value
-     *
-     * @param float|string $value
-     * @return void
-     */
-    public function setDailyRateAttribute(float|string $value): void
-    {
-        $this->attributes[
-            "daily_rate"
-        ] = $this->currencyService()->convertToInteger(
-            $value,
-            $this->attributes["currency_code"] ?? null
         );
     }
 
