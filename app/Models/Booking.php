@@ -3,14 +3,13 @@
 namespace App\Models;
 
 use App\Enums\Booking\BookingStatus;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Booking extends Model
 {
-    use HasFactory, SoftDeletes;
+    use SoftDeletes;
 
     protected $fillable = [
         "client_name",
@@ -96,5 +95,12 @@ class Booking extends Model
             BookingStatus::Pending->value,
             BookingStatus::OnGoing->value,
         ]);
+    }
+
+    public function addons()
+    {
+        return $this->belongsToMany(Addon::class, "booking_addon")
+            ->withPivot("quantity")
+            ->withTimestamps();
     }
 }

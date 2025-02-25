@@ -134,4 +134,12 @@ return [
     "increase" => "increase",
     "decrease" => "decrease",
     "from_last_month" => "from last month",
+
+    "Daily" => "Daily",
+    "Total" => "Total",
+    "billing_type" => "Billing Type",
+    "Addon" => "Addon",
+    "Addons" => "Addons",
+    "is_active" => "Active",
+    "quantity" => "Quantity",
 ];
