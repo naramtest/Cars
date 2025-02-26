@@ -145,4 +145,11 @@ return [
     "Number of Bookings" => "Number of Bookings",
     "Month" => "Month",
     "Most Booked Vehicles" => "Most Booked Vehicles",
+
+    "Expense" => "Expense",
+    "Expenses" => "Expenses",
+    "title" => "Title",
+    "expense_date" => "Expense Date",
+    "amount" => "Amount",
+    "receipt" => "Receipt",
 ];
