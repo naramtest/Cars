@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
+use App\Enums\Addon\BillingType;
 use App\Enums\Booking\BookingStatus;
-use App\Services\Currency\CurrencyService;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Abstract\MoneyModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Money\Money;
 
-class Booking extends Model
+class Booking extends MoneyModel
 {
     use SoftDeletes;
 
@@ -23,7 +23,6 @@ class Booking extends Model
         "vehicle_id",
         "driver_id",
         "address",
-        "addons",
         "status",
         "notes",
     ];
@@ -31,7 +30,6 @@ class Booking extends Model
     protected $casts = [
         "start_datetime" => "datetime",
         "end_datetime" => "datetime",
-        "addons" => "array",
         "status" => BookingStatus::class,
     ];
 
@@ -70,7 +68,7 @@ class Booking extends Model
      */
     public function getTotalPriceMoneyAttribute(): Money
     {
-        //TODO: add to column and from
+        //TODO: refactor this section (extract it to a Service)
 
         // If there's no vehicle, return zero
         if (!$this->vehicle) {
@@ -84,35 +82,19 @@ class Booking extends Model
         $totalPrice = $dailyRateMoney->multiply($duration);
 
         // Add addon prices
-        if ($this->addons && is_array($this->addons)) {
+        if ($this->addons) {
+            /** @var Addon $addon */
             foreach ($this->addons as $addon) {
-                //                TODO: convert to money
-                $addonPrice = $addon["price"] ?? 0;
-
-                if ($addonPrice > 0) {
-                    // Convert addon price to Money object in the same currency
-                    $addonMoney = $this->currencyService()->parse(
-                        $addonPrice,
-                        $this->currencyService()->getDefaultCurrency()
-                    );
-
-                    // Add to total
-                    $totalPrice = $totalPrice->add($addonMoney);
+                $addonPrice = $addon->price_money;
+                $billingType = $addon->billing_type;
+                if ($billingType === BillingType::Daily) {
+                    $addonPrice = $addonPrice->multiply($duration);
                 }
+                $totalPrice = $totalPrice->add($addonPrice);
             }
         }
 
         return $totalPrice;
-    }
-
-    /**
-     * Get the currency service instance
-     *
-     * @return CurrencyService
-     */
-    protected function currencyService(): CurrencyService
-    {
-        return app(CurrencyService::class);
     }
 
     /**

@@ -3,17 +3,22 @@
 namespace App\Filament\Tables\Booking;
 
 use App\Enums\Booking\BookingStatus;
+use App\Filament\Component\DateColumn;
 use App\Models\Booking;
-use Filament\Forms\Components\DatePicker;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
-use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
+use Pelmered\FilamentMoneyField\Tables\Columns\MoneyColumn;
+use Ysfkaya\FilamentPhoneInput\Tables\PhoneColumn;
 
 class BookingTableSchema
 {
+    /**
+     * @throws \Exception
+     */
     public static function schema(Table $table): Table
     {
         return $table
@@ -31,9 +36,9 @@ class BookingTableSchema
                     ->label(__("dashboard.client_email"))
                     ->searchable()
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
 
-                Tables\Columns\TextColumn::make("client_phone")
+                PhoneColumn::make("client_phone")
                     ->label(__("dashboard.client_phone"))
                     ->searchable()
                     ->sortable()
@@ -50,15 +55,16 @@ class BookingTableSchema
                     ->sortable()
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make("start_datetime")
-                    ->label(__("dashboard.start_datetime"))
-                    ->dateTime()
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make("end_datetime")
-                    ->label(__("dashboard.end_datetime"))
-                    ->dateTime()
-                    ->sortable(),
+                DateColumn::make(
+                    "start_datetime",
+                    __("dashboard.start_datetime"),
+                    false
+                ),
+                DateColumn::make(
+                    "end_datetime",
+                    __("dashboard.end_datetime"),
+                    false
+                ),
 
                 Tables\Columns\TextColumn::make("duration_in_days")
                     ->label(__("dashboard.duration"))
@@ -79,163 +85,81 @@ class BookingTableSchema
                         }
                     ),
 
-                Tables\Columns\TextColumn::make("total_price")
+                MoneyColumn::make("total_price")
                     ->label(__("dashboard.total_price"))
-                    ->formatStateUsing(
-                        fn(float $state): string => number_format($state, 2) .
-                            " " .
-                            __("dashboard.currency")
-                    )
                     ->sortable()
                     ->toggleable(),
 
-                Tables\Columns\IconColumn::make("status")
+                Tables\Columns\TextColumn::make("status")
                     ->label(__("dashboard.status"))
-                    ->icon(
-                        fn(BookingStatus $state): string => match ($state) {
-                            BookingStatus::Completed
-                                => "heroicon-o-check-circle",
-                            BookingStatus::OnGoing => "heroicon-o-arrow-path",
-                            BookingStatus::Pending => "heroicon-o-clock",
-                            BookingStatus::Cancelled => "heroicon-o-x-circle",
-                        }
-                    )
-                    ->color(
-                        fn(BookingStatus $state): string => $state->getColor()
-                    )
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make("created_at")
-                    ->label(__("dashboard.created_at"))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                DateColumn::make("created_at", __("dashboard.created_at")),
+                DateColumn::make("updated_at", __("dashboard.updated_at")),
             ])
             ->filters([
                 SelectFilter::make("status")
                     ->label(__("dashboard.status"))
                     ->options(fn(): string => BookingStatus::class)
                     ->multiple(),
-
-                Filter::make("created_at")
-                    ->form([
-                        DatePicker::make("created_from")->label(
-                            __("dashboard.created_from")
-                        ),
-                        DatePicker::make("created_until")->label(
-                            __("dashboard.created_until")
-                        ),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data["created_from"],
-                                fn(
-                                    Builder $query,
-                                    $date
-                                ): Builder => $query->whereDate(
-                                    "created_at",
-                                    ">=",
-                                    $date
-                                )
-                            )
-                            ->when(
-                                $data["created_until"],
-                                fn(
-                                    Builder $query,
-                                    $date
-                                ): Builder => $query->whereDate(
-                                    "created_at",
-                                    "<=",
-                                    $date
-                                )
-                            );
-                    }),
-
-                Filter::make("booking_date")
-                    ->form([
-                        DatePicker::make("date_from")->label(
-                            __("dashboard.date_from")
-                        ),
-                        DatePicker::make("date_until")->label(
-                            __("dashboard.date_until")
-                        ),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data["date_from"],
-                                fn(
-                                    Builder $query,
-                                    $date
-                                ): Builder => $query->whereDate(
-                                    "start_datetime",
-                                    ">=",
-                                    $date
-                                )
-                            )
-                            ->when(
-                                $data["date_until"],
-                                fn(
-                                    Builder $query,
-                                    $date
-                                ): Builder => $query->whereDate(
-                                    "end_datetime",
-                                    "<=",
-                                    $date
-                                )
-                            );
-                    }),
+                DateRangeFilter::make("start_datetime")->label(
+                    __("dashboard.start_datetime")
+                ),
+                DateRangeFilter::make("create_at")->label(
+                    __("dashboard.Created At")
+                ),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-                Action::make("complete")
-                    ->label(__("dashboard.mark_as_completed"))
-                    ->icon("heroicon-o-check-circle")
-                    ->color("success")
-                    ->action(function (Booking $record) {
-                        $record->update([
-                            "status" => BookingStatus::Completed->value,
-                        ]);
-                    })
-                    ->requiresConfirmation()
-                    ->visible(
-                        fn(Booking $record) => $record->status ==
-                            BookingStatus::OnGoing
-                    ),
+                Tables\Actions\ActionGroup::make([
+                    Action::make("complete")
+                        ->label(__("dashboard.mark_as_completed"))
+                        ->icon("heroicon-o-check-circle")
+                        ->color("success")
+                        ->action(function (Booking $record) {
+                            $record->update([
+                                "status" => BookingStatus::Completed->value,
+                            ]);
+                        })
+                        ->requiresConfirmation()
+                        ->visible(
+                            fn(Booking $record) => $record->status ==
+                                BookingStatus::OnGoing
+                        ),
 
-                Action::make("start")
-                    ->label(__("dashboard.mark_as_ongoing"))
-                    ->icon("heroicon-o-play")
-                    ->color("warning")
-                    ->action(function (Booking $record) {
-                        $record->update([
-                            "status" => BookingStatus::OnGoing->value,
-                        ]);
-                    })
-                    ->requiresConfirmation()
-                    ->visible(
-                        fn(Booking $record) => $record->status ==
-                            BookingStatus::Pending
-                    ),
+                    Action::make("start")
+                        ->label(__("dashboard.mark_as_ongoing"))
+                        ->icon("heroicon-o-play")
+                        ->color("warning")
+                        ->action(function (Booking $record) {
+                            $record->update([
+                                "status" => BookingStatus::OnGoing->value,
+                            ]);
+                        })
+                        ->requiresConfirmation()
+                        ->visible(
+                            fn(Booking $record) => $record->status ==
+                                BookingStatus::Pending
+                        ),
 
-                Action::make("cancel")
-                    ->label(__("dashboard.cancel_booking"))
-                    ->icon("heroicon-o-x-circle")
-                    ->color("danger")
-                    ->action(function (Booking $record) {
-                        $record->update([
-                            "status" => BookingStatus::Cancelled->value,
-                        ]);
-                    })
-                    ->requiresConfirmation()
-                    ->visible(
-                        fn(Booking $record) => in_array($record->status, [
-                            BookingStatus::Pending,
-                            BookingStatus::OnGoing,
-                        ])
-                    ),
+                    Action::make("cancel")
+                        ->label(__("dashboard.cancel_booking"))
+                        ->icon("heroicon-o-x-circle")
+                        ->color("danger")
+                        ->action(function (Booking $record) {
+                            $record->update([
+                                "status" => BookingStatus::Cancelled->value,
+                            ]);
+                        })
+                        ->requiresConfirmation()
+                        ->visible(
+                            fn(Booking $record) => in_array($record->status, [
+                                BookingStatus::Pending,
+                                BookingStatus::OnGoing,
+                            ])
+                        ),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

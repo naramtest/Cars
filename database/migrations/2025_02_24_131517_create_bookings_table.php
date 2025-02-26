@@ -24,7 +24,6 @@ return new class extends Migration {
                 ->constrained()
                 ->nullOnDelete();
             $table->text("address");
-            $table->json("addons")->nullable();
             $table->string("status")->default("pending");
             $table->text("notes")->nullable();
             $table->softDeletes();

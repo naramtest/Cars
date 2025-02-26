@@ -3,6 +3,7 @@
 namespace App\Filament\Tables\Addon;
 
 use App\Enums\Addon\BillingType;
+use App\Filament\Component\DateColumn;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
@@ -32,29 +33,14 @@ class AddonTableSchema
 
                 Tables\Columns\TextColumn::make("billing_type")
                     ->label(__("dashboard.billing_type"))
-                    ->badge()
-                    ->color(
-                        fn(BillingType $state): string => match ($state) {
-                            BillingType::Daily => "warning",
-                            BillingType::Total => "success",
-                        }
-                    ),
-
+                    ->badge(),
                 Tables\Columns\IconColumn::make("is_active")
                     ->label(__("dashboard.is_active"))
                     ->boolean()
                     ->sortable(),
-                Tables\Columns\TextColumn::make("created_at")
-                    ->label(__("dashboard.created_at"))
-                    ->dateTime("M j, Y")
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
 
-                Tables\Columns\TextColumn::make("updated_at")
-                    ->label(__("dashboard.updated_at"))
-                    ->dateTime("M j, Y")
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                DateColumn::make("created_at", __("dashboard.created_at")),
+                DateColumn::make("updated_at", __("dashboard.updated_at")),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make("billing_type")

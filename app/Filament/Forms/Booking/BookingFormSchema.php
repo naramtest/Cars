@@ -16,6 +16,7 @@ class BookingFormSchema
     {
         return [
             Forms\Components\Tabs::make()
+                ->activeTab(2)
                 ->columnSpan(
                     fn(string $operation) => $operation == "edit" ? 2 : 3
                 )
@@ -112,11 +113,19 @@ class BookingFormSchema
                         ->options(BookingStatus::class)
                         ->default(BookingStatus::Pending)
                         ->required(),
+                    Forms\Components\Textarea::make("address")
+                        ->label(__("dashboard.address"))
+                        ->rows(3)
+                        ->required()
+                        ->maxLength(65535),
                 ])
                 ->columnSpan(1)
                 ->columns(1),
 
             Forms\Components\Section::make()
+                ->extraAttributes([
+                    "class" => "booking",
+                ])
                 ->schema([
                     Forms\Components\DateTimePicker::make("start_datetime")
                         ->label(__("dashboard.start_datetime"))
@@ -131,13 +140,6 @@ class BookingFormSchema
                 ])
                 ->columnSpan(1)
                 ->heading(__("dashboard.reservation_period")),
-
-            Forms\Components\Section::make(__("dashboard.address"))->schema([
-                Forms\Components\Textarea::make("address")
-                    ->hiddenLabel()
-                    ->required()
-                    ->maxLength(65535),
-            ]),
         ];
     }
 
@@ -160,24 +162,12 @@ class BookingFormSchema
     private static function additionalInformationSchema(): array
     {
         return [
-            Forms\Components\Repeater::make("addons")
-                ->label(__("dashboard.addons"))
-                ->schema([
-                    Forms\Components\TextInput::make("name")
-                        ->label(__("dashboard.name"))
-                        ->required(),
-                    Forms\Components\TextInput::make("price")
-                        ->label(__("dashboard.price"))
-                        ->numeric()
-                        ->required(),
-                    Forms\Components\Textarea::make("description")
-                        ->label(__("dashboard.description"))
-                        ->rows(2),
-                ])
-                ->collapsible()
-                ->itemLabel(
-                    fn(array $state): ?string => $state["name"] ?? null
-                ),
+            Forms\Components\Select::make("addons")
+                ->label(__("dashboard.Addons"))
+                ->multiple()
+                ->relationship("addons", "name")
+                ->preload()
+                ->required(),
 
             Forms\Components\Textarea::make("notes")
                 ->label(__("dashboard.notes"))
@@ -187,6 +177,7 @@ class BookingFormSchema
 
     public static function statusInfoSection(): Forms\Components\Section
     {
+        //        TODO: add reactive price (all section details )
         return Forms\Components\Section::make(
             __("dashboard.booking_status_info")
         )
@@ -218,15 +209,11 @@ class BookingFormSchema
                     )
                     ->hidden(fn(string $operation) => $operation !== "edit"),
 
-                Forms\Components\Placeholder::make("total_price")
-                    ->label(__("dashboard.total_price"))
+                Forms\Components\Placeholder::make("total_price_money")
                     ->content(
-                        fn(?Booking $record): string => $record
-                            ? number_format($record->total_price, 2) .
-                                " " .
-                                __("dashboard.currency")
-                            : "-"
+                        fn(?Booking $record) => $record->formatted_total_price
                     )
+                    ->label(__("dashboard.total_price"))
                     ->hidden(fn(string $operation) => $operation !== "edit"),
             ])
             ->hidden(fn(string $operation) => $operation !== "edit")

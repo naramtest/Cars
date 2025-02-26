@@ -2,9 +2,10 @@
 
 namespace App\Enums\Booking;
 
+use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
-enum BookingStatus: string implements HasLabel
+enum BookingStatus: string implements HasLabel, HasColor
 {
     case Cancelled = "cancelled";
     case Completed = "completed";
@@ -24,9 +25,9 @@ enum BookingStatus: string implements HasLabel
     public function getColor(): string
     {
         return match ($this) {
-            self::Cancelled => "red",
-            self::Completed => "green",
-            self::OnGoing => "yellow",
+            self::Cancelled => "danger",
+            self::Completed => "success",
+            self::OnGoing => "warning",
             self::Pending => "gray",
         };
     }

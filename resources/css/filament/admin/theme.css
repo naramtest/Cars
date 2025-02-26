@@ -1,0 +1,14 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@config 'tailwind.config.js';
+
+.booking {
+    height: 100%;
+}
+
+.booking .fi-section-content-ctn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 80%;
+}
