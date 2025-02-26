@@ -15,7 +15,7 @@ enum TypesEnum: string
         //        TODO: add other types
         return match ($type->type) {
             self::VEHICLE => $type->vehicles()->exists(),
-            self::EXPENSE => throw new \Exception("To be implemented"),
+            self::EXPENSE => $type->expenses()->exists(),
             self::INSPECTION => throw new \Exception("To be implemented"),
         };
     }

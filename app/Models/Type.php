@@ -55,4 +55,12 @@ class Type extends Model
             "typeable"
         )->withTimestamps();
     }
+
+    public function expenses(): MorphToMany
+    {
+        return $this->morphedByMany(
+            Expense::class,
+            "typeable"
+        )->withTimestamps();
+    }
 }

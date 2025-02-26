@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TypesEnum;
 use App\Enums\Vehicle\FuelType;
 use App\Enums\Vehicle\GearboxType;
 use App\Models\Abstract\MoneyModel;
@@ -100,7 +101,7 @@ class Vehicle extends MoneyModel
     public function types(): MorphToMany
     {
         return $this->morphToMany(Type::class, "typeable")
-            ->where("type", "Vehicle")
+            ->where("type", TypesEnum::VEHICLE)
             ->withTimestamps();
     }
 
