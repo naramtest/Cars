@@ -142,4 +142,7 @@ return [
     "Addons" => "Addons",
     "is_active" => "Active",
     "quantity" => "Quantity",
+    "Number of Bookings" => "Number of Bookings",
+    "Month" => "Month",
+    "Most Booked Vehicles" => "Most Booked Vehicles",
 ];
