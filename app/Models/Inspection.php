@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\Inspection\InspectionStatus;
+use App\Enums\Inspection\RepairStatus;
 use App\Models\Abstract\MoneyModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
