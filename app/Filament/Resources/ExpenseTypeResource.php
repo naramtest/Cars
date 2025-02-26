@@ -4,8 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Enums\TypesEnum;
 use App\Filament\Forms\Type\TypeFormSchema;
-use App\Filament\Resources\VehicleTypeResource\Pages;
-use App\Filament\Resources\VehicleTypeResource\RelationManagers;
+use App\Filament\Resources\ExpenseTypeResource\Pages;
+use App\Filament\Resources\ExpenseTypeResource\RelationManagers;
 use App\Filament\Tables\Type\TypeTableSchema;
 use App\Models\Type;
 use Filament\Forms\Form;
@@ -13,7 +13,7 @@ use Filament\Resources\Concerns\Translatable;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 
-class VehicleTypeResource extends Resource
+class ExpenseTypeResource extends Resource
 {
     use Translatable;
 
@@ -23,18 +23,18 @@ class VehicleTypeResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return TypeFormSchema::make($form, TypesEnum::VEHICLE);
+        return TypeFormSchema::make($form, TypesEnum::EXPENSE);
     }
 
     public static function table(Table $table): Table
     {
-        return TypeTableSchema::schema($table, TypesEnum::VEHICLE);
+        return TypeTableSchema::schema($table, TypesEnum::EXPENSE);
     }
 
     public static function getPages(): array
     {
         return [
-            "index" => Pages\ManageVehicleTypes::route("/"),
+            "index" => Pages\ManageExpenseTypes::route("/"),
         ];
     }
 
@@ -70,6 +70,6 @@ class VehicleTypeResource extends Resource
 
     public static function getNavigationParentItem(): ?string
     {
-        return __("dashboard.Vehicles");
+        return __("dashboard.Expenses");
     }
 }

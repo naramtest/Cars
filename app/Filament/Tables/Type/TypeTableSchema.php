@@ -2,14 +2,17 @@
 
 namespace App\Filament\Tables\Type;
 
+use App\Enums\CategoryType;
+use App\Enums\TypesEnum;
 use App\Filament\Actions\Type\TypeActions;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class TypeTableSchema
 {
-    public static function schema(Table $table): Table
+    public static function schema(Table $table, TypesEnum $type): Table
     {
         return $table
             ->columns([
@@ -32,6 +35,9 @@ class TypeTableSchema
             ])
             ->defaultSort("order")
             ->reorderable("order")
-            ->actions(TypeActions::actions());
+            ->actions(TypeActions::actions())
+            ->modifyQueryUsing(function (Builder $query) use ($type) {
+                return $query->where("type", $type);
+            });
     }
 }
