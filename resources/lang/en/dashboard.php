@@ -152,4 +152,34 @@ return [
     "expense_date" => "Expense Date",
     "amount" => "Amount",
     "receipt" => "Receipt",
+
+    // Inspection translations
+    "Inspection" => "Inspection",
+    "Inspections" => "Inspections",
+    "inspection_by" => "Inspection By",
+    "inspection_date" => "Inspection Date",
+    "inspection_status" => "Inspection Status",
+    "repair_status" => "Repair Status",
+    "meter_reading_km" => "Meter Reading (Km)",
+    "incoming_date" => "Incoming Date",
+    "inspection_details" => "Inspection Details",
+    "incoming_details" => "Incoming Details",
+    "inspection_checklist" => "Inspection Checklist",
+    "checklist_item" => "Checklist Item",
+    "checklist_items" => "Checklist Items",
+    "enter_notes" => "Enter notes",
+
+    // Inspection status labels
+    "In Progress" => "In Progress",
+    "Conditional Pass" => "Conditional Pass",
+    "On Hold" => "On Hold",
+    "Rejected" => "Rejected",
+
+    // Repair status labels
+    "Needs Repair" => "Needs Repair",
+
+    // Inspection action buttons
+    "mark_as_needs_repair" => "Mark as Needs Repair",
+    "mark_as_in_progress_repair" => "Mark as In Progress",
+    "mark_as_repair_completed" => "Mark as Repair Completed",
 ];

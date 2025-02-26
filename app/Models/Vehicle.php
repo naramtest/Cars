@@ -114,4 +114,12 @@ class Vehicle extends MoneyModel
     {
         return $this->hasMany(Booking::class);
     }
+
+    /**
+     * Get inspections for this vehicle.
+     */
+    public function inspections(): HasMany
+    {
+        return $this->hasMany(Inspection::class);
+    }
 }
