@@ -5,7 +5,6 @@ namespace App\Filament\Forms\Inspection;
 use App\Enums\Inspection\InspectionStatus;
 use App\Enums\Inspection\RepairStatus;
 use App\Enums\TypesEnum;
-use App\Models\Inspection;
 use App\Models\Type;
 use Filament\Forms;
 use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
@@ -15,40 +14,27 @@ class InspectionFormSchema
     public static function schema(): array
     {
         return [
-            Forms\Components\Tabs::make()
-                ->columnSpan(
-                    fn(string $operation) => $operation == "edit" ? 2 : 3
-                )
-                ->columns()
-                ->tabs([
-                    Forms\Components\Tabs\Tab::make(
-                        __("dashboard.inspection_details")
-                    )
-                        ->icon("heroicon-o-clipboard")
-                        ->schema(self::inspectionDetailsSchema()),
-
-                    Forms\Components\Tabs\Tab::make(
+            Forms\Components\Group::make([
+                Forms\Components\Section::make("Details")
+                    ->schema(self::inspectionDetailsSchema())
+                    ->columns()
+                    ->columnSpan(1),
+                Forms\Components\Group::make([
+                    Forms\Components\Section::make("amount")
+                        ->schema(self::amountDetailsSchema())
+                        ->columns(),
+                    Forms\Components\Section::make(
                         __("dashboard.incoming_details")
                     )
-                        ->icon("heroicon-o-truck")
-                        ->schema([
-                            Forms\Components\Group::make()->schema(
-                                self::incomingDetailsSchema()
-                            ),
-                        ]),
-
-                    Forms\Components\Tabs\Tab::make(
-                        __("dashboard.inspection_checklist")
-                    )
-                        ->icon("heroicon-o-check-circle")
-                        ->schema([
-                            Forms\Components\Group::make()->schema(
-                                self::checklistSchema()
-                            ),
-                        ]),
-                ]),
-
-            self::statusSchema(),
+                        ->schema(self::incomingDetailsSchema())
+                        ->columns(),
+                ])->columnSpan(1),
+            ])
+                ->columns()
+                ->columnSpan(2),
+            Forms\Components\Section::make(__("dashboard.inspection_checklist"))
+                ->schema(self::checklistSchema())
+                ->columns(),
         ];
     }
 
@@ -86,12 +72,16 @@ class InspectionFormSchema
 
             Forms\Components\Textarea::make("notes")
                 ->label(__("dashboard.notes"))
-                ->columnSpanFull(),
+                ->rows(2),
+        ];
+    }
 
+    private static function amountDetailsSchema(): array
+    {
+        return [
             MoneyInput::make("amount")
                 ->label(__("dashboard.amount"))
                 ->nullable(),
-
             Forms\Components\FileUpload::make("receipt")
                 ->label(__("dashboard.receipt"))
                 ->directory("inspection-receipts")
@@ -134,40 +124,16 @@ class InspectionFormSchema
                 ->schema([
                     Forms\Components\Toggle::make("checklist.$slug.checked")
                         ->label($name)
-                        ->inline(false),
-                    Forms\Components\Textarea::make("checklist.$slug.notes")
+                        ->inline(false)
+                        ->columnSpan(1),
+                    Forms\Components\TextInput::make("checklist.$slug.notes")
                         ->label(__("dashboard.notes"))
                         ->placeholder(__("dashboard.enter_notes"))
-                        ->rows(2)
-                        ->columnSpanFull(),
+                        ->columnSpan(4),
                 ])
-                ->columns(1);
+                ->columns(5);
         }
 
         return $schema;
-    }
-
-    public static function statusSchema(): Forms\Components\Section
-    {
-        return Forms\Components\Section::make(__("dashboard.Status"))
-            ->schema([
-                Forms\Components\Placeholder::make("created_at")
-                    ->label(__("dashboard.created_at"))
-                    ->content(
-                        fn(?Inspection $record): string => $record
-                            ? $record->created_at->diffForHumans()
-                            : "-"
-                    ),
-
-                Forms\Components\Placeholder::make("updated_at")
-                    ->label(__("dashboard.updated_at"))
-                    ->content(
-                        fn(?Inspection $record): string => $record
-                            ? $record->updated_at->diffForHumans()
-                            : "-"
-                    ),
-            ])
-            ->hidden(fn(string $operation) => $operation !== "edit")
-            ->columnSpan(1);
     }
 }

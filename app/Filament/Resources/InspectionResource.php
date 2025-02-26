@@ -21,7 +21,7 @@ class InspectionResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form->columns(3)->schema(InspectionFormSchema::schema());
+        return $form->schema(InspectionFormSchema::schema());
     }
 
     /**
