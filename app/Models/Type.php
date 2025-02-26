@@ -63,4 +63,12 @@ class Type extends Model
             "typeable"
         )->withTimestamps();
     }
+
+    public function inspections(): MorphToMany
+    {
+        return $this->morphedByMany(
+            Inspection::class,
+            "typeable"
+        )->withTimestamps();
+    }
 }

@@ -12,11 +12,10 @@ enum TypesEnum: string
 
     public static function getExists(Type $type): ?bool
     {
-        //        TODO: add other types
         return match ($type->type) {
             self::VEHICLE => $type->vehicles()->exists(),
             self::EXPENSE => $type->expenses()->exists(),
-            self::INSPECTION => throw new \Exception("To be implemented"),
+            self::INSPECTION => $type->inspections()->exists(),
         };
     }
 }
