@@ -108,7 +108,7 @@ return [
 
     // Status Actions
     "mark_as_completed" => "Mark as Completed",
-    "mark_as_ongoing" => "Mark as On Going",
+    "mark_as_ongoing" => "Mark as Active",
     "cancel_booking" => "Cancel Booking",
 
     // Export
@@ -124,7 +124,7 @@ return [
     // Stats Widget
     "pending_bookings" => "Pending Bookings",
     "awaiting_confirmation" => "Awaiting Confirmation",
-    "ongoing_bookings" => "Ongoing Bookings",
+    "ongoing_bookings" => "Active Bookings",
     "in_progress" => "In Progress",
     "completed_bookings" => "Completed Bookings",
     "finished_successfully" => "Finished Successfully",

@@ -126,7 +126,7 @@ class BookingTableSchema
                         ->requiresConfirmation()
                         ->visible(
                             fn(Booking $record) => $record->status ==
-                                BookingStatus::OnGoing
+                                BookingStatus::Active
                         ),
 
                     Action::make("start")
@@ -135,7 +135,7 @@ class BookingTableSchema
                         ->color("warning")
                         ->action(function (Booking $record) {
                             $record->update([
-                                "status" => BookingStatus::OnGoing->value,
+                                "status" => BookingStatus::Active->value,
                             ]);
                         })
                         ->requiresConfirmation()
@@ -157,7 +157,7 @@ class BookingTableSchema
                         ->visible(
                             fn(Booking $record) => in_array($record->status, [
                                 BookingStatus::Pending,
-                                BookingStatus::OnGoing,
+                                BookingStatus::Active,
                             ])
                         ),
                 ]),

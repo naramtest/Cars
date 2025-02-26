@@ -9,7 +9,7 @@ enum BookingStatus: string implements HasLabel, HasColor
 {
     case Cancelled = "cancelled";
     case Completed = "completed";
-    case OnGoing = "on_going";
+    case Active = "active";
     case Pending = "pending";
 
     public function getLabel(): ?string
@@ -17,7 +17,7 @@ enum BookingStatus: string implements HasLabel, HasColor
         return match ($this) {
             self::Cancelled => __("dashboard.Cancelled"),
             self::Completed => __("dashboard.Completed"),
-            self::OnGoing => __("dashboard.On Going"),
+            self::Active => __("dashboard.is_active"),
             self::Pending => __("dashboard.Pending"),
         };
     }
@@ -27,7 +27,7 @@ enum BookingStatus: string implements HasLabel, HasColor
         return match ($this) {
             self::Cancelled => "danger",
             self::Completed => "success",
-            self::OnGoing => "warning",
+            self::Active => "warning",
             self::Pending => "gray",
         };
     }

@@ -135,7 +135,7 @@ class Booking extends MoneyModel
     {
         return $query->whereIn("status", [
             BookingStatus::Pending->value,
-            BookingStatus::OnGoing->value,
+            BookingStatus::Active->value,
         ]);
     }
 
