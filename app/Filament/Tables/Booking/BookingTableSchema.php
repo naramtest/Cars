@@ -4,6 +4,7 @@ namespace App\Filament\Tables\Booking;
 
 use App\Enums\Booking\BookingStatus;
 use App\Filament\Component\DateColumn;
+use App\Filament\Exports\BookingExporter;
 use App\Models\Booking;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
@@ -166,10 +167,10 @@ class BookingTableSchema
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
-                    //                    Tables\Actions\ExportBulkAction::make()
-                    //                        ->label(__("dashboard.export_selected"))
-                    //                        ->exporter(BookingExporter::class),
                 ]),
+                Tables\Actions\ExportBulkAction::make()
+                    ->label(__("dashboard.export_selected"))
+                    ->exporter(BookingExporter::class),
             ]);
     }
 }
