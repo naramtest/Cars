@@ -182,4 +182,6 @@ return [
     "mark_as_needs_repair" => "Mark as Needs Repair",
     "mark_as_in_progress_repair" => "Mark as In Progress",
     "mark_as_repair_completed" => "Mark as Repair Completed",
+    "Confirmed" => "Confirmed",
+    "Draft" => "Draft",
 ];
