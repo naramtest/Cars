@@ -226,4 +226,5 @@ return [
     "cancel_shipping" => "Cancel Shipping", // Shipping related translations
     "shipping_items" => "Shipping Items",
     "add_item" => "Add Item",
+    "Operations" => "Operations",
 ];

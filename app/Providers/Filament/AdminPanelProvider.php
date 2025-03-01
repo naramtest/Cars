@@ -52,6 +52,9 @@ class AdminPanelProvider extends PanelProvider
             ->pages([Pages\Dashboard::class])
             ->navigationGroups([
                 NavigationGroup::make()->label(
+                    fn(): string => __("dashboard.Operations")
+                ),
+                NavigationGroup::make()->label(
                     fn(): string => __("dashboard.Business Management")
                 ),
                 NavigationGroup::make()

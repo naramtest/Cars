@@ -54,7 +54,7 @@ class AddonResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __("dashboard.Business Management");
+        return __("dashboard.Operations");
     }
 
     public static function getLabel(): ?string
