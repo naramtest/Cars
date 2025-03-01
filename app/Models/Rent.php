@@ -41,9 +41,29 @@ class Rent extends MoneyModel
         parent::boot();
 
         static::creating(function (Rent $rent) {
-            // Generate a unique booking number if not provided
             if (empty($rent->rent_number)) {
-                $rent->rent_number = "R-" . strtoupper(uniqid());
+                $year = now()->format("Y");
+                $month = now()->format("m");
+
+                // Get the next sequential number for this month
+                $latestRent = static::where(
+                    "rent_number",
+                    "like",
+                    "R-{$year}{$month}-%"
+                )
+                    ->orderBy("id", "desc")
+                    ->first();
+
+                $sequence = 1;
+                if ($latestRent) {
+                    // Extract the sequence number from the latest rent
+                    $parts = explode("-", $latestRent->rent_number);
+                    $sequence = intval(end($parts)) + 1;
+                }
+
+                $rent->rent_number =
+                    "R-{$year}{$month}-" .
+                    str_pad($sequence, 4, "0", STR_PAD_LEFT);
             }
         });
     }

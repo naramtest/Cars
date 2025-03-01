@@ -182,6 +182,24 @@ return [
     "mark_as_needs_repair" => "Mark as Needs Repair",
     "mark_as_in_progress_repair" => "Mark as In Progress",
     "mark_as_repair_completed" => "Mark as Repair Completed",
-    "Confirmed" => "Confirmed",
+
+    // Rent related translations
+    "Rent" => "Rent",
+    "Rents" => "Rents",
+    "rent_number" => "Rent Number",
+    "rent_details" => "Rent Details",
+    "rent_status_info" => "Rent Status Information",
+    "pickup_address" => "Pickup Address",
+    "drop_off_address" => "Drop-off Address",
+    "terms_conditions" => "Terms & Conditions",
+
+    // Status Labels (some already exist in your dashboard.php)
+    "Active" => "Active",
     "Draft" => "Draft",
+    "Confirmed" => "Confirmed",
+
+    // Actions
+    "mark_as_active" => "Mark as Active",
+    "confirm_rent" => "Confirm Rent",
+    "cancel_rent" => "Cancel Rent",
 ];
