@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Ysfkaya\FilamentPhoneInput\PhoneInputNumberType;
 
 class Shipping extends Model
 {
@@ -83,7 +82,12 @@ class Shipping extends Model
      */
     public function recalculateTotalWeight(): float
     {
-        $this->total_weight = $this->items()->sum("total_weight");
+        $totalWeight =
+            $this->items()
+                ->selectRaw("SUM(weight * quantity) as calculated_weight")
+                ->first()->calculated_weight ?? 0;
+
+        $this->total_weight = floatval($totalWeight);
         $this->save();
 
         return $this->total_weight;
@@ -103,20 +107,6 @@ class Shipping extends Model
     public function driver(): BelongsTo
     {
         return $this->belongsTo(Driver::class);
-    }
-
-    /**
-     * Format the client phone number
-     *
-     * @return string|null
-     */
-    public function getFormattedPhoneAttribute(): ?string
-    {
-        if (!$this->client_phone) {
-            return null;
-        }
-
-        return PhoneInputNumberType::format($this->client_phone);
     }
 
     /**

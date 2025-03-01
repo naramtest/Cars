@@ -212,4 +212,18 @@ return [
     "total_weight" => "Total Weight",
     "items" => "Items",
     "delivery_address" => "Delivery Address",
+
+    "shipping_details" => "Shipping Details",
+    "shipping_status_info" => "Shipping Status Information",
+    "weight" => "Weight",
+    "Delivered" => "Delivered",
+
+    // Shipping actions
+    "mark_as_picked_up" => "Mark as Picked Up",
+    "mark_as_in_transit" => "Mark as In Transit",
+    "mark_as_delivered" => "Mark as Delivered",
+    "confirm_shipping" => "Confirm Shipping",
+    "cancel_shipping" => "Cancel Shipping", // Shipping related translations
+    "shipping_items" => "Shipping Items",
+    "add_item" => "Add Item",
 ];
