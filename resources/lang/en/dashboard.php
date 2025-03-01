@@ -202,4 +202,14 @@ return [
     "mark_as_active" => "Mark as Active",
     "confirm_rent" => "Confirm Rent",
     "cancel_rent" => "Cancel Rent",
+
+    // Shipping related translations
+    "Shipping" => "Shipping",
+    "Shippings" => "Shippings",
+    "tracking_number" => "Tracking Number",
+    "Picked_Up" => "Picked Up",
+    "In_Transit" => "In Transit",
+    "total_weight" => "Total Weight",
+    "items" => "Items",
+    "delivery_address" => "Delivery Address",
 ];
