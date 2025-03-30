@@ -22,12 +22,17 @@ class Shipping extends Model
         "tracking_number",
         "status",
         "total_weight",
+        "received_at",
+        "delivered_at",
         "notes",
+        "delivery_notes",
     ];
 
     protected $casts = [
         "status" => ShippingStatus::class,
         "total_weight" => "float",
+        "received_at" => "datetime",
+        "delivered_at" => "datetime",
     ];
 
     /**

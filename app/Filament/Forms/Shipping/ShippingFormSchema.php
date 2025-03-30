@@ -29,6 +29,12 @@ class ShippingFormSchema
                         ->icon("gmdi-person-o")
                         ->schema(self::clientInformationSchema())
                         ->columns(),
+                    Forms\Components\Tabs\Tab::make(
+                        __("dashboard.delivery_information")
+                    )
+                        ->icon("gmdi-local-shipping-o")
+                        ->schema(self::deliveryInformationSchema())
+                        ->columns(),
                 ]),
                 self::getItemsRepeater(),
             ])->columnSpan(
@@ -100,7 +106,6 @@ class ShippingFormSchema
                     Forms\Components\TextInput::make("client_email")
                         ->label(__("dashboard.email"))
                         ->email()
-                        ->required()
                         ->maxLength(255),
                     PhoneInput::make("client_phone")
                         ->label(__("dashboard.phone_number"))
@@ -112,6 +117,27 @@ class ShippingFormSchema
                 ->rows(5)
                 ->maxLength(65535)
                 ->columnSpan(1),
+        ];
+    }
+
+    private static function deliveryInformationSchema(): array
+    {
+        return [
+            Forms\Components\Group::make([
+                Forms\Components\DateTimePicker::make("received_at")
+                    ->label(__("dashboard.received_at"))
+                    ->seconds(false),
+
+                Forms\Components\DateTimePicker::make("delivered_at")
+                    ->label(__("dashboard.delivered_at"))
+                    ->seconds(false)
+                    ->after("received_at"),
+
+                Forms\Components\Textarea::make("delivery_notes")
+                    ->label(__("dashboard.delivery_notes"))
+                    ->rows(3)
+                    ->maxLength(65535),
+            ])->columns(1),
         ];
     }
 

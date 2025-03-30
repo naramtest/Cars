@@ -57,6 +57,18 @@ class ShippingTableSchema
                     ->formatStateUsing(fn(float $state): string => "$state kg")
                     ->sortable(),
 
+                Tables\Columns\TextColumn::make("received_at")
+                    ->label(__("dashboard.received_at"))
+                    ->dateTime("M j, Y H:i")
+                    ->sortable()
+                    ->toggleable(),
+
+                Tables\Columns\TextColumn::make("delivered_at")
+                    ->label(__("dashboard.delivered_at"))
+                    ->dateTime("M j, Y H:i")
+                    ->sortable()
+                    ->toggleable(),
+
                 Tables\Columns\TextColumn::make("items_count")
                     ->label(__("dashboard.items"))
                     ->formatStateUsing(

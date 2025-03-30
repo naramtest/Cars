@@ -227,4 +227,9 @@ return [
     "shipping_items" => "Shipping Items",
     "add_item" => "Add Item",
     "Operations" => "Operations",
+
+    "delivery_information" => "Delivery Information",
+    "received_at" => "Received At",
+    "delivered_at" => "Delivered At",
+    "delivery_notes" => "Delivery Notes",
 ];
