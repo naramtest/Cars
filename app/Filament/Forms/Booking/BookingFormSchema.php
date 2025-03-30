@@ -61,7 +61,6 @@ class BookingFormSchema
                     Forms\Components\TextInput::make("client_email")
                         ->label(__("dashboard.email"))
                         ->email()
-                        ->required()
                         ->maxLength(255),
                     PhoneInput::make("client_phone")
                         ->label(__("dashboard.phone_number"))
