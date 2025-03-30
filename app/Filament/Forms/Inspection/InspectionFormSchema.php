@@ -20,12 +20,10 @@ class InspectionFormSchema
                     ->columns()
                     ->columnSpan(1),
                 Forms\Components\Group::make([
-                    Forms\Components\Section::make("amount")
+                    Forms\Components\Section::make()
                         ->schema(self::amountDetailsSchema())
                         ->columns(),
-                    Forms\Components\Section::make(
-                        __("dashboard.incoming_details")
-                    )
+                    Forms\Components\Section::make(__("dashboard.notes"))
                         ->schema(self::incomingDetailsSchema())
                         ->columns(),
                 ])->columnSpan(1),
@@ -70,9 +68,11 @@ class InspectionFormSchema
                 ->default(RepairStatus::Pending)
                 ->required(),
 
-            Forms\Components\Textarea::make("notes")
-                ->label(__("dashboard.notes"))
-                ->rows(2),
+            Forms\Components\TextInput::make("meter_reading_km")
+                ->label(__("dashboard.meter_reading_km"))
+                ->numeric()
+                ->minValue(0)
+                ->nullable(),
         ];
     }
 
@@ -95,15 +95,14 @@ class InspectionFormSchema
     private static function incomingDetailsSchema(): array
     {
         return [
-            Forms\Components\DatePicker::make("incoming_date")
-                ->label(__("dashboard.incoming_date"))
-                ->nullable(),
+            //            Forms\Components\DatePicker::make("incoming_date")
+            //                ->label(__("dashboard.incoming_date"))
+            //                ->nullable(),
 
-            Forms\Components\TextInput::make("meter_reading_km")
-                ->label(__("dashboard.meter_reading_km"))
-                ->numeric()
-                ->minValue(0)
-                ->nullable(),
+            Forms\Components\Textarea::make("notes")
+                ->rows(2)
+                ->columnSpanFull()
+                ->hiddenLabel(),
         ];
     }
 

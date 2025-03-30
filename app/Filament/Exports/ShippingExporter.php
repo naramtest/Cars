@@ -3,7 +3,6 @@
 namespace App\Filament\Exports;
 
 use App\Models\Shipping;
-use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;
@@ -41,6 +40,13 @@ class ShippingExporter extends Exporter
                 ->formatStateUsing(
                     fn(Shipping $shipping) => $shipping->total_weight . " kg"
                 ),
+            ExportColumn::make("received_at")->label(
+                __("dashboard.received_at")
+            ),
+            ExportColumn::make("delivered_at")->label(
+                __("dashboard.delivered_at")
+            ),
+
             ExportColumn::make("items_count")
                 ->label(__("dashboard.items"))
                 ->formatStateUsing(
@@ -53,6 +59,9 @@ class ShippingExporter extends Exporter
                 __("dashboard.delivery_address")
             ),
             ExportColumn::make("notes")->label(__("dashboard.notes")),
+            ExportColumn::make("delivery_notes")->label(
+                __("dashboard.delivery_notes")
+            ),
             ExportColumn::make("created_at")->label(__("dashboard.created_at")),
             ExportColumn::make("updated_at")->label(__("dashboard.updated_at")),
         ];
@@ -77,10 +86,5 @@ class ShippingExporter extends Exporter
         }
 
         return $body;
-    }
-
-    public function getFormats(): array
-    {
-        return [ExportFormat::Xlsx];
     }
 }

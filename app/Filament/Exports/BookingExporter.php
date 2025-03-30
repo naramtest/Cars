@@ -3,7 +3,6 @@
 namespace App\Filament\Exports;
 
 use App\Models\Booking;
-use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;
@@ -109,10 +108,5 @@ class BookingExporter extends Exporter
         }
 
         return $body;
-    }
-
-    public function getFormats(): array
-    {
-        return [ExportFormat::Xlsx];
     }
 }

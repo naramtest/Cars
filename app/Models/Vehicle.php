@@ -6,6 +6,7 @@ use App\Enums\TypesEnum;
 use App\Enums\Vehicle\FuelType;
 use App\Enums\Vehicle\GearboxType;
 use App\Models\Abstract\MoneyModel;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -35,6 +36,8 @@ class Vehicle extends MoneyModel
         "options",
         "document",
         "notes",
+        "inspection_period_days",
+        "notify_before_inspection",
     ];
 
     protected $casts = [
@@ -43,6 +46,7 @@ class Vehicle extends MoneyModel
         "fuel_type" => FuelType::class,
         "kilometer" => "integer",
         "options" => "array",
+        "notify_before_inspection" => "boolean",
     ];
 
     protected $appends = ["formatted_daily_rate", "daily_rate_decimal"];
@@ -115,11 +119,51 @@ class Vehicle extends MoneyModel
         return $this->hasMany(Booking::class);
     }
 
+    public function getNextInspectionDateAttribute(): ?Carbon
+    {
+        if (!$this->inspection_period_days) {
+            return null;
+        }
+        $inspection = $this->inspections()->latest()->first();
+
+        $start_date = $inspection->inspection_date ?? $this->created_at;
+
+        return Carbon::parse($start_date)->addDays(
+            $this->inspection_period_days
+        );
+    }
+
+    // Calculate next inspection date based on period days
+
     /**
      * Get inspections for this vehicle.
      */
     public function inspections(): HasMany
     {
         return $this->hasMany(Inspection::class);
+    }
+
+    // Calculate days until next inspection
+
+    public function getDaysUntilNextInspectionAttribute(): ?int
+    {
+        if (!$this->next_inspection_date) {
+            return null;
+        }
+
+        return Carbon::now()->diffInDays($this->next_inspection_date, false);
+    }
+
+    //TODO: send notification when it is due
+
+    // Check if inspection is due based on setting
+    public function getIsInspectionDueAttribute(): bool
+    {
+        if (!$this->next_inspection_date || !$this->notify_before_inspection) {
+            return false;
+        }
+
+        $notificationDays = config("inspections.notification_days_before", 7);
+        return $this->days_until_next_inspection <= $notificationDays;
     }
 }

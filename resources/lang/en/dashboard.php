@@ -232,4 +232,14 @@ return [
     "received_at" => "Received At",
     "delivered_at" => "Delivered At",
     "delivery_notes" => "Delivery Notes",
+
+    // Inspection Period Related
+    "inspection_period" => "Inspection Period",
+    "inspection_period_days" => "Inspection Period",
+    "inspection_period_days_hint" =>
+        "Enter the number of days between inspections",
+    "notify_before_inspection" => "Enable Notifications",
+    "notify_before_inspection_hint" =>
+        "Receive notifications when inspection is due",
+    "next_inspection_date" => "Next Inspection",
 ];

@@ -12,6 +12,27 @@ use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
 
 class VehicleFormSchema
 {
+    private static function inspectionPeriodSchema(): array
+    {
+        return [
+            Forms\Components\Section::make(__("dashboard.inspection_period"))
+                ->schema([
+                    Forms\Components\TextInput::make("inspection_period_days")
+                        ->label(__("dashboard.inspection_period_days"))
+                        ->numeric()
+                        ->hiddenLabel()
+                        ->minValue(1)
+                        ->nullable()
+                        ->suffixIcon("heroicon-m-calendar")
+                        ->suffix(__("dashboard.days")),
+                    Forms\Components\Toggle::make("notify_before_inspection")
+                        ->label(__("dashboard.notify_before_inspection"))
+                        ->default(true),
+                ])
+                ->columns(3),
+        ];
+    }
+
     public static function schema(): array
     {
         return [
@@ -47,6 +68,7 @@ class VehicleFormSchema
                 ]),
 
             self::statusSchema(),
+            ...self::inspectionPeriodSchema(),
         ];
     }
 
@@ -171,25 +193,47 @@ class VehicleFormSchema
         ];
     }
 
-    public static function statusSchema(): Forms\Components\Section
+    public static function statusSchema(): Forms\Components\Group
     {
-        return Forms\Components\Section::make(__("dashboard.Status"))
+        return Forms\Components\Group::make()
             ->schema([
-                Forms\Components\Placeholder::make("created_at")
-                    ->label(__("dashboard.created_at"))
-                    ->content(
-                        fn(?Vehicle $record): string => $record
-                            ? $record->created_at->diffForHumans()
-                            : "-"
-                    ),
+                Forms\Components\Section::make("status")->schema([
+                    Forms\Components\Placeholder::make("created_at")
+                        ->label(__("dashboard.created_at"))
+                        ->content(
+                            fn(?Vehicle $record): string => $record
+                                ? $record->created_at->diffForHumans()
+                                : "-"
+                        ),
 
-                Forms\Components\Placeholder::make("updated_at")
-                    ->label(__("dashboard.updated_at"))
-                    ->content(
-                        fn(?Vehicle $record): string => $record
-                            ? $record->updated_at->diffForHumans()
-                            : "-"
-                    ),
+                    Forms\Components\Placeholder::make("updated_at")
+                        ->label(__("dashboard.updated_at"))
+                        ->content(
+                            fn(?Vehicle $record): string => $record
+                                ? $record->updated_at->diffForHumans()
+                                : "-"
+                        ),
+                ]),
+                Forms\Components\Section::make("Inspection")->schema([
+                    Forms\Components\Placeholder::make("next_inspection_date")
+                        ->label("Latest Inspection")
+                        ->content(function (?Vehicle $record): string {
+                            $inspection = $record
+                                ->inspections()
+                                ->latest()
+                                ->first();
+                            return $inspection->inspection_date->format(
+                                "M j, Y"
+                            ) ?? "-";
+                        }),
+                    Forms\Components\Placeholder::make("next_inspection_date")
+                        ->label(__("dashboard.next_inspection_date"))
+                        ->content(function (?Vehicle $record): string {
+                            return $record->next_inspection_date->format(
+                                "M j, Y"
+                            ) ?? "-";
+                        }),
+                ]),
             ])
             ->hidden(fn(string $operation) => $operation !== "edit")
             ->columnSpan(1);

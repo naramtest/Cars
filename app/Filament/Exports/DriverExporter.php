@@ -3,7 +3,6 @@
 namespace App\Filament\Exports;
 
 use App\Models\Driver;
-use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;
@@ -64,10 +63,5 @@ class DriverExporter extends Exporter
         }
 
         return $body;
-    }
-
-    public function getFormats(): array
-    {
-        return [ExportFormat::Xlsx];
     }
 }

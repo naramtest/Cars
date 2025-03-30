@@ -104,44 +104,4 @@ class Inspection extends MoneyModel
 
         return $this->currencyService->format($this->amount_money);
     }
-
-    /**
-     * Scope to filter by status
-     */
-    public function scopeStatus($query, InspectionStatus $status)
-    {
-        return $query->where("status", $status);
-    }
-
-    /**
-     * Scope to filter by repair status
-     */
-    public function scopeRepairStatus($query, RepairStatus $repairStatus)
-    {
-        return $query->where("repair_status", $repairStatus);
-    }
-
-    /**
-     * Scope to filter by pending status
-     */
-    public function scopePending($query)
-    {
-        return $query->where("status", InspectionStatus::Pending);
-    }
-
-    /**
-     * Scope to filter by completed status
-     */
-    public function scopeCompleted($query)
-    {
-        return $query->where("status", InspectionStatus::Completed);
-    }
-
-    /**
-     * Scope to filter by needs repair status
-     */
-    public function scopeNeedsRepair($query)
-    {
-        return $query->where("repair_status", RepairStatus::NeedsRepair);
-    }
 }

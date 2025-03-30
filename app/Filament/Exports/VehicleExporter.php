@@ -3,7 +3,6 @@
 namespace App\Filament\Exports;
 
 use App\Models\Vehicle;
-use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;
@@ -31,6 +30,12 @@ class VehicleExporter extends Exporter
             ExportColumn::make("daily_rate")->label(__("dashboard.daily_rate")),
             ExportColumn::make("year_of_first_immatriculation")->label(
                 __("dashboard.year_of_first_immatriculation")
+            ),
+            ExportColumn::make("inspection_period_days")->label(
+                __("dashboard.inspection_period_days")
+            ),
+            ExportColumn::make("next_inspection_date")->label(
+                __("dashboard.next_inspection_date")
             ),
             ExportColumn::make("gearbox")
                 ->label(__("dashboard.gearbox"))
@@ -81,10 +86,5 @@ class VehicleExporter extends Exporter
         }
 
         return $body;
-    }
-
-    public function getFormats(): array
-    {
-        return [ExportFormat::Xlsx];
     }
 }
