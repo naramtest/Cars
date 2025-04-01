@@ -104,6 +104,8 @@ abstract class AbstractNotificationHandler
             ];
         }
 
-        return new Component([], $components_body, []);
+        return new Component([], $components_body, [
+            //here we will add the button data
+        ]);
     }
 }

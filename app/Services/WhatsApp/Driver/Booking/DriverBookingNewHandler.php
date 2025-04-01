@@ -6,7 +6,7 @@ use App\Services\WhatsApp\AbstractNotificationHandler;
 
 class DriverBookingNewHandler extends AbstractNotificationHandler
 {
-    public function prepareData(array $modelData) {}
+    public function prepareData(array $modelData): array {}
 
     protected function getGroup(): string
     {
