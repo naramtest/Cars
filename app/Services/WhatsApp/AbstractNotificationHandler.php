@@ -32,13 +32,22 @@ abstract class AbstractNotificationHandler
         return $this->sendSingle($templateId, $messageData, $phone_numbers);
     }
 
-    abstract public function getTemplateId();
+    public function getTemplateId(): ?string
+    {
+        $class = static::class;
+        $group = $this->getGroup();
+        $templates = config("notification_templates.$group");
 
-    abstract public function prepareData(array $modelData);
+        return array_search($class, $templates, true) ?: null;
+    }
+
+    abstract protected function getGroup(): string;
+
+    abstract public function prepareData(array $modelData): array;
 
     protected function sendBatch(
-        $templateId,
-        $messageData,
+        string $templateId,
+        array $messageData,
         array $recipients
     ): array {
         $results = [];
@@ -62,15 +71,15 @@ abstract class AbstractNotificationHandler
      * @throws ResponseException
      */
     protected function sendSingle(
-        $templateId,
-        $messageData,
-        $recipient
+        string $templateId,
+        array $messageData,
+        string $recipient
     ): Response {
         try {
             return $this->whatsAppClient->sendTemplate(
                 $recipient,
                 $templateId,
-                components: $this->formatParametersForWhatsApp($messageData)
+                components: $this->formatBodyParameters($messageData)
             );
         } catch (Exception $e) {
             Log::error("WhatsApp notification failed", [
@@ -83,12 +92,12 @@ abstract class AbstractNotificationHandler
         }
     }
 
-    protected function formatParametersForWhatsApp($parameters): Component
+    protected function formatBodyParameters($parameters): Component
     {
         // Structure will depend on netflie/whatsapp-cloud-api requirements
         $components_body = [];
 
-        foreach ($parameters as $key => $value) {
+        foreach ($parameters as $value) {
             $components_body[] = [
                 "type" => "text",
                 "text" => (string) $value,

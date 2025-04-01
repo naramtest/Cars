@@ -14,7 +14,7 @@ class WhatsAppWebhookController extends Controller
         $webhook = new WebHook();
 
         // Token from Meta App dashboard (you define it yourself)
-        $verifyToken = "";
+        $verifyToken = "20250117154627N0SN";
 
         // Meta (Facebook) sends these parameters to verify webhook
         return response($webhook->verify($request->all(), $verifyToken));
@@ -23,6 +23,7 @@ class WhatsAppWebhookController extends Controller
     // Handle incoming webhook notifications
     public function handleWebhook(Request $request)
     {
+        logger("1");
         $webhook = new WebHook();
 
         // Get raw payload
