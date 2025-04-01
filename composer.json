@@ -10,6 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ext-intl": "*",
         "codeat3/blade-google-material-design-icons": "^1.19",
         "filament/filament": "^3.2",
         "filament/spatie-laravel-translatable-plugin": "^3.3",
@@ -17,9 +18,9 @@
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
         "malzariey/filament-daterangepicker-filter": "^3.2",
+        "netflie/whatsapp-cloud-api": "^2.2",
         "pelmered/filament-money-field": "^1.4",
-        "ysfkaya/filament-phone-input": "^3.1",
-        "ext-intl": "*"
+        "ysfkaya/filament-phone-input": "^3.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
