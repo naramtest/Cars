@@ -20,6 +20,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Outerweb\FilamentTranslatableFields\Filament\Plugins\FilamentTranslatableFieldsPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -49,6 +50,12 @@ class AdminPanelProvider extends PanelProvider
                 in: app_path("Filament/Pages"),
                 for: "App\\Filament\\Pages"
             )
+            ->plugins([
+                FilamentTranslatableFieldsPlugin::make()->supportedLocales([
+                    "en" => "English",
+                    "ar" => "Arabic",
+                ]),
+            ])
             ->pages([Pages\Dashboard::class])
             ->navigationGroups([
                 NavigationGroup::make()->label(

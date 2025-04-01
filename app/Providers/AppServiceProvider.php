@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\Models\ShippingItem;
 use App\Observers\ShippingItemObserver;
+use App\Settings\InfoSettings;
 use Illuminate\Support\ServiceProvider;
+use View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +23,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        View::composer(["components.layout.*"], function (
+            $view,
+            InfoSettings $infoSettings
+        ) {
+            $view->with("info", $infoSettings);
+        });
         ShippingItem::observe(ShippingItemObserver::class);
     }
 }

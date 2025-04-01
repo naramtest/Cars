@@ -242,4 +242,11 @@ return [
     "notify_before_inspection_hint" =>
         "Receive notifications when inspection is due",
     "next_inspection_date" => "Next Inspection",
+    "social_title" => "Social Media",
+    "name_placeholder" => "Website name",
+    "contacts" => "Contacts",
+    "phone" => "Phone",
+    "slogan" => "Slogan",
+    "about" => "About",
+    "label" => "Info",
 ];
