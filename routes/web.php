@@ -14,11 +14,15 @@ Route::get("/whatsapp/contact", function (InfoSettings $infoSettings) {
         "https://wa.me/$infoSettings->support_whatsapp_number"
     );
 });
-Route::get("/", function (WhatsAppNotificationService $whatsAppService) {
+Route::get("/test", function (WhatsAppNotificationService $whatsAppService) {
     $result = $whatsAppService->send(
         DriverBookingNewHandler::class,
         Booking::first(),
         "+971562065970"
     );
     dd($result);
+});
+
+Route::get("/", function () {
+    return view("welcome");
 });
