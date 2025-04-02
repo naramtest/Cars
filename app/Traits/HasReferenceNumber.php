@@ -22,7 +22,7 @@ trait HasReferenceNumber
         return "SHP";
     }
 
-    protected function generateReferenceNumber(
+    public function generateReferenceNumber(
         string $prefix = "SHP",
         string $column = "reference_number"
     ): string {
