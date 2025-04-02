@@ -67,7 +67,7 @@ class ShippingFormSchema
                 Forms\Components\Select::make("status")
                     ->label(__("dashboard.status"))
                     ->options(ShippingStatus::class)
-                    ->default(ShippingStatus::Draft)
+                    ->default(ShippingStatus::Pending)
                     ->required(),
 
                 Forms\Components\TextInput::make("total_weight")

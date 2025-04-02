@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->renameColumn("address", "pickup_address");
 
             // Add new destination_address column
-            $table->text("destination_address");
+            $table->text("destination_address")->nullable();
         });
     }
 

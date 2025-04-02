@@ -91,6 +91,7 @@ class RentFormSchema
                     ->label(__("dashboard.status"))
                     ->options(ReservationStatus::class)
                     ->default(ReservationStatus::Pending)
+                    ->visible(fn($operation) => $operation === "create")
                     ->required(),
             ])->columnSpan(1),
             Forms\Components\Section::make()
@@ -142,11 +143,21 @@ class RentFormSchema
         ];
     }
 
-    public static function statusInfoSection(): Forms\Components\Section
+    public static function statusInfoSection(): Forms\Components\Group
     {
-        return Forms\Components\Section::make(__("dashboard.rent_status_info"))
-            ->schema([
+        return Forms\Components\Group::make([
+            Forms\Components\Section::make(__("dashboard.Status"))->schema([
+                Forms\Components\Select::make("status")
+                    ->hiddenLabel()
+                    ->options(ReservationStatus::class)
+                    ->default(ReservationStatus::Pending)
+                    ->required(),
+            ]),
+            Forms\Components\Section::make(
+                __("dashboard.rent_status_info")
+            )->schema([
                 Forms\Components\Placeholder::make("created_at")
+                    ->inlineLabel()
                     ->label(__("dashboard.created_at"))
                     ->content(
                         fn(?Rent $record): string => $record
@@ -156,6 +167,7 @@ class RentFormSchema
 
                 Forms\Components\Placeholder::make("updated_at")
                     ->label(__("dashboard.updated_at"))
+                    ->inlineLabel()
                     ->content(
                         fn(?Rent $record): string => $record
                             ? $record->updated_at->diffForHumans()
@@ -164,6 +176,7 @@ class RentFormSchema
 
                 Forms\Components\Placeholder::make("duration")
                     ->label(__("dashboard.duration"))
+                    ->inlineLabel()
                     ->content(
                         fn(?Rent $record): string => $record &&
                         $record->rental_end_date
@@ -181,8 +194,10 @@ class RentFormSchema
                             : "-"
                     )
                     ->label(__("dashboard.total_price"))
+                    ->inlineLabel()
                     ->hidden(fn(string $operation) => $operation !== "edit"),
-            ])
+            ]),
+        ])
             ->hidden(fn(string $operation) => $operation !== "edit")
             ->columnSpan(["lg" => 1]);
     }

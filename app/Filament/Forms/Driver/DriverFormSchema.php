@@ -5,6 +5,7 @@ namespace App\Filament\Forms\Driver;
 use App\Enums\Gender;
 use App\Models\Driver;
 use Filament\Forms;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class DriverFormSchema
 {
@@ -60,11 +61,9 @@ class DriverFormSchema
                 ->email()
                 ->required()
                 ->maxLength(255),
-            Forms\Components\TextInput::make("phone_number")
+            PhoneInput::make("phone_number")
                 ->label(__("dashboard.phone_number"))
-                ->required()
-                ->tel()
-                ->maxLength(255),
+                ->required(),
             Forms\Components\Select::make("gender")
                 ->label(__("dashboard.gender"))
                 ->options(Gender::class)

@@ -115,6 +115,7 @@ class BookingFormSchema
                         ->label(__("dashboard.status"))
                         ->options(ReservationStatus::class)
                         ->default(ReservationStatus::Pending)
+                        ->visible(fn($operation) => $operation === "create")
                         ->required(),
                 ])
                 ->columnSpan(1)
@@ -138,7 +139,7 @@ class BookingFormSchema
                 ])
                 ->columnSpan(1)
                 ->heading(__("dashboard.reservation_period")),
-            Forms\Components\Section::make()
+            Forms\Components\Group::make()
                 ->schema([
                     Forms\Components\Textarea::make("pickup_address")
                         ->label(__("dashboard.pickup_address"))
@@ -150,7 +151,8 @@ class BookingFormSchema
                         ->rows(3)
                         ->maxLength(65535),
                 ])
-                ->columnSpan(2),
+                ->columnSpan(2)
+                ->columns(),
         ];
     }
 
@@ -186,15 +188,24 @@ class BookingFormSchema
         ];
     }
 
-    public static function statusInfoSection(): Forms\Components\Section
+    public static function statusInfoSection(): Forms\Components\Group
     {
         //        TODO: add reactive price (all section details )
-        return Forms\Components\Section::make(
-            __("dashboard.booking_status_info")
-        )
-            ->schema([
+
+        return Forms\Components\Group::make([
+            Forms\Components\Section::make(__("dashboard.Status"))->schema([
+                Forms\Components\Select::make("status")
+                    ->hiddenLabel()
+                    ->options(ReservationStatus::class)
+                    ->default(ReservationStatus::Pending)
+                    ->required(),
+            ]),
+            Forms\Components\Section::make(
+                __("dashboard.booking_details")
+            )->schema([
                 Forms\Components\Placeholder::make("created_at")
                     ->label(__("dashboard.created_at"))
+                    ->inlineLabel()
                     ->content(
                         fn(?Booking $record): string => $record
                             ? $record->created_at->diffForHumans()
@@ -203,6 +214,7 @@ class BookingFormSchema
 
                 Forms\Components\Placeholder::make("updated_at")
                     ->label(__("dashboard.updated_at"))
+                    ->inlineLabel()
                     ->content(
                         fn(?Booking $record): string => $record
                             ? $record->updated_at->diffForHumans()
@@ -211,6 +223,7 @@ class BookingFormSchema
 
                 Forms\Components\Placeholder::make("duration")
                     ->label(__("dashboard.duration"))
+                    ->inlineLabel()
                     ->content(
                         fn(?Booking $record): string => $record
                             ? $record->duration_in_days .
@@ -224,9 +237,11 @@ class BookingFormSchema
                     ->content(
                         fn(?Booking $record) => $record->formatted_total_price
                     )
+                    ->inlineLabel()
                     ->label(__("dashboard.total_price"))
                     ->hidden(fn(string $operation) => $operation !== "edit"),
-            ])
+            ]),
+        ])
             ->hidden(fn(string $operation) => $operation !== "edit")
             ->columnSpan(["lg" => 1]);
     }

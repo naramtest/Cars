@@ -17,11 +17,10 @@ abstract class AbstractNotificationHandler
      *
      * @throws Exception
      */
-    public function send(
-        $data,
-        array|string $phone_numbers = null
-    ): Response|array {
+    public function send($data, $phone_numbers = null): Response|array
+    {
         $templateId = $this->getTemplateId();
+        $phone_numbers ??= $this->setPhoneNumbers($data);
 
         // Process recipient (could be an array or single number)
         if (is_array($phone_numbers)) {
@@ -41,6 +40,8 @@ abstract class AbstractNotificationHandler
     }
 
     abstract protected function getGroup(): string;
+
+    abstract protected function setPhoneNumbers($data);
 
     protected function sendBatch(
         string $templateId,

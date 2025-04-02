@@ -38,4 +38,10 @@ class DriverBookingNewHandler extends AbstractNotificationHandler
     {
         return "driver";
     }
+
+    protected function setPhoneNumbers($data)
+    {
+        /** @var  Booking $data */
+        return $data->driver->phone_number;
+    }
 }

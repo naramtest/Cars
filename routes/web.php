@@ -20,7 +20,6 @@ Route::get("/test", function (WhatsAppNotificationService $whatsAppService) {
         Booking::first(),
         "+971562065970"
     );
-    dd($result);
 });
 
 Route::get("/", function () {
