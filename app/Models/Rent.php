@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\Rent\RentStatus;
 use App\Models\Abstract\MoneyModel;
+use App\Traits\HasReferenceNumber;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Money\Money;
@@ -11,6 +12,7 @@ use Money\Money;
 class Rent extends MoneyModel
 {
     use SoftDeletes;
+    use HasReferenceNumber;
 
     protected $fillable = [
         "reference_number",
@@ -34,48 +36,12 @@ class Rent extends MoneyModel
     ];
 
     /**
-     * Boot the model.
-     */
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function (Rent $rent) {
-            if (empty($rent->reference_number)) {
-                $year = now()->format("Y");
-                $month = now()->format("m");
-
-                // Get the next sequential number for this month
-                $latestRent = static::where(
-                    "reference_number",
-                    "like",
-                    "R-$year$month-%"
-                )
-                    ->orderBy("id", "desc")
-                    ->first();
-
-                $sequence = 1;
-                if ($latestRent) {
-                    // Extract the sequence number from the latest rent
-                    $parts = explode("-", $latestRent->reference_number);
-                    $sequence = intval(end($parts)) + 1;
-                }
-
-                $rent->reference_number =
-                    "R-$year$month-" . str_pad($sequence, 4, "0", STR_PAD_LEFT);
-            }
-        });
-    }
-
-    /**
      * Get the vehicle that owns the rent.
      */
     public function vehicle(): BelongsTo
     {
         return $this->belongsTo(Vehicle::class);
     }
-
-    //TODO: extract to a class (and check to see if it should be in hours or days )
 
     /**
      * Calculate the total duration of the rental in days.
@@ -92,6 +58,8 @@ class Rent extends MoneyModel
         return $start->diffInDays($end) +
             ($start->diffInHours($end) % 24 > 0 ? 1 : 0);
     }
+
+    //TODO: extract to a class (and check to see if it should be in hours or days )
 
     /**
      * Calculate the total price of the rental as a Money object.
@@ -163,5 +131,10 @@ class Rent extends MoneyModel
             RentStatus::Pending->value,
             RentStatus::Draft->value,
         ]);
+    }
+
+    protected function getReferenceNumberPrefix(): string
+    {
+        return "RNT";
     }
 }

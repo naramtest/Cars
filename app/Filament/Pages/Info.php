@@ -53,6 +53,10 @@ class Info extends SettingsPage
                                 ->rows(3)
                                 ->maxLength(250)
                                 ->translatable(),
+                            PhoneInput::make("support_whatsapp_number")
+                                ->label(__("dashboard.support_whatsapp_number"))
+                                ->prefixIcon("gmdi-whatsapp-o")
+                                ->columnSpan(1),
                         ])
                         ->columns(),
                     Tab::make("Contact")

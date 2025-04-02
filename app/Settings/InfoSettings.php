@@ -16,6 +16,7 @@ class InfoSettings extends Settings
     public array $phones;
     public array $emails;
     public array $socials;
+    public string $support_whatsapp_number; // Add this line
 
     public static function group(): string
     {

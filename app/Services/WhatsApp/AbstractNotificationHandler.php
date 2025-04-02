@@ -92,11 +92,15 @@ abstract class AbstractNotificationHandler
     protected function getComponent($data): Component
     {
         $header = [];
-        $body = $this->formatBodyParameters($this->prepareBodyData($data));
+        $body = $this->prepareBodyData($data);
         $buttons = $this->prepareButtonData($data);
 
         return new Component($header, $body, $buttons);
     }
+
+    abstract public function prepareBodyData($modelData): array;
+
+    abstract public function prepareButtonData($modelData): array;
 
     protected function formatBodyParameters($parameters): array
     {
@@ -110,8 +114,4 @@ abstract class AbstractNotificationHandler
 
         return $components_body;
     }
-
-    abstract public function prepareBodyData($modelData): array;
-
-    abstract public function prepareButtonData($modelData): array;
 }

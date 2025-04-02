@@ -11,6 +11,7 @@ return [
     "gender" => "Gender",
     "birth_date" => "Date of Birth",
     "address" => "Address",
+    "support_whatsapp_number" => "Support Whatsapp Number",
 
     // License Information
     "license_number" => "License Number",

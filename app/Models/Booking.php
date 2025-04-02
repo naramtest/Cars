@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\Addon\BillingType;
 use App\Enums\Booking\BookingStatus;
 use App\Models\Abstract\MoneyModel;
+use App\Traits\HasReferenceNumber;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,6 +14,7 @@ use Money\Money;
 class Booking extends MoneyModel
 {
     use SoftDeletes;
+    use HasReferenceNumber;
 
     protected $fillable = [
         "client_name",
@@ -148,5 +150,10 @@ class Booking extends MoneyModel
         return $this->belongsToMany(Addon::class, "booking_addon")
             ->withPivot("quantity")
             ->withTimestamps();
+    }
+
+    protected function getReferenceNumberPrefix(): string
+    {
+        return "BOK";
     }
 }
