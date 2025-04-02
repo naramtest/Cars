@@ -15,7 +15,7 @@ class ShippingExporter extends Exporter
     {
         return [
             ExportColumn::make("id")->label("ID"),
-            ExportColumn::make("tracking_number")->label(
+            ExportColumn::make("reference_number")->label(
                 __("dashboard.tracking_number")
             ),
             ExportColumn::make("client_name")->label(

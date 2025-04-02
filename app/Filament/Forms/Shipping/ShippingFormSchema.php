@@ -49,7 +49,7 @@ class ShippingFormSchema
     {
         return [
             Forms\Components\Group::make([
-                Forms\Components\TextInput::make("tracking_number")
+                Forms\Components\TextInput::make("reference_number")
                     ->label(__("dashboard.tracking_number"))
                     ->placeholder("Will be auto-generated if Empty")
                     ->maxLength(255),

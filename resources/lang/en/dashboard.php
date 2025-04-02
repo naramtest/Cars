@@ -208,7 +208,7 @@ return [
     // Shipping related translations
     "Shipping" => "Shipping",
     "Shippings" => "Shippings",
-    "tracking_number" => "Tracking Number",
+    "tracking_number" => "Reference Number",
     "Picked_Up" => "Picked Up",
     "In_Transit" => "In Transit",
     "total_weight" => "Total Weight",

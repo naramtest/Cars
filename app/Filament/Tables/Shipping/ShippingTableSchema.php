@@ -24,7 +24,7 @@ class ShippingTableSchema
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make("tracking_number")
+                Tables\Columns\TextColumn::make("reference_number")
                     ->label(__("dashboard.tracking_number"))
                     ->searchable()
                     ->sortable(),
