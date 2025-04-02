@@ -138,21 +138,6 @@ class ShippingTableSchema
                                 ShippingStatus::Pending
                         ),
 
-                    Action::make("inTransit")
-                        ->label(__("dashboard.mark_as_in_transit"))
-                        ->icon("heroicon-o-paper-airplane")
-                        ->color("primary")
-                        ->action(function (Shipping $record) {
-                            $record->update([
-                                "status" => ShippingStatus::In_Transit->value,
-                            ]);
-                        })
-                        ->requiresConfirmation()
-                        ->visible(
-                            fn(Shipping $record) => $record->status ==
-                                ShippingStatus::Picked_Up
-                        ),
-
                     Action::make("deliver")
                         ->label(__("dashboard.mark_as_delivered"))
                         ->icon("heroicon-o-check-circle")
@@ -165,7 +150,7 @@ class ShippingTableSchema
                         ->requiresConfirmation()
                         ->visible(
                             fn(Shipping $record) => $record->status ==
-                                ShippingStatus::In_Transit
+                                ShippingStatus::Picked_Up
                         ),
 
                     Action::make("confirm")
@@ -174,13 +159,13 @@ class ShippingTableSchema
                         ->color("primary")
                         ->action(function (Shipping $record) {
                             $record->update([
-                                "status" => ShippingStatus::Pending->value,
+                                "status" => ShippingStatus::Confirmed,
                             ]);
                         })
                         ->requiresConfirmation()
                         ->visible(
                             fn(Shipping $record) => $record->status ==
-                                ShippingStatus::Draft
+                                ShippingStatus::Pending
                         ),
 
                     Action::make("cancel")
