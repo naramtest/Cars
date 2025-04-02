@@ -18,18 +18,17 @@ abstract class AbstractNotificationHandler
      * @throws Exception
      */
     public function send(
-        array $data,
+        $data,
         array|string $phone_numbers = null
     ): Response|array {
         $templateId = $this->getTemplateId();
-        $messageData = $this->prepareData($data);
 
         // Process recipient (could be an array or single number)
         if (is_array($phone_numbers)) {
-            return $this->sendBatch($templateId, $messageData, $phone_numbers);
+            return $this->sendBatch($templateId, $data, $phone_numbers);
         }
 
-        return $this->sendSingle($templateId, $messageData, $phone_numbers);
+        return $this->sendSingle($templateId, $data, $phone_numbers);
     }
 
     public function getTemplateId(): ?string
@@ -43,11 +42,9 @@ abstract class AbstractNotificationHandler
 
     abstract protected function getGroup(): string;
 
-    abstract public function prepareData(array $modelData): array;
-
     protected function sendBatch(
         string $templateId,
-        array $messageData,
+        $messageData,
         array $recipients
     ): array {
         $results = [];
@@ -72,14 +69,14 @@ abstract class AbstractNotificationHandler
      */
     protected function sendSingle(
         string $templateId,
-        array $messageData,
+        $messageData,
         string $recipient
     ): Response {
         try {
             return $this->whatsAppClient->sendTemplate(
                 $recipient,
                 $templateId,
-                components: $this->formatBodyParameters($messageData)
+                components: $this->getComponent($messageData)
             );
         } catch (Exception $e) {
             Log::error("WhatsApp notification failed", [
@@ -92,11 +89,18 @@ abstract class AbstractNotificationHandler
         }
     }
 
-    protected function formatBodyParameters($parameters): Component
+    protected function getComponent($data): Component
     {
-        // Structure will depend on netflie/whatsapp-cloud-api requirements
-        $components_body = [];
+        $header = [];
+        $body = $this->formatBodyParameters($this->prepareBodyData($data));
+        $buttons = $this->prepareButtonData($data);
 
+        return new Component($header, $body, $buttons);
+    }
+
+    protected function formatBodyParameters($parameters): array
+    {
+        $components_body = [];
         foreach ($parameters as $value) {
             $components_body[] = [
                 "type" => "text",
@@ -104,8 +108,10 @@ abstract class AbstractNotificationHandler
             ];
         }
 
-        return new Component([], $components_body, [
-            //here we will add the button data
-        ]);
+        return $components_body;
     }
+
+    abstract public function prepareBodyData($modelData): array;
+
+    abstract public function prepareButtonData($modelData): array;
 }

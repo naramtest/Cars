@@ -120,7 +120,6 @@ class BookingFormSchema
                     Forms\Components\Textarea::make("destination_address")
                         ->label(__("dashboard.destination_address"))
                         ->rows(3)
-                        ->required()
                         ->maxLength(65535),
                 ])
                 ->columnSpan(1)

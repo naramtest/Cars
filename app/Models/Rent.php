@@ -49,7 +49,7 @@ class Rent extends MoneyModel
                 $latestRent = static::where(
                     "rent_number",
                     "like",
-                    "R-{$year}{$month}-%"
+                    "R-$year$month-%"
                 )
                     ->orderBy("id", "desc")
                     ->first();
@@ -62,8 +62,7 @@ class Rent extends MoneyModel
                 }
 
                 $rent->rent_number =
-                    "R-{$year}{$month}-" .
-                    str_pad($sequence, 4, "0", STR_PAD_LEFT);
+                    "R-$year$month-" . str_pad($sequence, 4, "0", STR_PAD_LEFT);
             }
         });
     }
