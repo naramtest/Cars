@@ -22,7 +22,8 @@ class Booking extends MoneyModel
         "end_datetime",
         "vehicle_id",
         "driver_id",
-        "address",
+        "pickup_address", // Renamed from address
+        "destination_address", // New address column
         "status",
         "notes",
     ];

@@ -190,6 +190,7 @@ return [
     "rent_details" => "Rent Details",
     "rent_status_info" => "Rent Status Information",
     "pickup_address" => "Pickup Address",
+    "destination_address" => "Destination Address",
     "drop_off_address" => "Drop-off Address",
     "terms_conditions" => "Terms & Conditions",
 

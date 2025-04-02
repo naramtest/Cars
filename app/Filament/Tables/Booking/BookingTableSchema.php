@@ -10,7 +10,6 @@ use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 use Pelmered\FilamentMoneyField\Tables\Columns\MoneyColumn;
 use Ysfkaya\FilamentPhoneInput\Tables\PhoneColumn;
@@ -24,10 +23,6 @@ class BookingTableSchema
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make("id")
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
                 Tables\Columns\TextColumn::make("client_name")
                     ->label(__("dashboard.client_name"))
                     ->searchable()
@@ -66,25 +61,10 @@ class BookingTableSchema
                     __("dashboard.end_datetime"),
                     false
                 ),
-
-                Tables\Columns\TextColumn::make("duration_in_days")
-                    ->label(__("dashboard.duration"))
-                    ->formatStateUsing(
-                        fn(int $state): string => $state .
-                            " " .
-                            __("dashboard.days")
-                    )
-                    ->sortable(
-                        query: function (
-                            Builder $query,
-                            string $direction
-                        ): Builder {
-                            return $query->orderByRaw(
-                                "DATEDIFF(end_datetime, start_datetime) " .
-                                    $direction
-                            );
-                        }
-                    ),
+                Tables\Columns\TextColumn::make("pickup_address")
+                    ->label(__("dashboard.pickup_address"))
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->limit(30),
 
                 MoneyColumn::make("total_price")
                     ->label(__("dashboard.total_price"))

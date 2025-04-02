@@ -112,8 +112,13 @@ class BookingFormSchema
                         ->options(BookingStatus::class)
                         ->default(BookingStatus::Pending)
                         ->required(),
-                    Forms\Components\Textarea::make("address")
-                        ->label(__("dashboard.address"))
+                    Forms\Components\Textarea::make("pickup_address")
+                        ->label(__("dashboard.pickup_address"))
+                        ->rows(3)
+                        ->required()
+                        ->maxLength(65535),
+                    Forms\Components\Textarea::make("destination_address")
+                        ->label(__("dashboard.destination_address"))
                         ->rows(3)
                         ->required()
                         ->maxLength(65535),

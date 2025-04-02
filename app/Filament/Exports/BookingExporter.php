@@ -46,7 +46,12 @@ class BookingExporter extends Exporter
             ExportColumn::make("driver.full_name")->label(
                 __("dashboard.Driver")
             ),
-            ExportColumn::make("address")->label(__("dashboard.address")),
+            ExportColumn::make("pickup_address")->label(
+                __("dashboard.pickup_address")
+            ),
+            ExportColumn::make("destination_address")->label(
+                __("dashboard.destination_address")
+            ),
             ExportColumn::make("status")
                 ->label(__("dashboard.status"))
                 ->formatStateUsing(
