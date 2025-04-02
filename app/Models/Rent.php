@@ -13,7 +13,7 @@ class Rent extends MoneyModel
     use SoftDeletes;
 
     protected $fillable = [
-        "rent_number",
+        "reference_number",
         "client_name",
         "client_email",
         "client_phone",
@@ -41,13 +41,13 @@ class Rent extends MoneyModel
         parent::boot();
 
         static::creating(function (Rent $rent) {
-            if (empty($rent->rent_number)) {
+            if (empty($rent->reference_number)) {
                 $year = now()->format("Y");
                 $month = now()->format("m");
 
                 // Get the next sequential number for this month
                 $latestRent = static::where(
-                    "rent_number",
+                    "reference_number",
                     "like",
                     "R-$year$month-%"
                 )
@@ -57,11 +57,11 @@ class Rent extends MoneyModel
                 $sequence = 1;
                 if ($latestRent) {
                     // Extract the sequence number from the latest rent
-                    $parts = explode("-", $latestRent->rent_number);
+                    $parts = explode("-", $latestRent->reference_number);
                     $sequence = intval(end($parts)) + 1;
                 }
 
-                $rent->rent_number =
+                $rent->reference_number =
                     "R-$year$month-" . str_pad($sequence, 4, "0", STR_PAD_LEFT);
             }
         });

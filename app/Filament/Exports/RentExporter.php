@@ -15,8 +15,8 @@ class RentExporter extends Exporter
     {
         return [
             ExportColumn::make("id")->label("ID"),
-            ExportColumn::make("rent_number")->label(
-                __("dashboard.rent_number")
+            ExportColumn::make("reference_number")->label(
+                __("dashboard.reference_number")
             ),
             ExportColumn::make("client_name")->label(
                 __("dashboard.client_name")

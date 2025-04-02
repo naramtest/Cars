@@ -74,8 +74,8 @@ class RentFormSchema
     {
         return [
             Forms\Components\Group::make([
-                Forms\Components\TextInput::make("rent_number")
-                    ->label(__("dashboard.rent_number"))
+                Forms\Components\TextInput::make("reference_number")
+                    ->label(__("dashboard.reference_number"))
                     ->disabled()
                     ->placeholder("Will be auto-generated")
                     ->maxLength(255),

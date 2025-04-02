@@ -25,8 +25,8 @@ class RentTableSchema
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make("rent_number")
-                    ->label(__("dashboard.rent_number"))
+                Tables\Columns\TextColumn::make("reference_number")
+                    ->label(__("dashboard.reference_number"))
                     ->searchable()
                     ->sortable(),
 

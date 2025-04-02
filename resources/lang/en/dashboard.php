@@ -186,7 +186,7 @@ return [
     // Rent related translations
     "Rent" => "Rent",
     "Rents" => "Rents",
-    "rent_number" => "Rent Number",
+    "reference_number" => "Reference Number",
     "rent_details" => "Rent Details",
     "rent_status_info" => "Rent Status Information",
     "pickup_address" => "Pickup Address",
