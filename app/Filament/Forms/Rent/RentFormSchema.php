@@ -154,7 +154,7 @@ class RentFormSchema
                     ->required(),
             ]),
             Forms\Components\Section::make(
-                __("dashboard.rent_status_info")
+                __("dashboard.rent_details")
             )->schema([
                 Forms\Components\Placeholder::make("created_at")
                     ->inlineLabel()

@@ -190,6 +190,7 @@ class ShippingFormSchema
         )
             ->schema([
                 Forms\Components\Placeholder::make("created_at")
+                    ->inlineLabel()
                     ->label(__("dashboard.created_at"))
                     ->content(
                         fn(?Shipping $record): string => $record
@@ -199,6 +200,7 @@ class ShippingFormSchema
 
                 Forms\Components\Placeholder::make("updated_at")
                     ->label(__("dashboard.updated_at"))
+                    ->inlineLabel()
                     ->content(
                         fn(?Shipping $record): string => $record
                             ? $record->updated_at->diffForHumans()
@@ -207,6 +209,7 @@ class ShippingFormSchema
 
                 Forms\Components\Placeholder::make("items_count")
                     ->label(__("dashboard.items"))
+                    ->inlineLabel()
                     ->content(
                         fn(?Shipping $record): string => $record
                             ? $record->items()->count() .
@@ -217,6 +220,7 @@ class ShippingFormSchema
                     ->hidden(fn(string $operation) => $operation !== "edit"),
 
                 Forms\Components\Placeholder::make("total_weight")
+                    ->inlineLabel()
                     ->content(
                         fn(?Shipping $record) => $record
                             ? $record->total_weight . " kg"
