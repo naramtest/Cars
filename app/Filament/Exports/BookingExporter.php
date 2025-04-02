@@ -15,6 +15,9 @@ class BookingExporter extends Exporter
     {
         return [
             ExportColumn::make("id")->label("ID"),
+            ExportColumn::make("reference_number")->label(
+                __("dashboard.reference_number")
+            ),
             ExportColumn::make("client_name")->label(
                 __("dashboard.client_name")
             ),

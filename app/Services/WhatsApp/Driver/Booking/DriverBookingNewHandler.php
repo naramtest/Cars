@@ -13,10 +13,6 @@ class DriverBookingNewHandler extends AbstractNotificationHandler
         $driver = $modelData->driver;
         $vehicle = $modelData->vehicle;
 
-        if (!$modelData->reference_number) {
-            $modelData->generateReferenceNumber("BOT");
-            $modelData->save();
-        }
         return $this->formatBodyParameters([
             $driver->full_name ?? " ", // 1 - Driver's name
             $modelData->reference_number ?: "Undefined", // 2 - Booking ref

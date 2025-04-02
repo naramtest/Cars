@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\Rent\RentStatus;
+use App\Enums\ReservationStatus;
 use App\Models\Abstract\MoneyModel;
 use App\Traits\HasReferenceNumber;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -32,7 +32,7 @@ class Rent extends MoneyModel
     protected $casts = [
         "rental_start_date" => "datetime",
         "rental_end_date" => "datetime",
-        "status" => RentStatus::class,
+        "status" => ReservationStatus::class,
     ];
 
     /**
@@ -106,31 +106,9 @@ class Rent extends MoneyModel
     /**
      * Scope a query to only include rents of a given status.
      */
-    public function scopeStatus($query, RentStatus $status)
+    public function scopeStatus($query, ReservationStatus $status)
     {
         return $query->where("status", $status);
-    }
-
-    /**
-     * Scope a query to only include active rents.
-     */
-    public function scopeActive($query)
-    {
-        return $query->whereIn("status", [
-            RentStatus::Active->value,
-            RentStatus::Confirmed->value,
-        ]);
-    }
-
-    /**
-     * Scope a query to only include pending rents.
-     */
-    public function scopePending($query)
-    {
-        return $query->whereIn("status", [
-            RentStatus::Pending->value,
-            RentStatus::Draft->value,
-        ]);
     }
 
     protected function getReferenceNumberPrefix(): string

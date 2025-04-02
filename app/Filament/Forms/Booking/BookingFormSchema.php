@@ -2,7 +2,7 @@
 
 namespace App\Filament\Forms\Booking;
 
-use App\Enums\Booking\BookingStatus;
+use App\Enums\ReservationStatus;
 use App\Models\Booking;
 use App\Models\Driver;
 use App\Models\Vehicle;
@@ -16,7 +16,6 @@ class BookingFormSchema
     {
         return [
             Forms\Components\Tabs::make()
-                ->activeTab(2)
                 ->columnSpan(
                     fn(string $operation) => $operation == "edit" ? 2 : 3
                 )
@@ -77,6 +76,11 @@ class BookingFormSchema
         return [
             Forms\Components\Group::make()
                 ->schema([
+                    Forms\Components\TextInput::make("reference_number")
+                        ->label(__("dashboard.reference_number"))
+                        ->disabled()
+                        ->placeholder("Will be auto-generated")
+                        ->maxLength(255),
                     Forms\Components\Select::make("vehicle_id")
                         ->label(__("dashboard.Vehicle"))
                         ->relationship("vehicle", "name", function ($query) {
@@ -109,18 +113,9 @@ class BookingFormSchema
 
                     Forms\Components\Select::make("status")
                         ->label(__("dashboard.status"))
-                        ->options(BookingStatus::class)
-                        ->default(BookingStatus::Pending)
+                        ->options(ReservationStatus::class)
+                        ->default(ReservationStatus::Pending)
                         ->required(),
-                    Forms\Components\Textarea::make("pickup_address")
-                        ->label(__("dashboard.pickup_address"))
-                        ->rows(3)
-                        ->required()
-                        ->maxLength(65535),
-                    Forms\Components\Textarea::make("destination_address")
-                        ->label(__("dashboard.destination_address"))
-                        ->rows(3)
-                        ->maxLength(65535),
                 ])
                 ->columnSpan(1)
                 ->columns(1),
@@ -143,6 +138,19 @@ class BookingFormSchema
                 ])
                 ->columnSpan(1)
                 ->heading(__("dashboard.reservation_period")),
+            Forms\Components\Section::make()
+                ->schema([
+                    Forms\Components\Textarea::make("pickup_address")
+                        ->label(__("dashboard.pickup_address"))
+                        ->rows(3)
+                        ->required()
+                        ->maxLength(65535),
+                    Forms\Components\Textarea::make("destination_address")
+                        ->label(__("dashboard.destination_address"))
+                        ->rows(3)
+                        ->maxLength(65535),
+                ])
+                ->columnSpan(2),
         ];
     }
 

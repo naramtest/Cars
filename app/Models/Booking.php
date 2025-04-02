@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Addon\BillingType;
-use App\Enums\Booking\BookingStatus;
+use App\Enums\ReservationStatus;
 use App\Models\Abstract\MoneyModel;
 use App\Traits\HasReferenceNumber;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,12 +28,13 @@ class Booking extends MoneyModel
         "destination_address", // New address column
         "status",
         "notes",
+        "reference_number",
     ];
 
     protected $casts = [
         "start_datetime" => "datetime",
         "end_datetime" => "datetime",
-        "status" => BookingStatus::class,
+        "status" => ReservationStatus::class,
     ];
 
     /**
@@ -126,20 +127,9 @@ class Booking extends MoneyModel
     /**
      * Scope a query to only include bookings of a given status.
      */
-    public function scopeStatus($query, BookingStatus $status)
+    public function scopeStatus($query, ReservationStatus $status)
     {
         return $query->where("status", $status);
-    }
-
-    /**
-     * Scope a query to only include active bookings.
-     */
-    public function scopeActive($query)
-    {
-        return $query->whereIn("status", [
-            BookingStatus::Pending->value,
-            BookingStatus::Active->value,
-        ]);
     }
 
     /**

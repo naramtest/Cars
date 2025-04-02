@@ -2,13 +2,12 @@
 
 namespace App\Filament\Tables\Rent;
 
-use App\Enums\Rent\RentStatus;
+use App\Enums\ReservationStatus;
+use App\Filament\Actions\Reservation\ReservationActions;
 use App\Filament\Component\DateColumn;
 use App\Filament\Exports\RentExporter;
-use App\Models\Rent;
 use Exception;
 use Filament\Tables;
-use Filament\Tables\Actions\Action;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -99,7 +98,7 @@ class RentTableSchema
             ->filters([
                 SelectFilter::make("status")
                     ->label(__("dashboard.status"))
-                    ->options(RentStatus::class)
+                    ->options(ReservationStatus::class)
                     ->multiple(),
                 DateRangeFilter::make("rental_start_date")->label(
                     __("dashboard.start_datetime")
@@ -117,70 +116,7 @@ class RentTableSchema
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\RestoreAction::make(),
                 Tables\Actions\ForceDeleteAction::make(),
-                Tables\Actions\ActionGroup::make([
-                    Action::make("complete")
-                        ->label(__("dashboard.mark_as_completed"))
-                        ->icon("heroicon-o-check-circle")
-                        ->color("success")
-                        ->action(function (Rent $record) {
-                            $record->update([
-                                "status" => RentStatus::Completed->value,
-                            ]);
-                        })
-                        ->requiresConfirmation()
-                        ->visible(
-                            fn(Rent $record) => $record->status ==
-                                RentStatus::Active
-                        ),
-
-                    Action::make("activate")
-                        ->label(__("dashboard.mark_as_active"))
-                        ->icon("heroicon-o-play")
-                        ->color("warning")
-                        ->action(function (Rent $record) {
-                            $record->update([
-                                "status" => RentStatus::Active->value,
-                            ]);
-                        })
-                        ->requiresConfirmation()
-                        ->visible(
-                            fn(Rent $record) => $record->status ==
-                                RentStatus::Confirmed ||
-                                $record->status == RentStatus::Pending
-                        ),
-
-                    Action::make("confirm")
-                        ->label(__("dashboard.confirm_rent"))
-                        ->icon("heroicon-o-check")
-                        ->color("primary")
-                        ->action(function (Rent $record) {
-                            $record->update([
-                                "status" => RentStatus::Confirmed->value,
-                            ]);
-                        })
-                        ->requiresConfirmation()
-                        ->visible(
-                            fn(Rent $record) => $record->status ==
-                                RentStatus::Draft ||
-                                $record->status == RentStatus::Pending
-                        ),
-
-                    Action::make("cancel")
-                        ->label(__("dashboard.cancel_rent"))
-                        ->icon("heroicon-o-x-circle")
-                        ->color("danger")
-                        ->action(function (Rent $record) {
-                            $record->update([
-                                "status" => RentStatus::Cancelled->value,
-                            ]);
-                        })
-                        ->requiresConfirmation()
-                        ->visible(
-                            fn(Rent $record) => $record->status !=
-                                RentStatus::Completed &&
-                                $record->status != RentStatus::Cancelled
-                        ),
-                ]),
+                ReservationActions::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

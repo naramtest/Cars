@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ReservationStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -24,7 +25,9 @@ return new class extends Migration {
                 ->constrained()
                 ->nullOnDelete();
             $table->text("address");
-            $table->string("status")->default("pending");
+            $table
+                ->string("status")
+                ->default(ReservationStatus::Pending->value);
             $table->text("notes")->nullable();
             $table->softDeletes();
             $table->timestamps();

@@ -2,7 +2,7 @@
 
 namespace App\Filament\Forms\Rent;
 
-use App\Enums\Rent\RentStatus;
+use App\Enums\ReservationStatus;
 use App\Models\Rent;
 use Filament\Forms;
 use Filament\Forms\Get;
@@ -89,8 +89,8 @@ class RentFormSchema
 
                 Forms\Components\Select::make("status")
                     ->label(__("dashboard.status"))
-                    ->options(RentStatus::class)
-                    ->default(RentStatus::Draft)
+                    ->options(ReservationStatus::class)
+                    ->default(ReservationStatus::Pending)
                     ->required(),
             ])->columnSpan(1),
             Forms\Components\Section::make()

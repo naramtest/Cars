@@ -2,12 +2,12 @@
 
 namespace App\Filament\Tables\Booking;
 
-use App\Enums\Booking\BookingStatus;
+use App\Enums\ReservationStatus;
+use App\Filament\Actions\Reservation\ReservationActions;
 use App\Filament\Component\DateColumn;
 use App\Filament\Exports\BookingExporter;
-use App\Models\Booking;
+use Exception;
 use Filament\Tables;
-use Filament\Tables\Actions\Action;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
@@ -17,12 +17,16 @@ use Ysfkaya\FilamentPhoneInput\Tables\PhoneColumn;
 class BookingTableSchema
 {
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public static function schema(Table $table): Table
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make("reference_number")
+                    ->label(__("dashboard.reference_number"))
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make("client_name")
                     ->label(__("dashboard.client_name"))
                     ->searchable()
@@ -73,6 +77,7 @@ class BookingTableSchema
 
                 Tables\Columns\TextColumn::make("status")
                     ->label(__("dashboard.status"))
+                    ->badge()
                     ->sortable(),
 
                 DateColumn::make("created_at", __("dashboard.created_at")),
@@ -81,7 +86,7 @@ class BookingTableSchema
             ->filters([
                 SelectFilter::make("status")
                     ->label(__("dashboard.status"))
-                    ->options(fn(): string => BookingStatus::class)
+                    ->options(fn(): string => ReservationStatus::class)
                     ->multiple(),
                 DateRangeFilter::make("start_datetime")->label(
                     __("dashboard.start_datetime")
@@ -93,54 +98,7 @@ class BookingTableSchema
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-                Tables\Actions\ActionGroup::make([
-                    Action::make("complete")
-                        ->label(__("dashboard.mark_as_completed"))
-                        ->icon("heroicon-o-check-circle")
-                        ->color("success")
-                        ->action(function (Booking $record) {
-                            $record->update([
-                                "status" => BookingStatus::Completed->value,
-                            ]);
-                        })
-                        ->requiresConfirmation()
-                        ->visible(
-                            fn(Booking $record) => $record->status ==
-                                BookingStatus::Active
-                        ),
-
-                    Action::make("start")
-                        ->label(__("dashboard.mark_as_ongoing"))
-                        ->icon("heroicon-o-play")
-                        ->color("warning")
-                        ->action(function (Booking $record) {
-                            $record->update([
-                                "status" => BookingStatus::Active->value,
-                            ]);
-                        })
-                        ->requiresConfirmation()
-                        ->visible(
-                            fn(Booking $record) => $record->status ==
-                                BookingStatus::Pending
-                        ),
-
-                    Action::make("cancel")
-                        ->label(__("dashboard.cancel_booking"))
-                        ->icon("heroicon-o-x-circle")
-                        ->color("danger")
-                        ->action(function (Booking $record) {
-                            $record->update([
-                                "status" => BookingStatus::Cancelled->value,
-                            ]);
-                        })
-                        ->requiresConfirmation()
-                        ->visible(
-                            fn(Booking $record) => in_array($record->status, [
-                                BookingStatus::Pending,
-                                BookingStatus::Active,
-                            ])
-                        ),
-                ]),
+                ReservationActions::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

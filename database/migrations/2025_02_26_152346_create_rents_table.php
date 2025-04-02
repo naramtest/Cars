@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\Rent\RentStatus;
+use App\Enums\ReservationStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -21,7 +21,9 @@ return new class extends Migration {
             $table->dateTime("rental_end_date")->nullable();
             $table->text("pickup_address");
             $table->text("drop_off_address");
-            $table->string("status")->default(RentStatus::Draft->value);
+            $table
+                ->string("status")
+                ->default(ReservationStatus::Pending->value);
             $table->text("terms_conditions")->nullable();
             $table->text("description")->nullable();
             $table->foreignId("vehicle_id")->constrained()->restrictOnDelete();

@@ -2,7 +2,7 @@
 
 namespace App\Filament\Widgets;
 
-use App\Enums\Booking\BookingStatus;
+use App\Enums\ReservationStatus;
 use App\Models\Booking;
 use App\Models\Vehicle;
 use Carbon\Carbon;
@@ -50,7 +50,7 @@ class BookingChartsWidget extends ChartWidget
 
         // Get status distribution
         $statusData = [];
-        foreach (BookingStatus::cases() as $status) {
+        foreach (ReservationStatus::cases() as $status) {
             $count = Booking::where("status", $status)->count();
             $statusData[$status->getLabel()] = $count;
         }
