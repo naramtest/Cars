@@ -6,5 +6,5 @@ interface WhatsAppNotificationInterface
 {
     public function phoneNumbers($data);
 
-    public function isEnabled(string $notificationType): bool;
+    public function isEnabled(): bool;
 }

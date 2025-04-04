@@ -22,13 +22,12 @@ class WhatsAppNotificationService
      * @throws Exception
      */
     public function send(
-        string $notificationClass,
+        WhatsAppTemplate $whatsAppTemplate,
         $data,
-        $recipients = null,
-        WhatsAppTemplate $whatsAppTemplate = null
+        $recipients = null
     ): array {
         // Check if this notification type is enabled
-        if (!$whatsAppTemplate->isEnabled($notificationClass)) {
+        if (!$whatsAppTemplate->isEnabled()) {
             throw new Exception("This Notification Template is not enabled.");
         }
         $recipients ??= $whatsAppTemplate->phoneNumbers($data);
@@ -61,6 +60,7 @@ class WhatsAppNotificationService
                     components: $component
                 );
             }
+            return $responses;
         }
         $responses[] = $this->whatsAppClient->sendTemplate(
             $recipients,

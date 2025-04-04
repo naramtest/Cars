@@ -106,7 +106,7 @@ class DBReminderHandler extends WhatsAppTemplate
         return $data->driver->phone_number;
     }
 
-    public function isEnabled(string $notificationType): bool
+    public function isEnabled(): bool
     {
         // TODO: Implement isEnabled() method.
         return true;

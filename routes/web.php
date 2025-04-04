@@ -24,11 +24,8 @@ Route::get("/webhook", [WhatsAppWebhookController::class, "verify"]);
 Route::post("/webhook", [WhatsAppWebhookController::class, "handleWebhook"]);
 
 Route::get("/test", function (WhatsAppNotificationService $whatsAppService) {
-    $result = $whatsAppService->send(
-        DBNewHandler::class,
-        Booking::first(),
-        "+971562065970"
-    );
+    $result = $whatsAppService->send(new DBNewHandler(), Booking::first());
+    dd($result);
 });
 
 Route::get("/", function () {});
