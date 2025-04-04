@@ -5,7 +5,7 @@ namespace App\Services\WhatsApp\Driver\Booking;
 use App\Models\Booking;
 use App\Services\WhatsApp\AbstractNotificationHandler;
 
-class DriverBookingNewHandler extends AbstractNotificationHandler
+class DBNewHandler extends AbstractNotificationHandler
 {
     /** @var Booking $modelData */
     public function prepareBodyData($modelData): array

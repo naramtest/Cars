@@ -4,7 +4,7 @@ namespace App\Observers;
 
 use App\Enums\ReservationStatus;
 use App\Models\Booking;
-use App\Services\WhatsApp\Driver\Booking\DriverBookingNewHandler;
+use App\Services\WhatsApp\Driver\Booking\DBNewHandler;
 use App\Services\WhatsApp\WhatsAppNotificationService;
 
 class BookingObserver
@@ -17,7 +17,7 @@ class BookingObserver
     {
         if ($booking->status === ReservationStatus::Confirmed) {
             $result = $this->notificationService->send(
-                DriverBookingNewHandler::class,
+                DBNewHandler::class,
                 $booking
             );
             dd($result);
@@ -36,7 +36,7 @@ class BookingObserver
             $booking->status === ReservationStatus::Confirmed
         ) {
             $result = $this->notificationService->send(
-                DriverBookingNewHandler::class,
+                DBNewHandler::class,
                 $booking
             );
             dd($result);

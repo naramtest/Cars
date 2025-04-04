@@ -39,5 +39,6 @@ return [
         "phone_id" => env("WHATSAPP_PHONE_ID"),
         "waba_id" => env("WHATSAPP_WABA_ID"),
         "api_version" => env("WHATSAPP_API_VERSION"),
+        "production_app_base_url" => env("PRODUCTION_APP_BASE_URL"),
     ],
 ];
