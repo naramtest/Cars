@@ -3,7 +3,6 @@
 use App\Http\Controllers\WhatsAppWebhookController;
 use App\Models\Booking;
 use App\Services\WhatsApp\Driver\Booking\DBNewHandler;
-use App\Services\WhatsApp\Templates\WhatsAppTemplateService;
 use App\Services\WhatsApp\WhatsAppNotificationService;
 use App\Settings\InfoSettings;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +31,4 @@ Route::get("/test", function (WhatsAppNotificationService $whatsAppService) {
     );
 });
 
-Route::get("/", function () {
-    WhatsAppTemplateService::make();
-});
+Route::get("/", function () {});
