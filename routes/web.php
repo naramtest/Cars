@@ -23,5 +23,13 @@ Route::get("/test", function (WhatsAppNotificationService $whatsAppService) {
 });
 
 Route::get("/", function () {
-    return view("welcome");
+    $waba_id = config("services.whatsapp.waba_id");
+    $api_version = config("services.whatsapp.api_version");
+    $request = Http::withHeaders([
+        "Authorization" => "Bearer " . config("services.whatsapp.token"),
+        "Content-Type" => "application/json",
+    ])->get(
+        "https://graph.facebook.com/{$api_version}/{$waba_id}/message_templates"
+    );
+    dd($request->json());
 });
