@@ -3,9 +3,9 @@
 namespace App\Services\WhatsApp\Driver\Booking;
 
 use App\Models\Booking;
-use App\Services\WhatsApp\AbstractNotificationHandler;
+use App\Services\WhatsApp\Abstract\WhatsAppTemplate;
 
-class DBNewHandler extends AbstractNotificationHandler
+class DBNewHandler extends WhatsAppTemplate
 {
     /** @var Booking $modelData */
     public function prepareBodyData($modelData): array
@@ -34,14 +34,25 @@ class DBNewHandler extends AbstractNotificationHandler
         return [];
     }
 
-    protected function getGroup(): string
+    public function getGroup(): string
     {
         return "driver";
     }
 
-    protected function setPhoneNumbers($data)
+    public function phoneNumbers($data)
     {
         /** @var  Booking $data */
         return $data->driver->phone_number;
+    }
+
+    public function isEnabled(string $notificationType): bool
+    {
+        // TODO: Implement isEnabled() method.
+        return true;
+    }
+
+    public function facebookTemplateData(): array
+    {
+        // TODO: Implement getTemplate() method.
     }
 }

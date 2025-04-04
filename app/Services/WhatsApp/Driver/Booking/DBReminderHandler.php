@@ -3,11 +3,9 @@
 namespace App\Services\WhatsApp\Driver\Booking;
 
 use App\Models\Booking;
-use App\Services\WhatsApp\AbstractNotificationHandler;
-use App\Services\WhatsApp\Templates\TemplateInterface;
+use App\Services\WhatsApp\Abstract\WhatsAppTemplate;
 
-class DBReminderHandler extends AbstractNotificationHandler implements
-    TemplateInterface
+class DBReminderHandler extends WhatsAppTemplate
 {
     /** @var Booking $modelData */
     public function prepareBodyData($modelData): array
@@ -52,10 +50,10 @@ class DBReminderHandler extends AbstractNotificationHandler implements
         ];
     }
 
-    public function getTemplate(): array
+    public function facebookTemplateData(): array
     {
         return [
-            "name" => "driver_booking_reminder",
+            "name" => $this->getTemplateId(),
             "language" => "en_US",
             "category" => "UTILITY",
             "components" => [
@@ -97,14 +95,20 @@ class DBReminderHandler extends AbstractNotificationHandler implements
         ];
     }
 
-    protected function getGroup(): string
+    public function getGroup(): string
     {
         return "driver";
     }
 
-    protected function setPhoneNumbers($data)
+    public function phoneNumbers($data)
     {
         /** @var  Booking $data */
         return $data->driver->phone_number;
+    }
+
+    public function isEnabled(string $notificationType): bool
+    {
+        // TODO: Implement isEnabled() method.
+        return true;
     }
 }

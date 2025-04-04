@@ -2,50 +2,71 @@
 
 namespace App\Services\WhatsApp;
 
-use Log;
+use App\Services\WhatsApp\Abstract\WhatsAppTemplate;
+use Exception;
+use Netflie\WhatsAppCloudApi\Message\Template\Component;
+use Netflie\WhatsAppCloudApi\Response\ResponseException;
 use Netflie\WhatsAppCloudApi\WhatsAppCloudApi;
 
 class WhatsAppNotificationService
 {
-    protected $whatsAppClient;
+    protected WhatsAppCloudApi $whatsAppClient;
 
     public function __construct(WhatsAppCloudApi $whatsAppClient)
     {
         $this->whatsAppClient = $whatsAppClient;
     }
 
-    public function send(string $notificationClass, $data, $recipient = null)
-    {
+    /**
+     * @throws ResponseException
+     * @throws Exception
+     */
+    public function send(
+        string $notificationClass,
+        $data,
+        $recipients = null,
+        WhatsAppTemplate $whatsAppTemplate = null
+    ): array {
         // Check if this notification type is enabled
-        if (!$this->isEnabled($notificationClass)) {
-            Log::info("Notification skipped (disabled): $notificationClass");
-            return false;
+        if (!$whatsAppTemplate->isEnabled($notificationClass)) {
+            throw new Exception("This Notification Template is not enabled.");
         }
+        $recipients ??= $whatsAppTemplate->phoneNumbers($data);
 
-        $handler = $this->resolveHandler($notificationClass);
-
-        if (!$handler) {
-            Log::warning(
-                "No handler found for notification type: $notificationClass"
-            );
-            return false;
-        }
-
-        return $handler->send($data, $recipient);
+        return $this->sendTemplateMessage(
+            $recipients,
+            $whatsAppTemplate->getTemplateId(),
+            $whatsAppTemplate->getComponent($data)
+        );
     }
 
-    protected function isEnabled(string $notificationType)
-    {
-        //TODO: add setting page to control notifications
-        return true;
-    }
-
-    protected function resolveHandler(string $handlerClass)
-    {
-        if (!$handlerClass || !class_exists($handlerClass)) {
-            return null;
+    /**
+     * @param array|string $recipients
+     * @param string|null $templateId
+     * @param Component $component
+     * @return array
+     * @throws ResponseException
+     */
+    public function sendTemplateMessage(
+        array|string $recipients,
+        ?string $templateId,
+        Component $component
+    ): array {
+        $responses = [];
+        if (is_array($recipients)) {
+            foreach ($recipients as $recipient) {
+                $recipient[] = $this->whatsAppClient->sendTemplate(
+                    $recipient,
+                    $templateId,
+                    components: $component
+                );
+            }
         }
-
-        return app($handlerClass);
+        $responses[] = $this->whatsAppClient->sendTemplate(
+            $recipients,
+            $templateId,
+            components: $component
+        );
+        return $responses;
     }
 }
