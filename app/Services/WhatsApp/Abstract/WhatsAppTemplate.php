@@ -8,7 +8,7 @@ abstract class WhatsAppTemplate implements WhatsAppNotificationInterface
 {
     abstract public function facebookTemplateData(): array;
 
-    public function getTemplateId(): ?string
+    public function getTemplateName(): ?string
     {
         $class = static::class;
         $group = $this->getGroup();

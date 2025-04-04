@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum WhatsAppTemplateStatus: string
+enum TemplateStatus: string
 {
     case APPROVED = "APPROVED";
     case IN_APPEAL = "IN_APPEAL";

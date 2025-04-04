@@ -4,6 +4,7 @@ use App\Http\Controllers\WhatsAppWebhookController;
 use App\Models\Booking;
 use App\Services\WhatsApp\Driver\Booking\DBNewHandler;
 use App\Services\WhatsApp\WhatsAppNotificationService;
+use App\Services\WhatsApp\WhatsAppTemplateService;
 use App\Settings\InfoSettings;
 use Illuminate\Support\Facades\Route;
 
@@ -28,4 +29,8 @@ Route::get("/test", function (WhatsAppNotificationService $whatsAppService) {
     dd($result);
 });
 
-Route::get("/", function () {});
+Route::get("/", function () {
+    app(WhatsAppTemplateService::class)->syncByNameFromRemote(
+        "driver_booking_reminder1"
+    );
+});

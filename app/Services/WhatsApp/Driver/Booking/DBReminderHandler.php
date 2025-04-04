@@ -53,7 +53,7 @@ class DBReminderHandler extends WhatsAppTemplate
     public function facebookTemplateData(): array
     {
         return [
-            "name" => $this->getTemplateId(),
+            "name" => $this->getTemplateName(),
             "language" => "en_US",
             "category" => "UTILITY",
             "components" => [

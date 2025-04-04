@@ -34,7 +34,7 @@ class WhatsAppNotificationService
 
         return $this->sendTemplateMessage(
             $recipients,
-            $whatsAppTemplate->getTemplateId(),
+            $whatsAppTemplate->getTemplateName(),
             $whatsAppTemplate->getComponent($data)
         );
     }
