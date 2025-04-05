@@ -3,9 +3,9 @@
 namespace App\Services\WhatsApp\Driver\Booking;
 
 use App\Models\Booking;
-use App\Services\WhatsApp\Abstract\WhatsAppTemplate;
+use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
 
-class DBReminderHandler extends WhatsAppTemplate
+class DBReminderHandler extends WhatsAppAbstractHandler
 {
     /** @var Booking $modelData */
     public function prepareBodyData($modelData): array

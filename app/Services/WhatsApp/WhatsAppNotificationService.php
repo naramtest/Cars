@@ -2,7 +2,7 @@
 
 namespace App\Services\WhatsApp;
 
-use App\Services\WhatsApp\Abstract\WhatsAppTemplate;
+use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
 use Exception;
 use Netflie\WhatsAppCloudApi\Message\Template\Component;
 use Netflie\WhatsAppCloudApi\Response\ResponseException;
@@ -11,7 +11,7 @@ use Netflie\WhatsAppCloudApi\WhatsAppCloudApi;
 class WhatsAppNotificationService
 {
     protected WhatsAppCloudApi $whatsAppClient;
-    protected WhatsAppTemplate $template;
+    protected WhatsAppAbstractHandler $template;
 
     public function __construct(WhatsAppCloudApi $whatsAppClient)
     {
@@ -23,7 +23,7 @@ class WhatsAppNotificationService
      * @throws Exception
      */
     public function send(
-        string|WhatsAppTemplate $handlerClass,
+        string|WhatsAppAbstractHandler $handlerClass,
         $data,
         $recipients = null
     ): array {

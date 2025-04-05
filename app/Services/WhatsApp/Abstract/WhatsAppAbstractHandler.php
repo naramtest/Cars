@@ -4,7 +4,7 @@ namespace App\Services\WhatsApp\Abstract;
 
 use Netflie\WhatsAppCloudApi\Message\Template\Component;
 
-abstract class WhatsAppTemplate implements WhatsAppNotificationInterface
+abstract class WhatsAppAbstractHandler implements WhatsAppNotificationInterface
 {
     abstract public function facebookTemplateData(): array;
 

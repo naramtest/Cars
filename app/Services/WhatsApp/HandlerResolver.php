@@ -2,14 +2,14 @@
 
 namespace App\Services\WhatsApp;
 
-use App\Services\WhatsApp\Abstract\WhatsAppTemplate;
+use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
 
 class HandlerResolver
 {
     public static function resolve(
-        string|WhatsAppTemplate $handlerClass
-    ): WhatsAppTemplate {
-        if ($handlerClass instanceof WhatsAppTemplate) {
+        string|WhatsAppAbstractHandler $handlerClass
+    ): WhatsAppAbstractHandler {
+        if ($handlerClass instanceof WhatsAppAbstractHandler) {
             return $handlerClass;
         }
         if (!$handlerClass || !class_exists($handlerClass)) {
@@ -19,7 +19,7 @@ class HandlerResolver
         }
 
         $handler = app($handlerClass);
-        if (!($handler instanceof WhatsAppTemplate)) {
+        if (!($handler instanceof WhatsAppAbstractHandler)) {
             throw new \InvalidArgumentException(
                 "Handler class '{$handlerClass}' must be an instance of WhatsAppTemplate, " .
                     get_class($handler) .

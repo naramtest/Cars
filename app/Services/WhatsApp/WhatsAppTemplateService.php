@@ -4,7 +4,7 @@ namespace App\Services\WhatsApp;
 
 use App\Enums\TemplateStatus;
 use App\Models\Template;
-use App\Services\WhatsApp\Abstract\WhatsAppTemplate;
+use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
 use Exception;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
@@ -16,7 +16,7 @@ class WhatsAppTemplateService
      * @throws Exception
      */
     public function resolveTemplate(
-        string|WhatsAppTemplate $templateClassName
+        string|WhatsAppAbstractHandler $templateClassName
     ): Template {
         $templateClass = HandlerResolver::resolve($templateClassName);
         $templateName = $templateClass->getTemplateName();
@@ -98,8 +98,9 @@ class WhatsAppTemplateService
      * @throws ConnectionException
      * @throws Exception
      */
-    public function createRemoteTemplate(WhatsAppTemplate $template): Template
-    {
+    public function createRemoteTemplate(
+        WhatsAppAbstractHandler $template
+    ): Template {
         //Send a Request to create a new template
         $data = $this->makeHttpRequest(
             method: "POST",
