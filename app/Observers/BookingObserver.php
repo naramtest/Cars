@@ -6,21 +6,36 @@ use App\Enums\ReservationStatus;
 use App\Models\Booking;
 use App\Services\WhatsApp\Driver\Booking\DBNewHandler;
 use App\Services\WhatsApp\WhatsAppNotificationService;
+use App\Services\WhatsApp\WhatsAppTemplateService;
+use Illuminate\Http\Client\ConnectionException;
+use Netflie\WhatsAppCloudApi\Response\ResponseException;
 
 class BookingObserver
 {
     public function __construct(
-        protected WhatsAppNotificationService $notificationService
+        protected WhatsAppNotificationService $notificationService,
+        protected DBNewHandler $newHandler,
+        protected WhatsAppTemplateService $templateService
     ) {}
 
     public function created(Booking $booking): void
     {
         if ($booking->status === ReservationStatus::Confirmed) {
-            $result = $this->notificationService->send(
-                DBNewHandler::class,
-                $booking
+            $this->driverAssignBookingNotification($booking);
+        }
+    }
+
+    public function driverAssignBookingNotification(Booking $booking): void
+    {
+        try {
+            $template = $this->templateService->resolveTemplate(
+                $this->newHandler
             );
-            dd($result);
+            $this->notificationService->send($this->newHandler, $booking);
+
+            $booking->recordNotification($template->name);
+        } catch (ConnectionException | ResponseException | \Exception $e) {
+            logger($e->getMessage());
         }
     }
 
@@ -35,11 +50,7 @@ class BookingObserver
             $booking->getOriginal("status") === ReservationStatus::Pending &&
             $booking->status === ReservationStatus::Confirmed
         ) {
-            $result = $this->notificationService->send(
-                DBNewHandler::class,
-                $booking
-            );
-            dd($result);
+            $this->driverAssignBookingNotification($booking);
         }
     }
 }

@@ -20,11 +20,6 @@ abstract class BaseNotificationCommand extends Command
         $handlerClass,
         $notificationType
     ): bool {
-        if ($model->hasNotificationBeenSent($notificationType)) {
-            $this->info("Already Sent"); // Already sent
-            return false;
-        }
-
         try {
             $this->whatsAppService->send($handlerClass, $model);
 

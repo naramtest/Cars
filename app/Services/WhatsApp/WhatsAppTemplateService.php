@@ -16,9 +16,9 @@ class WhatsAppTemplateService
      * @throws Exception
      */
     public function resolveTemplate(
-        string|WhatsAppAbstractHandler $templateClassName
+        string|WhatsAppAbstractHandler $handlerClass
     ): Template {
-        $templateClass = HandlerResolver::resolve($templateClassName);
+        $templateClass = HandlerResolver::resolve($handlerClass);
         $templateName = $templateClass->getTemplateName();
         $template = Template::where("name", $templateName)->first();
 
