@@ -15,8 +15,10 @@ class WhatsAppTemplateService
      * @throws ConnectionException
      * @throws Exception
      */
-    public function resolveTemplate(WhatsAppTemplate $templateClass): Template
-    {
+    public function resolveTemplate(
+        string|WhatsAppTemplate $templateClassName
+    ): Template {
+        $templateClass = HandlerResolver::resolve($templateClassName);
         $templateName = $templateClass->getTemplateName();
         $template = Template::where("name", $templateName)->first();
 
@@ -41,13 +43,13 @@ class WhatsAppTemplateService
      */
     public function syncByNameFromRemote($templateName): ?Template
     {
-        $request = $this->makeHttpRequest("GET", null, [
+        $response = $this->makeHttpRequest("GET", null, [
             "name" => $templateName,
         ]);
 
-        return empty($request["data"])
+        return empty($response["data"])
             ? null
-            : $this->saveFromRemoteData($request["data"]);
+            : $this->saveFromRemoteData($response["data"][0]);
     }
 
     /**

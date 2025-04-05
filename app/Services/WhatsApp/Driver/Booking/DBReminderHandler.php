@@ -86,8 +86,11 @@ class DBReminderHandler extends WhatsAppTemplate
                             "type" => "URL",
                             "text" => "Mark as Completed",
                             "url" => route("booking.driver.confirmation", [
-                                "booking" => Booking::first(),
+                                "booking" => "{{1}}",
                             ]),
+                            "example" => [
+                                "button_text" => ["BOK-202504-0001"],
+                            ],
                         ],
                     ],
                 ],

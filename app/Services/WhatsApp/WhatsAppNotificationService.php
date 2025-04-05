@@ -11,6 +11,7 @@ use Netflie\WhatsAppCloudApi\WhatsAppCloudApi;
 class WhatsAppNotificationService
 {
     protected WhatsAppCloudApi $whatsAppClient;
+    protected WhatsAppTemplate $template;
 
     public function __construct(WhatsAppCloudApi $whatsAppClient)
     {
@@ -22,10 +23,12 @@ class WhatsAppNotificationService
      * @throws Exception
      */
     public function send(
-        WhatsAppTemplate $whatsAppTemplate,
+        string|WhatsAppTemplate $handlerClass,
         $data,
         $recipients = null
     ): array {
+        $whatsAppTemplate = HandlerResolver::resolve($handlerClass);
+
         // Check if this notification type is enabled
         if (!$whatsAppTemplate->isEnabled()) {
             throw new Exception("This Notification Template is not enabled.");

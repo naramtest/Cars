@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\Addon\BillingType;
 use App\Enums\ReservationStatus;
 use App\Models\Abstract\MoneyModel;
+use App\Traits\HasNotifications;
 use App\Traits\HasReferenceNumber;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -15,6 +16,7 @@ class Booking extends MoneyModel
 {
     use SoftDeletes;
     use HasReferenceNumber;
+    use HasNotifications;
 
     protected $fillable = [
         "client_name",

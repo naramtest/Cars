@@ -23,7 +23,6 @@ class WhatsAppWebhookController extends Controller
     // Handle incoming webhook notifications
     public function handleWebhook(Request $request)
     {
-        logger("1");
         $webhook = new WebHook();
 
         // Get raw payload
