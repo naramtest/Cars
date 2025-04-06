@@ -33,19 +33,7 @@ class ABReminderHandler extends WhatsAppAbstractHandler
 
     public function prepareButtonData($modelData): array
     {
-        return [
-            [
-                "type" => "button",
-                "sub_type" => "url",
-                "index" => 0,
-                "parameters" => [
-                    [
-                        "type" => "text",
-                        "text" => $modelData->reference_number,
-                    ],
-                ],
-            ],
-        ];
+        return [];
     }
 
     public function facebookTemplateData(): array
@@ -58,7 +46,7 @@ class ABReminderHandler extends WhatsAppAbstractHandler
                 [
                     "type" => "BODY",
                     "text" =>
-                        "Hi {{1}}, this is a reminder for your upcoming booking.\n\n🧾 Booking Reference: {{2}}\n👤 Customer: {{3}} ({{4}})\n🚗 Vehicle: {{5}} ({{6}})\n📅 Pickup Time: {{7}} at {{8}}\n📍 Pickup Location: {{9}}\n🏁 Drop-off Location: {{10}}\n\n{{11}}\n\n🚫 Note: This is an automated reminder. Do not reply to this message.\n\n✅ When the booking is complete, please press the button below.",
+                        "Hi , this is a reminder for your upcoming booking.\n\n Driver : {{1}} \n\n🧾 Booking Reference: {{2}}\n👤 Customer: {{3}} ({{4}})\n🚗 Vehicle: {{5}} ({{6}})\n📅 Pickup Time: {{7}} at {{8}}\n📍 Pickup Location: {{9}}\n🏁 Drop-off Location: {{10}}\n\n{{11}}\n\n🚫 Note: This is an automated reminder. Do not reply to this message.",
                     "example" => [
                         "body_text" => [
                             [
@@ -77,19 +65,6 @@ class ABReminderHandler extends WhatsAppAbstractHandler
                         ],
                     ],
                 ],
-                [
-                    "type" => "BUTTONS",
-                    "buttons" => [
-                        [
-                            "type" => "URL",
-                            "text" => "Mark as Completed",
-                            "url" => route("booking.driver.confirmation", [
-                                "booking" => "{{1}}",
-                            ]),
-                            "example" => ["BOK-202504-0001"],
-                        ],
-                    ],
-                ],
             ],
         ];
     }
@@ -101,8 +76,9 @@ class ABReminderHandler extends WhatsAppAbstractHandler
 
     public function phoneNumbers($data)
     {
+        //TODO: get it from database
         /** @var  Booking $data */
-        return $data->driver->phone_number;
+        return ["+971562065970"];
     }
 
     public function isEnabled(): bool

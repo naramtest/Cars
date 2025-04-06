@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\Booking;
+use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
+use App\Services\WhatsApp\Admin\Booking\ABReminderHandler;
 use App\Services\WhatsApp\Driver\Booking\DBReminderHandler;
 use Carbon\Carbon;
 use Illuminate\Http\Client\ConnectionException;
@@ -14,19 +16,15 @@ class SendBookingReminders extends BaseNotificationCommand
 
     public function handle()
     {
-        // Find bookings that need driver notifications (2 hours before)
-        $this->sendDriverReminders();
-
-        // Find bookings that need admin notifications (1 day before)
-        $this->sendAdminReminders();
+        $this->sendBookingReminder(app(DBReminderHandler::class));
+        $this->sendBookingReminder(app(ABReminderHandler::class));
     }
 
-    private function sendDriverReminders(): void
+    private function sendBookingReminder(WhatsAppAbstractHandler $handler): void
     {
         try {
-            $dbReminderHandler = app(DBReminderHandler::class);
             $template = $this->whatsAppTemplateService->resolveTemplate(
-                $dbReminderHandler
+                $handler
             );
 
             // Find bookings starting in about 2 hours
@@ -40,22 +38,12 @@ class SendBookingReminders extends BaseNotificationCommand
                     $query->where("notification_type", $template->name);
                 })
                 ->get();
-            
+
             foreach ($upcomingBookings as $booking) {
-                $this->sendNotification(
-                    $booking,
-                    $dbReminderHandler,
-                    $template->name
-                );
+                $this->sendNotification($booking, $handler, $template->name);
             }
         } catch (ConnectionException | \Exception $e) {
             $this->info($e->getMessage());
         }
-    }
-
-    private function sendAdminReminders()
-    {
-        // Similar logic for admin reminders (1 day before)
-        // ...
     }
 }
