@@ -4,6 +4,7 @@ namespace App\Services\WhatsApp;
 
 use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
 use Exception;
+use Illuminate\Http\Client\ConnectionException;
 use Netflie\WhatsAppCloudApi\Message\Template\Component;
 use Netflie\WhatsAppCloudApi\Response\ResponseException;
 use Netflie\WhatsAppCloudApi\WhatsAppCloudApi;
@@ -16,6 +17,26 @@ class WhatsAppNotificationService
     public function __construct(WhatsAppCloudApi $whatsAppClient)
     {
         $this->whatsAppClient = $whatsAppClient;
+    }
+
+    /**
+     * @throws ResponseException
+     * @throws ConnectionException
+     */
+    public function sendAndSave(
+        string|WhatsAppAbstractHandler $handlerClass,
+        $data,
+        $recipients = null
+    ): void {
+        $handler = HandlerResolver::resolve($handlerClass);
+        //1- Check if template exists and return it
+        $template = app(WhatsAppTemplateService::class)->resolveTemplate(
+            $handler
+        );
+        //2- send template message
+        $this->send($handler, $data, $recipients);
+        //3- save sent message to the database
+        $data->recordNotification($template->name);
     }
 
     /**
@@ -57,7 +78,7 @@ class WhatsAppNotificationService
         $responses = [];
         if (is_array($recipients)) {
             foreach ($recipients as $recipient) {
-                $recipient[] = $this->whatsAppClient->sendTemplate(
+                $responses[] = $this->whatsAppClient->sendTemplate(
                     $recipient,
                     $templateId,
                     components: $component

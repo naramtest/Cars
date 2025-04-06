@@ -22,7 +22,7 @@ class DBNewHandler extends WhatsAppAbstractHandler
             $vehicle->license_plate, // 6 - Vehicle plate
             $modelData->start_datetime->format("Y-m-d"),
             // 7 - Pickup date
-            $modelData->end_datetime->format("H:i"), // 8 - Pickup time
+            $modelData->start_datetime->format("H:i"), // 8 - Pickup time
             $modelData->pickup_address, // 9 - Pickup location
             $modelData->destination_address ?: "Undefined", // 10 - Dropoff location
             $modelData->notes ?? "nothing", // 11 - Optional instructions

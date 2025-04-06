@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Enums\ReservationStatus;
 use App\Models\Booking;
+use App\Services\WhatsApp\Admin\Booking\ABNewHandler;
 use App\Services\WhatsApp\Driver\Booking\DBNewHandler;
 use App\Services\WhatsApp\Driver\Booking\DBUpdatedHandler;
 use App\Services\WhatsApp\WhatsAppNotificationService;
@@ -21,8 +22,22 @@ class BookingObserver
 
     public function created(Booking $booking): void
     {
+        $this->adminNewBookingNotification($booking);
+
         if ($booking->status === ReservationStatus::Confirmed) {
             $this->driverAssignBookingNotification($booking);
+        }
+    }
+
+    public function adminNewBookingNotification(Booking $booking): void
+    {
+        try {
+            $handler = app(ABNewHandler::class);
+            $template = $this->templateService->resolveTemplate($handler);
+            $this->notificationService->send($handler, $booking);
+            $booking->recordNotification($template->name);
+        } catch (ConnectionException | ResponseException | \Exception $e) {
+            logger($e->getMessage());
         }
     }
 

@@ -2,10 +2,13 @@
 
 use App\Http\Controllers\WhatsAppWebhookController;
 use App\Models\Booking;
+use App\Services\WhatsApp\Admin\Booking\ABNewHandler;
 use App\Services\WhatsApp\Driver\Booking\DBNewHandler;
 use App\Services\WhatsApp\WhatsAppNotificationService;
 use App\Settings\InfoSettings;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Route;
+use Netflie\WhatsAppCloudApi\Response\ResponseException;
 
 Route::get("/whatsapp/contact", function (InfoSettings $infoSettings) {
     return redirect()->away(
@@ -29,10 +32,14 @@ Route::get("/test", function (WhatsAppNotificationService $whatsAppService) {
 });
 
 Route::get("/", function () {
-    //    dd(templateUrl(BookingResource::getUrl() . "/{{1}}"));
-    //    return app(
-    //        \App\Services\WhatsApp\WhatsAppTemplateService::class
-    //    )->resolveTemplate(
-    //        \App\Services\WhatsApp\Driver\Booking\DBUpdatedHandler::class
-    //    );
+    try {
+        $booking = Booking::first();
+        app(WhatsAppNotificationService::class)->sendAndSave(
+            ABNewHandler::class,
+            $booking
+        );
+    } catch (ConnectionException | ResponseException | \Exception $e) {
+        dd($e);
+        logger($e->getMessage());
+    }
 });
