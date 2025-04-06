@@ -62,6 +62,12 @@ class BookingObserver
 
     protected function shouldSendUpdateNotification(Booking $booking): bool
     {
+        if (
+            $booking->status !== ReservationStatus::Confirmed and
+            $booking->status !== ReservationStatus::Active
+        ) {
+            return false;
+        }
         $watchedFields = [
             "start_datetime",
             "end_datetime",
