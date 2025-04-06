@@ -14,7 +14,7 @@ Route::get("/whatsapp/contact", function (InfoSettings $infoSettings) {
     return redirect()->away(
         "https://wa.me/$infoSettings->support_whatsapp_number"
     );
-});
+})->name("whatsapp.contact");
 
 Route::get("/bookings/complete/{booking:reference_number}", function (
     $booking

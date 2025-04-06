@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Enums\ReservationStatus;
 use App\Models\Booking;
 use App\Services\WhatsApp\Admin\Booking\ABNewHandler;
+use App\Services\WhatsApp\Customer\Booking\CBNewHandler;
 use App\Services\WhatsApp\Driver\Booking\DBNewHandler;
 use App\Services\WhatsApp\Driver\Booking\DBUpdatedHandler;
 use App\Services\WhatsApp\HandlerResolver;
@@ -27,6 +28,7 @@ class BookingObserver
 
         if ($booking->status === ReservationStatus::Confirmed) {
             $this->sendAndSave(DBNewHandler::class, $booking);
+            $this->sendAndSave(CBNewHandler::class, $booking);
         }
     }
 
@@ -52,6 +54,7 @@ class BookingObserver
             $booking->status === ReservationStatus::Confirmed
         ) {
             $this->sendAndSave(DBNewHandler::class, $booking);
+            $this->sendAndSave(CBNewHandler::class, $booking);
         }
 
         // Send DBUpdatedHandler if other fields were changed
