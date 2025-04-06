@@ -40,7 +40,7 @@ class SendBookingReminders extends BaseNotificationCommand
                     $query->where("notification_type", $template->name);
                 })
                 ->get();
-
+            
             foreach ($upcomingBookings as $booking) {
                 $this->sendNotification(
                     $booking,
