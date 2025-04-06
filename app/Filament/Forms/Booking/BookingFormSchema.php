@@ -17,7 +17,7 @@ class BookingFormSchema
         return [
             Forms\Components\Tabs::make()
                 ->columnSpan(
-                    fn(string $operation) => $operation == "edit" ? 2 : 3
+                    fn(string $operation) => $operation == "create" ? 3 : 2
                 )
                 ->columns()
                 ->tabs([
@@ -231,7 +231,7 @@ class BookingFormSchema
                                 __("dashboard.days")
                             : "-"
                     )
-                    ->hidden(fn(string $operation) => $operation !== "edit"),
+                    ->hidden(fn(string $operation) => $operation === "create"),
 
                 Forms\Components\Placeholder::make("total_price_money")
                     ->content(
@@ -239,10 +239,10 @@ class BookingFormSchema
                     )
                     ->inlineLabel()
                     ->label(__("dashboard.total_price"))
-                    ->hidden(fn(string $operation) => $operation !== "edit"),
+                    ->hidden(fn(string $operation) => $operation === "create"),
             ]),
         ])
-            ->hidden(fn(string $operation) => $operation !== "edit")
+            ->hidden(fn(string $operation) => $operation === "create")
             ->columnSpan(["lg" => 1]);
     }
 }

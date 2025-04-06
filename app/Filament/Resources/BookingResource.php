@@ -43,6 +43,7 @@ class BookingResource extends Resource
             "index" => Pages\ListBookings::route("/"),
             "create" => Pages\CreateBooking::route("/create"),
             "edit" => Pages\EditBooking::route("/{record}/edit"),
+            "view" => Pages\ViewBooking::route("/{record}"),
         ];
     }
 

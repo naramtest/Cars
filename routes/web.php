@@ -4,7 +4,6 @@ use App\Http\Controllers\WhatsAppWebhookController;
 use App\Models\Booking;
 use App\Services\WhatsApp\Driver\Booking\DBNewHandler;
 use App\Services\WhatsApp\WhatsAppNotificationService;
-use App\Services\WhatsApp\WhatsAppTemplateService;
 use App\Settings\InfoSettings;
 use Illuminate\Support\Facades\Route;
 
@@ -14,8 +13,8 @@ Route::get("/whatsapp/contact", function (InfoSettings $infoSettings) {
     );
 });
 
-Route::get("/bookings/{booking:reference_number}/complete", function (
-    Booking $booking
+Route::get("/bookings/complete/{booking:reference_number}", function (
+    $booking
 ) {
     //TODO: add auth or pin check before changing the status of the booking
     dd($booking);
@@ -30,7 +29,10 @@ Route::get("/test", function (WhatsAppNotificationService $whatsAppService) {
 });
 
 Route::get("/", function () {
-    app(WhatsAppTemplateService::class)->syncByNameFromRemote(
-        "driver_booking_reminder1"
-    );
+    //    dd(templateUrl(BookingResource::getUrl() . "/{{1}}"));
+    //    return app(
+    //        \App\Services\WhatsApp\WhatsAppTemplateService::class
+    //    )->resolveTemplate(
+    //        \App\Services\WhatsApp\Driver\Booking\DBUpdatedHandler::class
+    //    );
 });

@@ -2,6 +2,7 @@
 
 namespace App\Services\WhatsApp\Driver\Booking;
 
+use App\Filament\Resources\BookingResource;
 use App\Models\Booking;
 use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
 
@@ -60,6 +61,7 @@ class DBUpdatedHandler extends WhatsAppAbstractHandler
         ]);
     }
 
+    /** @var Booking $modelData */
     public function prepareButtonData($modelData): array
     {
         return [
@@ -70,9 +72,18 @@ class DBUpdatedHandler extends WhatsAppAbstractHandler
                 "parameters" => [
                     [
                         "type" => "text",
-                        "text" => route("booking.driver.confirmation", [
-                            "booking" => $modelData,
-                        ]),
+                        "text" => $modelData->reference_number ?? "N/A",
+                    ],
+                ],
+            ],
+            [
+                "type" => "button",
+                "sub_type" => "url",
+                "index" => 1,
+                "parameters" => [
+                    [
+                        "type" => "text",
+                        "text" => $modelData->id,
                     ],
                 ],
             ],
@@ -81,7 +92,6 @@ class DBUpdatedHandler extends WhatsAppAbstractHandler
 
     public function facebookTemplateData(): array
     {
-        //TODO: add button and test
         return [
             "name" => $this->getTemplateName(),
             "language" => "en_US",
@@ -107,12 +117,20 @@ class DBUpdatedHandler extends WhatsAppAbstractHandler
                         [
                             "type" => "URL",
                             "text" => "Mark as Completed",
-                            "url" => route("booking.driver.confirmation", [
-                                "booking" => "{{1}}",
-                            ]),
-                            "example" => [
-                                "button_text" => ["BOK-202504-0001"],
-                            ],
+                            "url" => templateUrlReplaceParameter(
+                                route("booking.driver.confirmation", [
+                                    "booking" => "PLACEHOLDER_VALUE",
+                                ])
+                            ),
+                            "example" => ["BOK-202504-0001"],
+                        ],
+                        [
+                            "type" => "URL",
+                            "text" => "View Booking Details",
+                            "url" => templateUrl(
+                                BookingResource::getUrl() . "/{{1}}"
+                            ),
+                            "example" => ["1"],
                         ],
                     ],
                 ],

@@ -41,9 +41,7 @@ class DBReminderHandler extends WhatsAppAbstractHandler
                 "parameters" => [
                     [
                         "type" => "text",
-                        "text" => route("booking.driver.confirmation", [
-                            "booking" => $modelData,
-                        ]),
+                        "text" => $modelData->reference_number,
                     ],
                 ],
             ],
@@ -88,9 +86,7 @@ class DBReminderHandler extends WhatsAppAbstractHandler
                             "url" => route("booking.driver.confirmation", [
                                 "booking" => "{{1}}",
                             ]),
-                            "example" => [
-                                "button_text" => ["BOK-202504-0001"],
-                            ],
+                            "example" => ["BOK-202504-0001"],
                         ],
                     ],
                 ],
