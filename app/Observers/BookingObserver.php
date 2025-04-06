@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Services\WhatsApp\Admin\Booking\ABNewHandler;
 use App\Services\WhatsApp\Driver\Booking\DBNewHandler;
 use App\Services\WhatsApp\Driver\Booking\DBUpdatedHandler;
+use App\Services\WhatsApp\HandlerResolver;
 use App\Services\WhatsApp\WhatsAppNotificationService;
 use App\Services\WhatsApp\WhatsAppTemplateService;
 use Illuminate\Http\Client\ConnectionException;
@@ -22,35 +23,19 @@ class BookingObserver
 
     public function created(Booking $booking): void
     {
-        $this->adminNewBookingNotification($booking);
+        $this->sendAndSave(ABNewHandler::class, $booking);
 
         if ($booking->status === ReservationStatus::Confirmed) {
-            $this->driverAssignBookingNotification($booking);
+            $this->sendAndSave(DBNewHandler::class, $booking);
         }
     }
 
-    public function adminNewBookingNotification(Booking $booking): void
+    private function sendAndSave(string $class, Booking $booking): void
     {
         try {
-            $handler = app(ABNewHandler::class);
-            $template = $this->templateService->resolveTemplate($handler);
-            $this->notificationService->send($handler, $booking);
-            $booking->recordNotification($template->name);
-        } catch (ConnectionException | ResponseException | \Exception $e) {
-            logger($e->getMessage());
-        }
-    }
-
-    public function driverAssignBookingNotification(Booking $booking): void
-    {
-        try {
-            $template = $this->templateService->resolveTemplate(
-                $this->newHandler
-            );
-            $this->notificationService->send($this->newHandler, $booking);
-
-            $booking->recordNotification($template->name);
-        } catch (ConnectionException | ResponseException | \Exception $e) {
+            $handler = HandlerResolver::resolve($class);
+            $this->notificationService->sendAndSave($handler, $booking);
+        } catch (ConnectionException | ResponseException $e) {
             logger($e->getMessage());
         }
     }
@@ -66,12 +51,12 @@ class BookingObserver
             $booking->getOriginal("status") === ReservationStatus::Pending &&
             $booking->status === ReservationStatus::Confirmed
         ) {
-            $this->driverAssignBookingNotification($booking);
+            $this->sendAndSave(DBNewHandler::class, $booking);
         }
 
         // Send DBUpdatedHandler if other fields were changed
         if ($this->shouldSendUpdateNotification($booking)) {
-            $this->sendDriverUpdateNotification($booking);
+            $this->sendAndSave(DBUpdatedHandler::class, $booking);
         }
     }
 
@@ -98,18 +83,5 @@ class BookingObserver
         }
 
         return false;
-    }
-
-    protected function sendDriverUpdateNotification(Booking $booking): void
-    {
-        try {
-            $handler = app(DBUpdatedHandler::class);
-            $template = $this->templateService->resolveTemplate($handler);
-            $this->notificationService->send($handler, $booking);
-
-            $booking->recordNotification($template->name);
-        } catch (ConnectionException | ResponseException | \Exception $e) {
-            logger($e->getMessage());
-        }
     }
 }
