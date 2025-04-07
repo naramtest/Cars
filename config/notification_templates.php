@@ -2,7 +2,7 @@
 
 use App\Services\WhatsApp\Admin\Booking\{ABNewHandler, ABReminderHandler};
 use App\Services\WhatsApp\Admin\Rent\{ARNewHandler, ARReminderHandler};
-use App\Services\WhatsApp\Admin\Vehicle\{VehicleInspectionReminderHandler};
+use App\Services\WhatsApp\Admin\Vehicle\{VehicleInspectionReminderHandler, VehicleRegistrationExpiryHandler};
 use App\Services\WhatsApp\Customer\Booking\{CBNewHandler};
 use App\Services\WhatsApp\Customer\Rent\{CREndReminderHandler, CRNewHandler};
 use App\Services\WhatsApp\Driver\Booking\{DBNewHandler, DBReminderHandler, DBUpdatedHandler};
@@ -23,6 +23,8 @@ return [
         //Vehicle
         "admin_vehicle_inspection_reminder" =>
             VehicleInspectionReminderHandler::Class,
+        "admin_vehicle_registration_expiry_reminder" =>
+            VehicleRegistrationExpiryHandler::Class,
     ],
     "customer" => [
         "customer_booking_new" => CBNewHandler::class,

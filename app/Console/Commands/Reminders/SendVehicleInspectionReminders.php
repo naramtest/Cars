@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Reminders;
 
+use App\Console\Commands\BaseNotificationCommand;
 use App\Models\Vehicle;
 use App\Services\WhatsApp\Admin\Vehicle\VehicleInspectionReminderHandler;
+use Exception;
 use Illuminate\Http\Client\ConnectionException;
 
 class SendVehicleInspectionReminders extends BaseNotificationCommand
@@ -71,7 +73,7 @@ class SendVehicleInspectionReminders extends BaseNotificationCommand
             }
 
             return 0;
-        } catch (ConnectionException | \Exception $e) {
+        } catch (ConnectionException | Exception $e) {
             $this->error(
                 "Error sending inspection reminders: " . $e->getMessage()
             );
