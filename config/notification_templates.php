@@ -3,6 +3,7 @@
 use App\Services\WhatsApp\Admin\Booking\{ABNewHandler, ABReminderHandler};
 use App\Services\WhatsApp\Admin\Rent\{ARNewHandler, ARReminderHandler};
 use App\Services\WhatsApp\Customer\Booking\{CBNewHandler};
+use App\Services\WhatsApp\Customer\Rent\{CREndReminderHandler, CRNewHandler};
 use App\Services\WhatsApp\Driver\Booking\{DBNewHandler, DBReminderHandler, DBUpdatedHandler};
 
 return [
@@ -20,5 +21,8 @@ return [
     ],
     "customer" => [
         "customer_booking_new" => CBNewHandler::class,
+        //Rents
+        "customer_rent_new" => CRNewHandler::class,
+        "customer_rent_end_reminder" => CREndReminderHandler::class,
     ],
 ];
