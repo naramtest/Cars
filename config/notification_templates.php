@@ -1,7 +1,7 @@
 <?php
 
 use App\Services\WhatsApp\Admin\Booking\{ABNewHandler, ABReminderHandler};
-use App\Services\WhatsApp\Admin\Rent\{ARNewHandler};
+use App\Services\WhatsApp\Admin\Rent\{ARNewHandler, ARReminderHandler};
 use App\Services\WhatsApp\Customer\Booking\{CBNewHandler};
 use App\Services\WhatsApp\Driver\Booking\{DBNewHandler, DBReminderHandler, DBUpdatedHandler};
 
@@ -16,6 +16,7 @@ return [
         "admin_booking_reminder" => ABReminderHandler::class,
         //Rents
         "admin_rent_new" => ARNewHandler::class,
+        "admin_rent_reminder" => ARReminderHandler::class,
     ],
     "customer" => [
         "customer_booking_new" => CBNewHandler::class,
