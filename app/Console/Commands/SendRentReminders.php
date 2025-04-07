@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Rent;
 use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
 use App\Services\WhatsApp\Admin\Rent\ARReminderHandler;
+use App\Services\WhatsApp\Customer\Rent\CREndReminderHandler;
 use Carbon\Carbon;
 use Illuminate\Http\Client\ConnectionException;
 
@@ -15,6 +16,8 @@ class SendRentReminders extends BaseNotificationCommand
 
     public function handle()
     {
+        //TODO: query and get Rents from the database only one time
+        
         // Send start reminders
         $startHandler = new ARReminderHandler(ARReminderHandler::TYPE_START);
         $this->sendRentReminder($startHandler, "start");
@@ -22,6 +25,9 @@ class SendRentReminders extends BaseNotificationCommand
         // Send end reminders
         $endHandler = new ARReminderHandler(ARReminderHandler::TYPE_END);
         $this->sendRentReminder($endHandler, "end");
+
+        $endCustomerHandler = app(CREndReminderHandler::class);
+        $this->sendRentReminder($endCustomerHandler, "end");
 
         return 0;
     }
