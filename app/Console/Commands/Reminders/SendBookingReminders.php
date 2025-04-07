@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Reminders;
 
+use App\Console\Commands\BaseNotificationCommand;
 use App\Models\Booking;
 use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
 use App\Services\WhatsApp\Admin\Booking\ABReminderHandler;

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Reminders;
 
+use App\Console\Commands\BaseNotificationCommand;
 use App\Models\Rent;
 use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
 use App\Services\WhatsApp\Admin\Rent\ARReminderHandler;
@@ -17,7 +18,7 @@ class SendRentReminders extends BaseNotificationCommand
     public function handle()
     {
         //TODO: query and get Rents from the database only one time
-        
+
         // Send start reminders
         $startHandler = new ARReminderHandler(ARReminderHandler::TYPE_START);
         $this->sendRentReminder($startHandler, "start");

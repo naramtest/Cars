@@ -217,6 +217,12 @@ class VehicleFormSchema
                 Forms\Components\Section::make("Inspection")->schema([
                     Forms\Components\Placeholder::make("next_inspection_date")
                         ->label("Latest Inspection")
+                        ->visible(function (?Vehicle $record): bool {
+                            return (bool) $record
+                                ->inspections()
+                                ->latest()
+                                ->first();
+                        })
                         ->content(function (?Vehicle $record): string {
                             $inspection = $record
                                 ->inspections()
@@ -227,6 +233,12 @@ class VehicleFormSchema
                             ) ?? "-";
                         }),
                     Forms\Components\Placeholder::make("next_inspection_date")
+                        ->visible(function (?Vehicle $record): bool {
+                            return (bool) $record
+                                ->inspections()
+                                ->latest()
+                                ->first();
+                        })
                         ->label(__("dashboard.next_inspection_date"))
                         ->content(function (?Vehicle $record): string {
                             return $record->next_inspection_date->format(
