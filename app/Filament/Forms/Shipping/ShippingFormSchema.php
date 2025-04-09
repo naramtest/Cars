@@ -79,6 +79,9 @@ class ShippingFormSchema
             ])->columnSpan(1),
 
             Forms\Components\Group::make([
+                Forms\Components\DateTimePicker::make("pick_up_at")
+                    ->label(__("dashboard.Pickup at"))
+                    ->seconds(false),
                 Forms\Components\Textarea::make("pickup_address")
                     ->label(__("dashboard.pickup_address"))
                     ->rows(3)

@@ -251,4 +251,5 @@ return [
     "slogan" => "Slogan",
     "about" => "About",
     "label" => "Info",
+    "Pickup at" => "Pickup at",
 ];

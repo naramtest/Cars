@@ -28,6 +28,7 @@ class Shipping extends Model
         "delivered_at",
         "notes",
         "delivery_notes",
+        "pick_up_at",
     ];
     protected $casts = [
         "status" => ShippingStatus::class,
