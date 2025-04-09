@@ -1,6 +1,6 @@
 <?php
 
-use App\Filament\Resources\RentResource;
+use App\Filament\Resources\InspectionResource;
 use App\Http\Controllers\WhatsAppWebhookController;
 use App\Models\Booking;
 use App\Services\WhatsApp\Driver\Booking\DBNewHandler;
@@ -30,5 +30,5 @@ Route::get("/test", function (WhatsAppNotificationService $whatsAppService) {
 });
 
 Route::get("/", function () {
-    dd(templateUrl(RentResource::getUrl() . "/{{1}}/edit"));
+    dd(InspectionResource::getUrl("create"));
 });

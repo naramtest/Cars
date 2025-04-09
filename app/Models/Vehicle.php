@@ -6,6 +6,7 @@ use App\Enums\TypesEnum;
 use App\Enums\Vehicle\FuelType;
 use App\Enums\Vehicle\GearboxType;
 use App\Models\Abstract\MoneyModel;
+use App\Traits\HasNotifications;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -17,6 +18,7 @@ use Storage;
 class Vehicle extends MoneyModel
 {
     use SoftDeletes;
+    use HasNotifications;
 
     protected $fillable = [
         "name",
