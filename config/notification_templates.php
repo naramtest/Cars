@@ -2,7 +2,7 @@
 
 use App\Services\WhatsApp\Admin\Booking\{ABNewHandler, ABReminderHandler};
 use App\Services\WhatsApp\Admin\Rent\{ARNewHandler, ARReminderHandler};
-use App\Services\WhatsApp\Admin\Shipping\{ASNewHandler, ASReminderHandler};
+use App\Services\WhatsApp\Admin\Shipping\{ASDeliveredHandler, ASNewHandler, ASReminderHandler};
 use App\Services\WhatsApp\Admin\Vehicle\{VehicleInspectionReminderHandler, VehicleRegistrationExpiryHandler};
 use App\Services\WhatsApp\Customer\Booking\{CBNewHandler};
 use App\Services\WhatsApp\Customer\Rent\{CREndReminderHandler, CRNewHandler};
@@ -30,6 +30,7 @@ return [
         //Shipping
         "admin_shipping_new" => ASNewHandler::class,
         "admin_shipping_reminder" => ASReminderHandler::class,
+        "admin_shipping_delivered" => ASDeliveredHandler::class,
     ],
     "customer" => [
         "customer_booking_new" => CBNewHandler::class,

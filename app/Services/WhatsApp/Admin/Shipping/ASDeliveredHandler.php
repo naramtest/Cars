@@ -6,10 +6,10 @@ use App\Filament\Resources\ShippingResource;
 use App\Models\Shipping;
 use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
 
-class ASNewHandler extends WhatsAppAbstractHandler
+class ASDeliveredHandler extends WhatsAppAbstractHandler
 {
     /**
-     * Prepares body data for shipping notification
+     * Prepares body data for shipping delivered notification
      *
      * @param Shipping $modelData
      * @return array
@@ -25,7 +25,10 @@ class ASNewHandler extends WhatsAppAbstractHandler
             $driver ? $driver->full_name : "Not assigned", // 4 - Driver name
             $modelData->pickup_address, // 5 - Pickup address
             $modelData->delivery_address, // 6 - Delivery address
-            $modelData->notes ?: "No notes provided", // 7 - Notes
+            $modelData->delivered_at
+                ? $modelData->delivered_at->format("Y-m-d H:i")
+                : now()->format("Y-m-d H:i"), // 7 - Delivery time
+            $modelData->delivery_notes ?: "No delivery notes provided", // 8 - Delivery notes
         ]);
     }
 
@@ -56,14 +59,15 @@ class ASNewHandler extends WhatsAppAbstractHandler
                 [
                     "type" => "BODY",
                     "text" =>
-                        "📦 New Shipping Created 📦\n\n" .
+                        "🚚 Shipping Delivered Successfully 🚚\n\n" .
                         "Reference: {{1}}\n" .
-                        "Client: {{2}} ({{3}})\n\n" .
-                        "Driver: {{4}}\n" .
-                        "Locations:\n" .
-                        "- Pickup: {{5}}\n" .
-                        "- Delivery: {{6}}\n\n" .
-                        "Notes: {{7}}\n" .
+                        "Client: {{2}} ({{3}})\n" .
+                        "Driver: {{4}}\n\n" .
+                        "Shipping Route:\n" .
+                        "- From: {{5}}\n" .
+                        "- To: {{6}}\n\n" .
+                        "Delivered At: {{7}}\n\n" .
+                        "Delivery Notes: {{8}}\n\n" .
                         "🚫 This is an automated message. Please do not reply.",
                     "example" => [
                         "body_text" => [
@@ -72,9 +76,10 @@ class ASNewHandler extends WhatsAppAbstractHandler
                                 "John Smith", // {{2}} Client name
                                 "+971550000000", // {{3}} Client phone
                                 "Ahmed Hassan", // {{4}} Driver name
-                                "Dubai Marina", // {{7}} Pickup address
-                                "Dubai Airport Terminal 3", // {{8}} Delivery address
-                                "Fragile items, handle with care", // {{9}} Notes
+                                "Dubai Marina", // {{5}} Pickup address
+                                "Dubai Airport Terminal 3", // {{6}} Delivery address
+                                "2025-04-15 16:30", // {{7}} Delivery time
+                                "Delivered to reception desk, signed by Sarah.", // {{8}} Delivery notes
                             ],
                         ],
                     ],
