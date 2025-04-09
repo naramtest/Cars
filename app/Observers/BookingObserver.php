@@ -8,20 +8,9 @@ use App\Services\WhatsApp\Admin\Booking\ABNewHandler;
 use App\Services\WhatsApp\Customer\Booking\CBNewHandler;
 use App\Services\WhatsApp\Driver\Booking\DBNewHandler;
 use App\Services\WhatsApp\Driver\Booking\DBUpdatedHandler;
-use App\Services\WhatsApp\HandlerResolver;
-use App\Services\WhatsApp\WhatsAppNotificationService;
-use App\Services\WhatsApp\WhatsAppTemplateService;
-use Illuminate\Http\Client\ConnectionException;
-use Netflie\WhatsAppCloudApi\Response\ResponseException;
 
-class BookingObserver
+class BookingObserver extends NotificationObserver
 {
-    public function __construct(
-        protected WhatsAppNotificationService $notificationService,
-        protected DBNewHandler $newHandler,
-        protected WhatsAppTemplateService $templateService
-    ) {}
-
     public function created(Booking $booking): void
     {
         $this->sendAndSave(ABNewHandler::class, $booking);
@@ -29,16 +18,6 @@ class BookingObserver
         if ($booking->status === ReservationStatus::Confirmed) {
             $this->sendAndSave(DBNewHandler::class, $booking);
             $this->sendAndSave(CBNewHandler::class, $booking);
-        }
-    }
-
-    private function sendAndSave(string $class, Booking $booking): void
-    {
-        try {
-            $handler = HandlerResolver::resolve($class);
-            $this->notificationService->sendAndSave($handler, $booking);
-        } catch (ConnectionException | ResponseException $e) {
-            logger($e->getMessage());
         }
     }
 

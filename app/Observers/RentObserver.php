@@ -6,37 +6,15 @@ use App\Enums\ReservationStatus;
 use App\Models\Rent;
 use App\Services\WhatsApp\Admin\Rent\ARNewHandler;
 use App\Services\WhatsApp\Customer\Rent\CRNewHandler;
-use App\Services\WhatsApp\WhatsAppNotificationService;
-use Illuminate\Http\Client\ConnectionException;
-use Netflie\WhatsAppCloudApi\Response\ResponseException;
 
-class RentObserver
+class RentObserver extends NotificationObserver
 {
-    public function __construct(
-        protected WhatsAppNotificationService $notificationService
-    ) {}
-
     public function created(Rent $rent): void
     {
         $this->sendAndSave(ARNewHandler::class, $rent);
 
         if ($rent->status === ReservationStatus::Confirmed) {
             $this->sendAndSave(CRNewHandler::class, $rent);
-        }
-    }
-
-    private function sendAndSave(string $class, Rent $rent): void
-    {
-        try {
-            $this->notificationService->sendAndSave($class, $rent);
-        } catch (ConnectionException | ResponseException $e) {
-            logger()->error(
-                "Failed to send rent notification: " . $e->getMessage(),
-                [
-                    "rent_id" => $rent->id,
-                    "handler" => $class,
-                ]
-            );
         }
     }
 

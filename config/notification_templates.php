@@ -2,6 +2,7 @@
 
 use App\Services\WhatsApp\Admin\Booking\{ABNewHandler, ABReminderHandler};
 use App\Services\WhatsApp\Admin\Rent\{ARNewHandler, ARReminderHandler};
+use App\Services\WhatsApp\Admin\Shipping\{ASNewHandler};
 use App\Services\WhatsApp\Admin\Vehicle\{VehicleInspectionReminderHandler, VehicleRegistrationExpiryHandler};
 use App\Services\WhatsApp\Customer\Booking\{CBNewHandler};
 use App\Services\WhatsApp\Customer\Rent\{CREndReminderHandler, CRNewHandler};
@@ -25,6 +26,9 @@ return [
             VehicleInspectionReminderHandler::Class,
         "admin_vehicle_registration_expiry_reminder" =>
             VehicleRegistrationExpiryHandler::Class,
+
+        //Shipping
+        "admin_shipping_new" => ASNewHandler::class,
     ],
     "customer" => [
         "customer_booking_new" => CBNewHandler::class,
