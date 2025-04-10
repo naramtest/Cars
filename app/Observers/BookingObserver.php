@@ -28,9 +28,10 @@ class BookingObserver extends NotificationObserver
     {
         // Check if status was changed from pending to confirmed
         if (
-            $booking->isDirty("status") &&
-            $booking->getOriginal("status") === ReservationStatus::Pending &&
-            $booking->status === ReservationStatus::Confirmed
+            $booking->check(
+                ReservationStatus::Confirmed,
+                ReservationStatus::Pending
+            )
         ) {
             $this->sendAndSave(DBNewHandler::class, $booking);
             $this->sendAndSave(CBNewHandler::class, $booking);

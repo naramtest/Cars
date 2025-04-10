@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Shipping\ShippingStatus;
+use App\Traits\CheckStatus;
 use App\Traits\HasReferenceNumber;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,6 +14,7 @@ class Shipping extends Model
 {
     use SoftDeletes;
     use HasReferenceNumber;
+    use CheckStatus;
 
     protected $fillable = [
         "client_name",

@@ -22,9 +22,10 @@ class RentObserver extends NotificationObserver
     {
         // Check if status was changed from pending to confirmed
         if (
-            $rent->isDirty("status") &&
-            $rent->getOriginal("status") === ReservationStatus::Pending &&
-            $rent->status === ReservationStatus::Confirmed
+            $rent->check(
+                ReservationStatus::Confirmed,
+                ReservationStatus::Pending
+            )
         ) {
             // Send notification to driver if vehicle has a driver assigned
             if ($rent->vehicle && $rent->vehicle->driver) {

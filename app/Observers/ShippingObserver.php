@@ -20,14 +20,10 @@ class ShippingObserver extends NotificationObserver
     public function created(Shipping $shipping): void
     {
         $this->sendAndSave(ASNewHandler::class, $shipping);
-        // If shipping is created with Confirmed status and has a driver
         if ($shipping->status === ShippingStatus::Confirmed) {
-            // Send notification to driver if assigned
             if ($shipping->driver_id) {
                 $this->sendAndSave(DSNewHandler::class, $shipping);
             }
-
-            // Send notification to customer
             $this->sendAndSave(CSNewHandler::class, $shipping);
         }
     }
@@ -35,12 +31,7 @@ class ShippingObserver extends NotificationObserver
     public function updated(Shipping $shipping): void
     {
         // Check if status was changed to delivered
-        if (
-            $shipping->isDirty("status") &&
-            $shipping->status === ShippingStatus::Delivered &&
-            $shipping->getOriginal("status") !== ShippingStatus::Delivered
-        ) {
-            // If delivered_at is not set, set it to now
+        if ($shipping->check(ShippingStatus::Delivered)) {
             if (!$shipping->delivered_at) {
                 $shipping->delivered_at = now();
                 $shipping->save();
@@ -52,28 +43,16 @@ class ShippingObserver extends NotificationObserver
 
         // Check if status was changed from pending to confirmed
         if (
-            $shipping->isDirty("status") &&
-            $shipping->status === ShippingStatus::Confirmed &&
-            $shipping->getOriginal("status") === ShippingStatus::Pending
+            $shipping->check(ShippingStatus::Confirmed, ShippingStatus::Pending)
         ) {
-            // Send notification to driver if assigned
+            $this->sendAndSave(CSNewHandler::class, $shipping);
             if ($shipping->driver_id) {
                 $this->sendAndSave(DSNewHandler::class, $shipping);
             }
-
-            // Send notification to customer
-            $this->sendAndSave(CSNewHandler::class, $shipping);
         }
         // Handle status changing to Picked_Up
-        if (
-            $shipping->isDirty("status") &&
-            $shipping->status === ShippingStatus::Picked_Up &&
-            $shipping->getOriginal("status") !== ShippingStatus::Picked_Up
-        ) {
-            // Send notification to customer
+        if ($shipping->check(ShippingStatus::Picked_Up)) {
             $this->sendAndSave(CSPickedUpHandler::class, $shipping);
-
-            // Send notification to driver if assigned
             if ($shipping->driver_id) {
                 $this->sendAndSave(DSDeliveryHandler::class, $shipping);
             }
