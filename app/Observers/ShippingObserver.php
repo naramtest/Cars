@@ -6,6 +6,7 @@ use App\Enums\Shipping\ShippingStatus;
 use App\Models\Shipping;
 use App\Services\WhatsApp\Admin\Shipping\ASDeliveredHandler;
 use App\Services\WhatsApp\Admin\Shipping\ASNewHandler;
+use App\Services\WhatsApp\Customer\Shipping\CSDeliveredHandler;
 use App\Services\WhatsApp\Customer\Shipping\CSNewHandler;
 use App\Services\WhatsApp\Customer\Shipping\CSPickedUpHandler;
 use App\Services\WhatsApp\Driver\Shipping\DSDeliveryHandler;
@@ -46,6 +47,7 @@ class ShippingObserver extends NotificationObserver
             }
 
             $this->sendAndSave(ASDeliveredHandler::class, $shipping);
+            $this->sendAndSave(CSDeliveredHandler::class, $shipping);
         }
 
         // Check if status was changed from pending to confirmed
