@@ -1,6 +1,5 @@
 <?php
 
-use App\Filament\Resources\InspectionResource;
 use App\Http\Controllers\WhatsAppWebhookController;
 use App\Models\Booking;
 use App\Services\WhatsApp\Driver\Booking\DBNewHandler;
@@ -21,6 +20,12 @@ Route::get("/bookings/complete/{booking:reference_number}", function (
     dd($booking);
 })->name("booking.driver.confirmation");
 
+// Add this to routes/web.php
+Route::get(
+    "/driver/shipping/pickup/{token}",
+    "App\Http\Controllers\DriverActionController@confirmPickup"
+)->name("shipping.driver.pickup");
+
 Route::get("/webhook", [WhatsAppWebhookController::class, "verify"]);
 Route::post("/webhook", [WhatsAppWebhookController::class, "handleWebhook"]);
 
@@ -30,5 +35,11 @@ Route::get("/test", function (WhatsAppNotificationService $whatsAppService) {
 });
 
 Route::get("/", function () {
-    dd(InspectionResource::getUrl("create"));
+    $shipping = \App\Models\Shipping::first();
+    $token = \App\Helpers\TokenHelper::generatePickupToken(
+        $shipping->id,
+        $shipping->driver_id,
+        $shipping->pick_up_at
+    );
+    dd(\route("shipping.driver.pickup", $token));
 });

@@ -149,6 +149,7 @@ class ShippingFormSchema
      */
     public static function getItemsRepeater(): Forms\Components\Section
     {
+        //TODO: change to the package repeater to make the design better
         return Forms\Components\Section::make(
             __("dashboard.shipping_items")
         )->schema([
