@@ -2,13 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ReservationStatus;
 use App\Enums\Shipping\ShippingStatus;
+use App\Models\Booking;
 use App\Models\Shipping;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 
 class DriverActionController extends Controller
 {
+    // Booking completion confirmation method
+    public function confirmBookingCompletion(Booking $booking)
+    {
+        // Check if booking is in a valid state to be completed
+        if (
+            $booking->status !== ReservationStatus::Active &&
+            $booking->status !== ReservationStatus::Confirmed
+        ) {
+            return view("confirm.booking.failed", [
+                "message" =>
+                    "This booking cannot be marked as completed in its current state.",
+            ]);
+        }
+        // Update booking status to Completed
+        $booking->update([
+            "status" => ReservationStatus::Completed,
+        ]);
+        // Return a success page
+        return view("confirm.booking.success", [
+            "booking" => $booking,
+        ]);
+    }
+
     public function confirmPickup($token)
     {
         try {

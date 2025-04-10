@@ -14,15 +14,12 @@ Route::get("/whatsapp/contact", function (InfoSettings $infoSettings) {
     );
 })->name("whatsapp.contact");
 
-Route::get("/bookings/complete/{booking:reference_number}", function (
-    $booking
-) {
-    //TODO: add auth or pin check before changing the status of the booking
-    dd($booking);
-})->name("booking.driver.confirmation");
-
 // Add this to routes/web.php
 Route::controller(DriverActionController::class)->group(function () {
+    Route::get(
+        "/bookings/complete/{booking:reference_number}",
+        "confirmBookingCompletion"
+    )->name("booking.driver.confirmation");
     Route::get("/driver/shipping/delivery/{token}", "confirmDelivery")->name(
         "shipping.driver.delivery"
     );
