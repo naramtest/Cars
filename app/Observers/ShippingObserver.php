@@ -7,6 +7,7 @@ use App\Models\Shipping;
 use App\Services\WhatsApp\Admin\Shipping\ASDeliveredHandler;
 use App\Services\WhatsApp\Admin\Shipping\ASNewHandler;
 use App\Services\WhatsApp\Customer\Shipping\CSNewHandler;
+use App\Services\WhatsApp\Customer\Shipping\CSPickedUpHandler;
 use App\Services\WhatsApp\Driver\Shipping\DSDeliveryHandler;
 use App\Services\WhatsApp\Driver\Shipping\DSNewHandler;
 
@@ -61,15 +62,19 @@ class ShippingObserver extends NotificationObserver
             // Send notification to customer
             $this->sendAndSave(CSNewHandler::class, $shipping);
         }
-
-        // New logic for picked up status
+        // Handle status changing to Picked_Up
         if (
             $shipping->isDirty("status") &&
             $shipping->status === ShippingStatus::Picked_Up &&
-            $shipping->getOriginal("status") !== ShippingStatus::Picked_Up &&
-            $shipping->driver_id
+            $shipping->getOriginal("status") !== ShippingStatus::Picked_Up
         ) {
-            $this->sendAndSave(DSDeliveryHandler::class, $shipping);
+            // Send notification to customer
+            $this->sendAndSave(CSPickedUpHandler::class, $shipping);
+
+            // Send notification to driver if assigned
+            if ($shipping->driver_id) {
+                $this->sendAndSave(DSDeliveryHandler::class, $shipping);
+            }
         }
     }
 }
