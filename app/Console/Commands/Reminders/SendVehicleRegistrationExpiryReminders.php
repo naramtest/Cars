@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Reminders;
 
 use App\Console\Commands\BaseNotificationCommand;
+use App\Models\Template;
 use App\Models\Vehicle;
 use App\Services\WhatsApp\Admin\Vehicle\VehicleRegistrationExpiryHandler;
 use Illuminate\Http\Client\ConnectionException;
@@ -15,63 +16,49 @@ class SendVehicleRegistrationExpiryReminders extends BaseNotificationCommand
     /**
      * Execute the console command.
      */
-    public function handle(VehicleRegistrationExpiryHandler $handler)
+    public function handle(VehicleRegistrationExpiryHandler $handler): int
     {
         try {
+            // Check if the notification is enabled
             if (!$this->notificationEnabled($handler)) {
-                return;
+                return 0;
             }
 
             $template = $this->whatsAppTemplateService->resolveTemplate(
                 $handler
             );
 
-            // Number of days before expiry to send first notification
-            $reminderDays = config("vehicle.registration_reminder_days", [
-                30,
-                14,
-                7,
-                3,
-                1,
-            ]);
+            // Get reminder timing from settings (convert minutes to days)
+            $reminderMinutes = $handler->getReminderTiming();
+            $daysBeforeExpiry = ceil($reminderMinutes / 1440); // Convert minutes to days
+
+            $this->info(
+                "Looking for vehicles with registrations expiring within $daysBeforeExpiry days"
+            );
 
             // Find vehicles with registrations expiring soon
             $vehicles = Vehicle::with(["driver", "notifications"])
                 ->whereDate("registration_expiry_date", ">", now())
-                ->whereDate(
-                    "registration_expiry_date",
-                    "<=",
-                    now()->addDays(max($reminderDays))
-                )
                 ->get()
-                ->filter(function ($vehicle) use ($reminderDays, $template) {
-                    // Calculate days until expiry
-                    $daysUntilExpiry = now()->diffInDays(
-                        $vehicle->registration_expiry_date,
-                        false
-                    );
-
-                    // Check if we should send a notification for this number of days
-                    if (!in_array($daysUntilExpiry, $reminderDays)) {
+                ->filter(function ($vehicle) use (
+                    $template,
+                    $daysBeforeExpiry
+                ) {
+                    // Check if we should send a notification for this day specifically
+                    if (
+                        now()->diffInDays($vehicle->registration_expiry_date) >
+                        $daysBeforeExpiry
+                    ) {
                         return false;
                     }
-
-                    // Create a key that includes the actual expiry date and days remaining
-                    // This ensures that after a renewal, we'll generate new notifications
-                    $expiryDate = $vehicle->registration_expiry_date->format(
-                        "Y-m-d"
-                    );
-                    $notificationKey =
-                        $template->name .
-                        "_" .
-                        $expiryDate .
-                        "_" .
-                        $daysUntilExpiry;
 
                     // Get notifications sent for this template with this specific expiry date and days
                     $existingNotification = $vehicle
                         ->notifications()
-                        ->where("notification_type", $notificationKey)
+                        ->where(
+                            "notification_type",
+                            $this->getTemplateName($vehicle, $template)
+                        )
                         ->exists();
 
                     // Only include vehicle if we haven't sent a notification for this specific
@@ -86,22 +73,11 @@ class SendVehicleRegistrationExpiryReminders extends BaseNotificationCommand
             );
 
             foreach ($vehicles as $vehicle) {
-                $daysUntilExpiry = now()->diffInDays(
-                    $vehicle->registration_expiry_date,
-                    false
+                $this->sendNotification(
+                    $vehicle,
+                    $handler,
+                    $this->getTemplateName($vehicle, $template)
                 );
-                $expiryDate = $vehicle->registration_expiry_date->format(
-                    "Y-m-d"
-                );
-                $notificationKey =
-                    $template->name .
-                    "_" .
-                    $expiryDate .
-                    "_" .
-                    $daysUntilExpiry;
-
-                // Send notification with the day-specific key
-                $this->sendNotification($vehicle, $handler, $notificationKey);
             }
 
             return 0;
@@ -112,5 +88,12 @@ class SendVehicleRegistrationExpiryReminders extends BaseNotificationCommand
             );
             return 1;
         }
+    }
+
+    function getTemplateName(Vehicle $vehicle, Template $template): string
+    {
+        return $template->name .
+            "_" .
+            $vehicle->registration_expiry_date->format("Y-m-d");
     }
 }
