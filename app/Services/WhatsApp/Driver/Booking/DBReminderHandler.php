@@ -85,10 +85,4 @@ class DBReminderHandler extends WhatsAppAbstractHandler
         /** @var  Booking $data */
         return $data->driver->phone_number;
     }
-
-    public function isEnabled(): bool
-    {
-        // TODO: Implement isEnabled() method.
-        return true;
-    }
 }

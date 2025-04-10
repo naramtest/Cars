@@ -111,9 +111,4 @@ class ASDeliveredHandler extends WhatsAppAbstractHandler
         // TODO: Get admin numbers from settings or database
         return ["+971562065970"]; // Replace with appropriate admin phone numbers
     }
-
-    public function isEnabled(): bool
-    {
-        return true;
-    }
 }

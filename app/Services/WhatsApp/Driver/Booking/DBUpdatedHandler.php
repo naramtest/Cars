@@ -147,9 +147,4 @@ class DBUpdatedHandler extends WhatsAppAbstractHandler
     {
         return $data->driver->phone_number;
     }
-
-    public function isEnabled(): bool
-    {
-        return true;
-    }
 }

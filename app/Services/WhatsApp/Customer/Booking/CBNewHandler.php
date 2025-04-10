@@ -43,12 +43,6 @@ class CBNewHandler extends WhatsAppAbstractHandler
         return $data->client_phone;
     }
 
-    public function isEnabled(): bool
-    {
-        // TODO: Implement isEnabled() method.
-        return true;
-    }
-
     public function facebookTemplateData(): array
     {
         return [

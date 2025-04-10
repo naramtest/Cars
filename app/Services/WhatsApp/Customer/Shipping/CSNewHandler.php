@@ -91,9 +91,4 @@ class CSNewHandler extends WhatsAppAbstractHandler
         /** @var Shipping $data */
         return $data->client_phone;
     }
-
-    public function isEnabled(): bool
-    {
-        return true;
-    }
 }

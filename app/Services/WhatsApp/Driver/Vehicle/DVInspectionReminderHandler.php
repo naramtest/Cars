@@ -95,9 +95,4 @@ class DVInspectionReminderHandler extends WhatsAppAbstractHandler
         /** @var Vehicle $data */
         return $data->driver->phone_number;
     }
-
-    public function isEnabled(): bool
-    {
-        return true;
-    }
 }

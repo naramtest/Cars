@@ -123,9 +123,4 @@ class DSReminderHandler extends WhatsAppAbstractHandler
         /** @var Shipping $data */
         return $data->driver ? $data->driver->phone_number : null;
     }
-
-    public function isEnabled(): bool
-    {
-        return true;
-    }
 }

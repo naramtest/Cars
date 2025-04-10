@@ -107,9 +107,4 @@ class CRNewHandler extends WhatsAppAbstractHandler
         /** @var Rent $data */
         return $data->client_phone;
     }
-
-    public function isEnabled(): bool
-    {
-        return true;
-    }
 }

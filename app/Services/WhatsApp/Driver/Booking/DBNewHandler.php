@@ -28,12 +28,6 @@ class DBNewHandler extends WhatsAppAbstractHandler
         return $data->driver->phone_number;
     }
 
-    public function isEnabled(): bool
-    {
-        // TODO: Implement isEnabled() method.
-        return true;
-    }
-
     public function facebookTemplateData(): array
     {
         // TODO: Implement getTemplate() method.
