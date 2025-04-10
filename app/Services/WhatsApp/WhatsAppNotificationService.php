@@ -3,6 +3,7 @@
 namespace App\Services\WhatsApp;
 
 use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
+use App\Settings\NotificationSettings;
 use Exception;
 use Illuminate\Http\Client\ConnectionException;
 use Netflie\WhatsAppCloudApi\Message\Template\Component;
@@ -29,6 +30,12 @@ class WhatsAppNotificationService
         $recipients = null
     ): void {
         $handler = HandlerResolver::resolve($handlerClass);
+
+        // Check if this notification type is enabled
+        if (!$this->isNotificationEnabled($handler)) {
+            throw new Exception("This notification is disabled in settings.");
+        }
+
         //1- Check if template exists and return it
         $template = app(WhatsAppTemplateService::class)->resolveTemplate(
             $handler
@@ -37,6 +44,22 @@ class WhatsAppNotificationService
         $this->send($handler, $data, $recipients);
         //3- save sent message to the database
         $data->recordNotification($template->name);
+    }
+
+    /**
+     * Check if the notification is enabled in settings
+     */
+    private function isNotificationEnabled(
+        WhatsAppAbstractHandler $handler
+    ): bool {
+        try {
+            /** @var NotificationSettings $settings */
+            $settings = app(NotificationSettings::class);
+            return $settings->isEnabled($handler->getTemplateName() ?? "");
+        } catch (\Exception $e) {
+            // Fallback to true if settings are not available yet
+            return true;
+        }
     }
 
     /**
@@ -49,6 +72,11 @@ class WhatsAppNotificationService
         $recipients = null
     ): array {
         $whatsAppTemplate = HandlerResolver::resolve($handlerClass);
+
+        // Check if this notification type is enabled
+        if (!$this->isNotificationEnabled($whatsAppTemplate)) {
+            throw new Exception("This notification is disabled in settings.");
+        }
 
         // Check if this notification type is enabled
         if (!$whatsAppTemplate->isEnabled()) {

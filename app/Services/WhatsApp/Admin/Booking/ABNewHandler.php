@@ -27,12 +27,6 @@ class ABNewHandler extends WhatsAppAbstractHandler
         return ["+971562065970"];
     }
 
-    public function isEnabled(): bool
-    {
-        // TODO: Implement isEnabled() method.
-        return true;
-    }
-
     public function facebookTemplateData(): array
     {
         return [

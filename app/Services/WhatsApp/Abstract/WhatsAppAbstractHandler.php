@@ -2,22 +2,12 @@
 
 namespace App\Services\WhatsApp\Abstract;
 
+use App\Settings\NotificationSettings;
 use Netflie\WhatsAppCloudApi\Message\Template\Component;
 
 abstract class WhatsAppAbstractHandler implements WhatsAppNotificationInterface
 {
     abstract public function facebookTemplateData(): array;
-
-    public function getTemplateName(): ?string
-    {
-        $class = static::class;
-        $group = $this->getGroup();
-        $templates = config("notification_templates.$group");
-
-        return array_search($class, $templates, true) ?: null;
-    }
-
-    abstract public function getGroup(): string;
 
     public function getComponent($data): Component
     {
@@ -31,6 +21,54 @@ abstract class WhatsAppAbstractHandler implements WhatsAppNotificationInterface
     abstract public function prepareBodyData($modelData): array;
 
     abstract public function prepareButtonData($modelData): array;
+
+    public function isEnabled(): bool
+    {
+        try {
+            /** @var NotificationSettings $settings */
+            $settings = app(NotificationSettings::class);
+            return $settings->isEnabled($this->getTemplateName() ?? "");
+        } catch (\Exception $e) {
+            // Fallback to true if settings are not available yet
+            return true;
+        }
+    }
+
+    public function getTemplateName(): ?string
+    {
+        $class = static::class;
+        $group = $this->getGroup();
+        $templates = config("notification_templates.$group");
+
+        return array_search($class, $templates, true) ?: null;
+    }
+
+    abstract public function getGroup(): string;
+
+    public function getReminderTiming(): int
+    {
+        try {
+            /** @var NotificationSettings $settings */
+            $settings = app(NotificationSettings::class);
+            return $settings->getReminderTiming($this->getTemplateName() ?? "");
+        } catch (\Exception $e) {
+            // Fallback to 120 minutes (2 hours) if settings are not available
+            return 120;
+        }
+    }
+
+    public function getDescription(): string
+    {
+        try {
+            /** @var NotificationSettings $settings */
+            $settings = app(NotificationSettings::class);
+            $descriptions = $settings->template_descriptions;
+            return $descriptions[$this->getTemplateName()] ??
+                "No description available";
+        } catch (\Exception $e) {
+            return "No description available";
+        }
+    }
 
     protected function formatBodyParameters($parameters): array
     {

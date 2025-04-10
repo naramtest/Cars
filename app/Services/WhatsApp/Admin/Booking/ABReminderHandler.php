@@ -59,10 +59,4 @@ class ABReminderHandler extends WhatsAppAbstractHandler
         /** @var  Booking $data */
         return ["+971562065970"];
     }
-
-    public function isEnabled(): bool
-    {
-        // TODO: Implement isEnabled() method.
-        return true;
-    }
 }
