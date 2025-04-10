@@ -15,10 +15,13 @@ class SendVehicleRegistrationExpiryReminders extends BaseNotificationCommand
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(VehicleRegistrationExpiryHandler $handler)
     {
         try {
-            $handler = app(VehicleRegistrationExpiryHandler::class);
+            if (!$this->notificationEnabled($handler)) {
+                return;
+            }
+
             $template = $this->whatsAppTemplateService->resolveTemplate(
                 $handler
             );

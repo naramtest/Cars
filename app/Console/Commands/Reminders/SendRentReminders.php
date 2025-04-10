@@ -21,14 +21,20 @@ class SendRentReminders extends BaseNotificationCommand
 
         // Send start reminders
         $startHandler = new ARReminderHandler(ARReminderHandler::TYPE_START);
-        $this->sendRentReminder($startHandler, "start");
+        if ($this->notificationEnabled($startHandler)) {
+            $this->sendRentReminder($startHandler, "start");
+        }
 
         // Send end reminders
         $endHandler = new ARReminderHandler(ARReminderHandler::TYPE_END);
-        $this->sendRentReminder($endHandler, "end");
+        if ($this->notificationEnabled($endHandler)) {
+            $this->sendRentReminder($endHandler, "end");
+        }
 
         $endCustomerHandler = app(CREndReminderHandler::class);
-        $this->sendRentReminder($endCustomerHandler, "end");
+        if ($this->notificationEnabled($endCustomerHandler)) {
+            $this->sendRentReminder($endCustomerHandler, "end");
+        }
 
         return 0;
     }
@@ -47,14 +53,16 @@ class SendRentReminders extends BaseNotificationCommand
                 $type === "start" ? "rental_start_date" : "rental_end_date";
 
             // Find rents with events happening in about 2 hours
-            $twoHoursFromNow = Carbon::now()->addHours(2);
+            $minutesFromNow = Carbon::now()->addMinutes(
+                $handler->getReminderTiming()
+            );
 
             $upcomingRents = Rent::with([
                 "vehicle",
                 "vehicle.driver",
                 "notifications",
             ])
-                ->whereBetween($dateField, [now(), $twoHoursFromNow])
+                ->whereBetween($dateField, [now(), $minutesFromNow])
                 ->whereDoesntHave("notifications", function ($query) use (
                     $template
                 ) {

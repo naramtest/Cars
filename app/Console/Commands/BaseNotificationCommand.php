@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
 use App\Services\WhatsApp\WhatsAppNotificationService;
 use App\Services\WhatsApp\WhatsAppTemplateService;
 use Illuminate\Console\Command;
@@ -13,6 +14,19 @@ abstract class BaseNotificationCommand extends Command
         protected WhatsAppTemplateService $whatsAppTemplateService
     ) {
         parent::__construct();
+    }
+
+    public function notificationEnabled(WhatsAppAbstractHandler $handler): bool
+    {
+        if (!$handler->isEnabled()) {
+            $this->info(
+                "Notification " .
+                    $handler->getTemplateName() .
+                    " is disabled, skipping."
+            );
+            return false;
+        }
+        return true;
     }
 
     protected function sendNotification(

@@ -17,12 +17,17 @@ class SendShippingDriverReminders extends BaseNotificationCommand
     public function handle(DSReminderHandler $handler)
     {
         try {
+            if (!$this->notificationEnabled($handler)) {
+                return;
+            }
             $template = $this->whatsAppTemplateService->resolveTemplate(
                 $handler
             );
 
             // Find shippings scheduled for pickup in ~30 minutes
-            $windowEnd = Carbon::now()->addMinutes(35);
+            $windowEnd = Carbon::now()->addMinutes(
+                $handler->getReminderTiming()
+            );
 
             $upcomingShippings = Shipping::with(["driver", "notifications"])
                 ->whereNotNull("pick_up_at")

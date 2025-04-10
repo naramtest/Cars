@@ -17,12 +17,15 @@ class SendShippingReminders extends BaseNotificationCommand
     public function handle(AsReminderHandler $handler)
     {
         try {
+            if (!$this->notificationEnabled($handler)) {
+                return;
+            }
+            $minutesFromNow = Carbon::now()->addMinutes(
+                $handler->getReminderTiming()
+            );
             $template = $this->whatsAppTemplateService->resolveTemplate(
                 $handler
             );
-
-            // Find shippings scheduled for pickup or delivery in about 2 hours
-            $twoHoursFromNow = Carbon::now()->addHours(2);
 
             // Look for shippings with received_at (pickup time) scheduled within the next 2 hours
             $upcomingShippings = Shipping::with([
@@ -31,7 +34,7 @@ class SendShippingReminders extends BaseNotificationCommand
                 "notifications",
             ])
                 ->whereNotNull("pick_up_at")
-                ->whereBetween("pick_up_at", [now(), $twoHoursFromNow])
+                ->whereBetween("pick_up_at", [now(), $minutesFromNow])
                 ->where("status", ShippingStatus::Pending->value)
                 ->whereDoesntHave("notifications", function ($query) use (
                     $template

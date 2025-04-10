@@ -24,15 +24,18 @@ class SendBookingReminders extends BaseNotificationCommand
     private function sendBookingReminder(WhatsAppAbstractHandler $handler): void
     {
         try {
+            if (!$this->notificationEnabled($handler)) {
+                return;
+            }
+            $minutesFromNow = Carbon::now()->addMinutes(
+                $handler->getReminderTiming()
+            );
             $template = $this->whatsAppTemplateService->resolveTemplate(
                 $handler
             );
 
-            // Find bookings starting in about 2 hours
-            $twoHoursFromNow = Carbon::now()->addHours(2);
-
             $upcomingBookings = Booking::with(["driver", "notifications"])
-                ->whereBetween("start_datetime", [now(), $twoHoursFromNow])
+                ->whereBetween("start_datetime", [now(), $minutesFromNow])
                 ->whereDoesntHave("notifications", function ($query) use (
                     $template
                 ) {

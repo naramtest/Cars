@@ -13,17 +13,16 @@ class SendDriverVehicleInspectionReminders extends BaseNotificationCommand
     protected $signature = "notifications:driver-vehicle-inspections";
     protected $description = "Send WhatsApp reminders to drivers for vehicles due for inspection";
 
-    public function handle()
+    public function handle(DVInspectionReminderHandler $handler)
     {
         try {
-            $handler = app(DVInspectionReminderHandler::class);
+            if (!$this->notificationEnabled($handler)) {
+                return;
+            }
             $template = $this->whatsAppTemplateService->resolveTemplate(
                 $handler
             );
-            $notificationDays = config(
-                "inspections.notification_days_before",
-                7
-            );
+            $notificationDays = ceil($handler->getReminderTiming() / 1440);
 
             // Find vehicles that need inspection soon and have an assigned driver
             $vehicles = Vehicle::with([
