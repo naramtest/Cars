@@ -6,6 +6,7 @@ use App\Enums\Shipping\ShippingStatus;
 use App\Models\Shipping;
 use App\Services\WhatsApp\Admin\Shipping\ASDeliveredHandler;
 use App\Services\WhatsApp\Admin\Shipping\ASNewHandler;
+use App\Services\WhatsApp\Driver\Shipping\DSDeliveryHandler;
 use App\Services\WhatsApp\Driver\Shipping\DSNewHandler;
 
 class ShippingObserver extends NotificationObserver
@@ -50,6 +51,16 @@ class ShippingObserver extends NotificationObserver
             $shipping->driver_id
         ) {
             $this->sendAndSave(DSNewHandler::class, $shipping);
+        }
+
+        // New logic for picked up status
+        if (
+            $shipping->isDirty("status") &&
+            $shipping->status === ShippingStatus::Picked_Up &&
+            $shipping->getOriginal("status") !== ShippingStatus::Picked_Up &&
+            $shipping->driver_id
+        ) {
+            $this->sendAndSave(DSDeliveryHandler::class, $shipping);
         }
     }
 }

@@ -7,7 +7,7 @@ use App\Services\WhatsApp\Admin\Vehicle\{VehicleInspectionReminderHandler, Vehic
 use App\Services\WhatsApp\Customer\Booking\{CBNewHandler};
 use App\Services\WhatsApp\Customer\Rent\{CREndReminderHandler, CRNewHandler};
 use App\Services\WhatsApp\Driver\Booking\{DBNewHandler, DBReminderHandler, DBUpdatedHandler};
-use App\Services\WhatsApp\Driver\Shipping\{DSNewHandler, DSReminderHandler};
+use App\Services\WhatsApp\Driver\Shipping\{DSDeliveryHandler, DSNewHandler, DSReminderHandler};
 use App\Services\WhatsApp\Driver\Vehicle\{DVInspectionReminderHandler};
 
 return [
@@ -23,6 +23,7 @@ return [
         //Shipping
         "driver_shipping_confirmed" => DSNewHandler::class,
         "driver_shipping_reminder" => DSReminderHandler::class,
+        "driver_shipping_delivery" => DSDeliveryHandler::class,
     ],
     "admin" => [
         "admin_booking_new" => ABNewHandler::class,
