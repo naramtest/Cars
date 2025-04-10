@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\Reminders;
+namespace App\Console\Commands\Reminders\Driver;
 
 use App\Console\Commands\BaseNotificationCommand;
 use App\Models\Vehicle;
