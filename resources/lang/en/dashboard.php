@@ -252,4 +252,8 @@ return [
     "about" => "About",
     "label" => "Info",
     "Pickup at" => "Pickup at",
+    "admin_phone_numbers" => "Admins Phone Numbers",
+    "Admin Name" => "Admin Name",
+    "Phone numbers that will receive WhatsApp notifications" =>
+        "Phone numbers that will receive WhatsApp notifications",
 ];

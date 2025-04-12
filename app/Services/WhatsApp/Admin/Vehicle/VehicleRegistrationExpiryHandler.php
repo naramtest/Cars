@@ -5,9 +5,12 @@ namespace App\Services\WhatsApp\Admin\Vehicle;
 use App\Filament\Resources\VehicleResource;
 use App\Models\Vehicle;
 use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
+use App\Traits\HasAdminPhoneNumbers;
 
 class VehicleRegistrationExpiryHandler extends WhatsAppAbstractHandler
 {
+    use HasAdminPhoneNumbers;
+
     /** @var Vehicle $modelData */
     public function prepareBodyData($modelData): array
     {
@@ -96,11 +99,5 @@ class VehicleRegistrationExpiryHandler extends WhatsAppAbstractHandler
     public function getGroup(): string
     {
         return "admin";
-    }
-
-    public function phoneNumbers($data)
-    {
-        // TODO: Get admin numbers from settings or database
-        return ["+971562065970"]; // Replace with appropriate admin phone numbers
     }
 }

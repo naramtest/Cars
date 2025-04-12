@@ -85,6 +85,39 @@ class Info extends SettingsPage
                                 ->label(__("dashboard.email")),
                         ])
                         ->columns(),
+                    Tab::make("Admins Phone Numbers")
+                        ->icon("gmdi-phone-o")
+                        ->label(__("dashboard.admin_phone_numbers"))
+                        ->schema([
+                            Repeater::make("admin_phones")
+                                ->columns()
+                                ->hiddenLabel()
+                                ->schema([
+                                    PhoneInput::make("number")
+                                        ->label(__("dashboard.phone"))
+                                        ->required()
+                                        ->columnSpan(1)
+                                        ->hiddenLabel(),
+                                    TextInput::make("name")
+                                        ->label(__("dashboard.name"))
+                                        ->required()
+                                        ->columnSpan(1)
+                                        ->hiddenLabel()
+                                        ->placeholder(
+                                            __("dashboard.Admin Name")
+                                        )
+                                        ->maxLength(100),
+                                ])
+                                ->columnSpan(1)
+                                ->label(__("dashboard.admin_phone_numbers"))
+                                ->helperText(
+                                    __(
+                                        "dashboard.Phone numbers that will receive WhatsApp notifications"
+                                    )
+                                )
+                                ->defaultItems(1),
+                        ]),
+
                     Tab::make("Social Media")
                         ->label(__("dashboard.social_title"))
                         ->icon("gmdi-tag-o")

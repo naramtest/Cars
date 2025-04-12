@@ -41,14 +41,13 @@ return new class extends SettingsMigration {
 
     private function getDefaultDescriptions(): array
     {
-        //TODO: fix before deploy
         return [
             // Admin notifications
             "admin_booking_new" =>
                 "Sent to admin when a new booking is created",
             "admin_booking_reminder" =>
                 "Sent to admin before a booking pickup time",
-            "admin_rent_new" => "Sent to admin when a new rental is created",
+            "admin_rent_new" => "Sent to admin when a new rent is created",
             "admin_rent_reminder" =>
                 "Sent to admin before a rental start/end time",
             "admin_vehicle_inspection_reminder" =>
@@ -82,7 +81,7 @@ return new class extends SettingsMigration {
             "customer_booking_new" =>
                 "Sent to customer when their booking is confirmed",
             "customer_rent_new" =>
-                "Sent to customer when their rental is confirmed",
+                "Sent to customer when their rent is confirmed",
             "customer_rent_end_reminder" =>
                 "Sent to customer before their rental ends",
             "customer_shipping_confirmed" =>
@@ -96,7 +95,6 @@ return new class extends SettingsMigration {
 
     private function getDefaultReminderTimings(): array
     {
-        //TODO: fix before deploy
         return [
             // Default values in minutes
             "admin_booking_reminder" => 120, // 2 hours

@@ -2,12 +2,13 @@
 
 namespace App\Services\WhatsApp\Admin\Booking;
 
-use App\Models\Booking;
 use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
 use App\Services\WhatsApp\Traits\BookingNotificationData;
+use App\Traits\HasAdminPhoneNumbers;
 
 class ABNewHandler extends WhatsAppAbstractHandler
 {
+    use HasAdminPhoneNumbers;
     use BookingNotificationData;
 
     public function prepareButtonData($modelData): array
@@ -18,13 +19,6 @@ class ABNewHandler extends WhatsAppAbstractHandler
     public function getGroup(): string
     {
         return "admin";
-    }
-
-    public function phoneNumbers($data)
-    {
-        //TODO: get it from database
-        /** @var  Booking $data */
-        return ["+971562065970"];
     }
 
     public function facebookTemplateData(): array

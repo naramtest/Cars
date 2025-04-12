@@ -5,9 +5,12 @@ namespace App\Services\WhatsApp\Admin\Shipping;
 use App\Filament\Resources\ShippingResource;
 use App\Models\Shipping;
 use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
+use App\Traits\HasAdminPhoneNumbers;
 
 class ASDeliveredHandler extends WhatsAppAbstractHandler
 {
+    use HasAdminPhoneNumbers;
+
     /**
      * Prepares body data for shipping delivered notification
      *
@@ -104,11 +107,5 @@ class ASDeliveredHandler extends WhatsAppAbstractHandler
     public function getGroup(): string
     {
         return "admin";
-    }
-
-    public function phoneNumbers($data)
-    {
-        // TODO: Get admin numbers from settings or database
-        return ["+971562065970"]; // Replace with appropriate admin phone numbers
     }
 }

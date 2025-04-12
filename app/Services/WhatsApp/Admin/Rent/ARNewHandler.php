@@ -5,9 +5,12 @@ namespace App\Services\WhatsApp\Admin\Rent;
 use App\Filament\Resources\RentResource;
 use App\Models\Rent;
 use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
+use App\Traits\HasAdminPhoneNumbers;
 
 class ARNewHandler extends WhatsAppAbstractHandler
 {
+    use HasAdminPhoneNumbers;
+
     /**
      * Prepares body data for rent notification
      *
@@ -117,11 +120,5 @@ class ARNewHandler extends WhatsAppAbstractHandler
     public function getGroup(): string
     {
         return "admin";
-    }
-
-    public function phoneNumbers($data)
-    {
-        // TODO: Get admin numbers from settings or database
-        return ["+971562065970"]; // Replace with appropriate admin phone numbers
     }
 }

@@ -17,6 +17,7 @@ class InfoSettings extends Settings
     public array $emails;
     public array $socials;
     public string $support_whatsapp_number; // Add this line
+    public array $admin_phones = []; // New field for admin phone numbers
 
     public static function group(): string
     {

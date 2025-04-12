@@ -156,8 +156,6 @@ class Vehicle extends MoneyModel
         return Carbon::now()->diffInDays($this->next_inspection_date, false);
     }
 
-    //TODO: send notification when it is due
-
     // Check if inspection is due based on setting
     public function getIsInspectionDueAttribute(): bool
     {
