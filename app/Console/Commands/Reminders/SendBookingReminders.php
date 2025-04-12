@@ -42,8 +42,6 @@ class SendBookingReminders extends BaseNotificationCommand
                     $query->where("notification_type", $template->name);
                 })
                 ->get();
-            $this->info($minutesFromNow, count($upcomingBookings));
-            return;
 
             foreach ($upcomingBookings as $booking) {
                 $this->sendNotification($booking, $handler, $template->name);
