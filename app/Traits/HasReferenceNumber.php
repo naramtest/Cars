@@ -8,7 +8,7 @@ trait HasReferenceNumber
     {
         static::creating(function ($model) {
             $prefix = $model->getReferenceNumberPrefix();
-
+            $referenceColumn = $model->getReferenceNumberColumn();
             if (empty($model->{$referenceColumn})) {
                 $model->{$referenceColumn} = $model->generateReferenceNumber(
                     $prefix
@@ -21,6 +21,13 @@ trait HasReferenceNumber
     {
         return "SHP";
     }
+
+    protected function getReferenceNumberColumn(): string
+    {
+        return "reference_number";
+    }
+
+    // You can override these methods in your models if needed
 
     public function generateReferenceNumber(
         string $prefix = "SHP",

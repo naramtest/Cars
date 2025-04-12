@@ -64,7 +64,6 @@ class BookingFormSchema
                         ->maxLength(255),
                     PhoneInput::make("client_phone")
                         ->label(__("dashboard.phone_number"))
-                        ->unique(ignoreRecord: true)
                         ->required(),
                 ])
                 ->columns(1)
@@ -181,9 +180,7 @@ class BookingFormSchema
                 ->label(__("dashboard.Addons"))
                 ->multiple()
                 ->relationship("addons", "name")
-                ->preload()
-                ->required(),
-
+                ->preload(),
             Forms\Components\Textarea::make("notes")
                 ->label(__("dashboard.notes"))
                 ->maxLength(65535),
