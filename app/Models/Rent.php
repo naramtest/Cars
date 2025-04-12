@@ -29,6 +29,7 @@ class Rent extends MoneyModel
         "terms_conditions",
         "description",
         "vehicle_id",
+        "total_price",
     ];
 
     protected $casts = [
@@ -46,63 +47,30 @@ class Rent extends MoneyModel
     }
 
     /**
-     * Calculate the total duration of the rental in days.
+     * Calculate the total duration of the booking in days.
      */
-    public function getDurationInDaysAttribute(): float
+    public function getDurationInDaysAttribute(): int
     {
-        if (!$this->rental_end_date) {
+        if (!$this->end_datetime || !$this->start_datetime) {
             return 0;
         }
 
-        $start = $this->rental_start_date;
-        $end = $this->rental_end_date;
-
-        return $start->diffInDays($end) +
-            ($start->diffInHours($end) % 24 > 0 ? 1 : 0);
+        return $this->start_datetime
+            ->startOfDay()
+            ->diffInDays($this->end_datetime->startOfDay()) + 1;
     }
 
-    //TODO: extract to a class (and check to see if it should be in hours or days )
-
-    /**
-     * Calculate the total price of the rental as a Money object.
-     *
-     * @return Money
-     */
-    public function getTotalPriceMoneyAttribute(): Money
-    {
-        // If there's no vehicle or end date, return zero
-        if (!$this->vehicle || !$this->rental_end_date) {
-            return $this->currencyService->money(0);
-        }
-
-        $dailyRateMoney = $this->vehicle->daily_rate_money;
-        $duration = $this->duration_in_days;
-
-        // Daily rate multiplied by the duration
-        return $dailyRateMoney->multiply($duration);
-    }
-
-    /**
-     * Get the total price as an integer (for storage or calculations)
-     *
-     * @return int
-     */
-    public function getTotalPriceAttribute(): int
-    {
-        return (int) $this->total_price_money->getAmount();
-    }
-
-    /**
-     * Get the formatted total price.
-     *
-     * @return string
-     */
     public function getFormattedTotalPriceAttribute(): string
     {
         return $this->currencyService->format(
-            $this->total_price_money,
+            $this->getTotalPriceMoneyAttribute(),
             app()->getLocale()
         );
+    }
+
+    public function getTotalPriceMoneyAttribute(): Money
+    {
+        return $this->currencyService->money($this->total_price);
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Enums\ReservationStatus;
 use App\Models\Rent;
 use Filament\Forms;
 use Filament\Forms\Get;
+use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class RentFormSchema
@@ -93,6 +94,7 @@ class RentFormSchema
                     ->default(ReservationStatus::Pending)
                     ->visible(fn($operation) => $operation === "create")
                     ->required(),
+                MoneyInput::make("total_price")->required(),
             ])->columnSpan(1),
             Forms\Components\Section::make()
                 ->extraAttributes([
@@ -185,16 +187,6 @@ class RentFormSchema
                                 __("dashboard.days")
                             : "-"
                     )
-                    ->hidden(fn(string $operation) => $operation !== "edit"),
-
-                Forms\Components\Placeholder::make("total_price_money")
-                    ->content(
-                        fn(?Rent $record) => $record && $record->rental_end_date
-                            ? $record->formatted_total_price
-                            : "-"
-                    )
-                    ->label(__("dashboard.total_price"))
-                    ->inlineLabel()
                     ->hidden(fn(string $operation) => $operation !== "edit"),
             ]),
         ])

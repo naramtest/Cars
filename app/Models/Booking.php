@@ -91,7 +91,7 @@ class Booking extends MoneyModel
 
     public function getFormattedTotalPriceAttribute(): string
     {
-        return $this->currencyService()->format(
+        return $this->currencyService->format(
             $this->getTotalPriceMoneyAttribute(),
             app()->getLocale()
         );
