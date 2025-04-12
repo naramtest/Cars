@@ -9,6 +9,13 @@ trait HasNotifications
     public function recordNotification(string $type, array $metadata = [])
     {
         logger($type);
+        logger(
+            $this->notifications()->create([
+                "notification_type" => $type,
+                "sent_at" => now(),
+                "metadata" => $metadata,
+            ])
+        );
         return $this->notifications()->create([
             "notification_type" => $type,
             "sent_at" => now(),

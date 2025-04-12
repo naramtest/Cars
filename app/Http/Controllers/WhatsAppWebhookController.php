@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Netflie\WhatsAppCloudApi\WebHook;
 
 class WhatsAppWebhookController extends Controller
@@ -25,40 +24,38 @@ class WhatsAppWebhookController extends Controller
     {
         $webhook = new WebHook();
 
-        // Get raw payload
-        $payload = $request->getContent();
-
-        // Optional: log the incoming payload
-        Log::info("WhatsApp Webhook Payload: " . $payload);
-
-        // Decode the payload and read notification
-        $notification = $webhook->read(json_decode($payload, true));
-
-        // Handle the notification (Example: incoming message)
-        if ($notification && $notification->type() === "message") {
-            $message = $notification->message();
-
-            // Example handling: log incoming message details
-            Log::info("Incoming WhatsApp message", [
-                "from" => $message->from(),
-                "text" => $message->text(),
-            ]);
-        }
-
-        // To handle multiple messages (batch)
-        $notifications = $webhook->readAll(json_decode($payload, true));
-
-        foreach ($notifications as $notif) {
-            if ($notif->type() === "message") {
-                $message = $notif->message();
-
-                // Handle each message individually
-                Log::info("Batch WhatsApp message", [
-                    "from" => $message->from(),
-                    "text" => $message->text(),
-                ]);
-            }
-        }
+        //        // Get raw payload
+        //        $payload = $request->getContent();
+        //
+        //
+        //        // Decode the payload and read notification
+        //        $notification = $webhook->read(json_decode($payload, true));
+        //
+        //        // Handle the notification (Example: incoming message)
+        //        if ($notification && $notification->type() === "message") {
+        //            $message = $notification->message();
+        //
+        //            // Example handling: log incoming message details
+        //            Log::info("Incoming WhatsApp message", [
+        //                "from" => $message->from(),
+        //                "text" => $message->text(),
+        //            ]);
+        //        }
+        //
+        //        // To handle multiple messages (batch)
+        //        $notifications = $webhook->readAll(json_decode($payload, true));
+        //
+        //        foreach ($notifications as $notif) {
+        //            if ($notif->type() === "message") {
+        //                $message = $notif->message();
+        //
+        //                // Handle each message individually
+        //                Log::info("Batch WhatsApp message", [
+        //                    "from" => $message->from(),
+        //                    "text" => $message->text(),
+        //                ]);
+        //            }
+        //        }
 
         return response("EVENT_RECEIVED", 200);
     }
