@@ -14,15 +14,15 @@ class NotificationObserver
     ) {}
 
     //TODO:resend booking updated  notification even when it sends
-    protected function sendAndSave(string $class, Model $rent): void
+    protected function sendAndSave(string $class, Model $model): void
     {
         try {
-            $this->notificationService->sendAndSave($class, $rent);
+            $this->notificationService->sendAndSave($class, $model);
         } catch (ConnectionException | ResponseException | \Exception $e) {
             logger()->error(
-                "Failed to send rent notification: " . $e->getMessage(),
+                "Failed to send  notification: " . $e->getMessage(),
                 [
-                    "rent_id" => $rent->id,
+                    "model_id" => $model->id,
                     "handler" => $class,
                 ]
             );
