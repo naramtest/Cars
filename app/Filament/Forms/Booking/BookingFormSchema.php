@@ -8,6 +8,7 @@ use App\Models\Driver;
 use App\Models\Vehicle;
 use Filament\Forms;
 use Filament\Forms\Get;
+use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class BookingFormSchema
@@ -117,6 +118,7 @@ class BookingFormSchema
                         ->default(ReservationStatus::Pending)
                         ->visible(fn($operation) => $operation === "create")
                         ->required(),
+                    MoneyInput::make("total_price")->required(),
                 ])
                 ->columnSpan(1)
                 ->columns(1),
@@ -190,8 +192,6 @@ class BookingFormSchema
 
     public static function statusInfoSection(): Forms\Components\Group
     {
-        //        TODO: add reactive price (all section details )
-
         return Forms\Components\Group::make([
             Forms\Components\Section::make(__("dashboard.Status"))->schema([
                 Forms\Components\Select::make("status")
@@ -231,14 +231,6 @@ class BookingFormSchema
                                 __("dashboard.days")
                             : "-"
                     )
-                    ->hidden(fn(string $operation) => $operation === "create"),
-
-                Forms\Components\Placeholder::make("total_price_money")
-                    ->content(
-                        fn(?Booking $record) => $record->formatted_total_price
-                    )
-                    ->inlineLabel()
-                    ->label(__("dashboard.total_price"))
                     ->hidden(fn(string $operation) => $operation === "create"),
             ]),
         ])

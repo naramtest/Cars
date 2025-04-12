@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\Addon\BillingType;
 use App\Enums\ReservationStatus;
 use App\Models\Abstract\MoneyModel;
 use App\Traits\CheckStatus;
@@ -33,6 +32,7 @@ class Booking extends MoneyModel
         "status",
         "notes",
         "reference_number",
+        "total_price",
     ];
 
     protected $casts = [
@@ -60,72 +60,15 @@ class Booking extends MoneyModel
     /**
      * Calculate the total duration of the booking in days.
      */
-    public function getDurationInDaysAttribute(): float
+    public function getDurationInDaysAttribute(): int
     {
-        $start = $this->start_datetime;
-        $end = $this->end_datetime;
-
-        return $start->diffInDays($end) +
-            ($start->diffInHours($end) % 24 > 0 ? 1 : 0);
-    }
-
-    /**
-     * Calculate the total price of the booking as a Money object.
-     *
-     * @return Money
-     */
-    public function getTotalPriceMoneyAttribute(): Money
-    {
-        //TODO: refactor this section (extract it to a Service)
-
-        // If there's no vehicle, return zero
-        if (!$this->vehicle) {
-            return $this->currencyService()->money(0);
+        if (!$this->end_datetime || !$this->start_datetime) {
+            return 0;
         }
 
-        $dailyRateMoney = $this->vehicle->daily_rate_money;
-        $duration = $this->duration_in_days;
-
-        // Start with the daily rate multiplied by the duration
-        $totalPrice = $dailyRateMoney->multiply($duration);
-
-        // Add addon prices
-        if ($this->addons) {
-            /** @var Addon $addon */
-            foreach ($this->addons as $addon) {
-                $addonPrice = $addon->price_money;
-                $billingType = $addon->billing_type;
-                if ($billingType === BillingType::Daily) {
-                    $addonPrice = $addonPrice->multiply($duration);
-                }
-                $totalPrice = $totalPrice->add($addonPrice);
-            }
-        }
-
-        return $totalPrice;
-    }
-
-    /**
-     * Get the total price as an integer (for storage or calculations)
-     *
-     * @return int
-     */
-    public function getTotalPriceAttribute(): int
-    {
-        return (int) $this->total_price_money->getAmount();
-    }
-
-    /**
-     * Get the formatted total price.
-     *
-     * @return string
-     */
-    public function getFormattedTotalPriceAttribute(): string
-    {
-        return $this->currencyService()->format(
-            $this->total_price_money,
-            app()->getLocale()
-        );
+        return $this->start_datetime
+            ->startOfDay()
+            ->diffInDays($this->end_datetime->startOfDay()) + 1;
     }
 
     /**
@@ -144,6 +87,19 @@ class Booking extends MoneyModel
         return $this->belongsToMany(Addon::class, "booking_addon")
             ->withPivot("quantity")
             ->withTimestamps();
+    }
+
+    public function getFormattedTotalPriceAttribute(): string
+    {
+        return $this->currencyService()->format(
+            $this->getTotalPriceMoneyAttribute(),
+            app()->getLocale()
+        );
+    }
+
+    public function getTotalPriceMoneyAttribute(): Money
+    {
+        return $this->currencyService->money($this->total_price);
     }
 
     protected function getReferenceNumberPrefix(): string

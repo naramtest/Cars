@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Forms\Booking\BookingFormSchema;
 use App\Filament\Resources\BookingResource\Pages;
-use App\Filament\Resources\BookingResource\RelationManagers;
 use App\Filament\Tables\Booking\BookingTableSchema;
 use App\Models\Booking;
 use Filament\Forms\Form;
