@@ -8,6 +8,6 @@ trait CheckStatus
     {
         return $this->isDirty("status") &&
             $this->status === $value &&
-            $this->getOriginal("status") !== $original ?? $value;
+            $this->getOriginal("status") === $original ?? $value;
     }
 }
