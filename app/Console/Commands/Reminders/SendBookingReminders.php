@@ -25,7 +25,7 @@ class SendBookingReminders extends BaseNotificationCommand
     {
         try {
             if (!$this->notificationEnabled($handler)) {
-                return;
+                $this->info("Notification disabled");
             }
             $minutesFromNow = Carbon::now()->addMinutes(
                 $handler->getReminderTiming()
