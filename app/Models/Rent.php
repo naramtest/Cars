@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\ReservationStatus;
 use App\Models\Abstract\MoneyModel;
 use App\Traits\CheckStatus;
+use App\Traits\HasNotifications;
 use App\Traits\HasReferenceNumber;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -14,6 +15,8 @@ class Rent extends MoneyModel
 {
     use SoftDeletes;
     use HasReferenceNumber;
+    use HasNotifications;
+
     use CheckStatus;
 
     protected $fillable = [

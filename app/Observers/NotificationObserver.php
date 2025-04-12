@@ -13,6 +13,7 @@ class NotificationObserver
         protected WhatsAppNotificationService $notificationService
     ) {}
 
+    //TODO:resend booking updated  notification even when it sends
     protected function sendAndSave(string $class, Model $rent): void
     {
         try {
