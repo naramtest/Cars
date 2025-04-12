@@ -20,7 +20,11 @@ class Info extends SettingsPage
 
     protected static ?string $navigationIcon = "heroicon-o-cog-6-tooth";
     protected static string $settings = InfoSettings::class;
-    protected static ?string $navigationGroup = "Settings";
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __("dashboard.System Settings");
+    }
 
     protected function getFormSchema(): array
     {

@@ -24,14 +24,13 @@ class NotificationSettingsPage extends Page implements HasForms
     protected static ?string $navigationIcon = "heroicon-o-bell-alert";
 
     protected static ?string $navigationLabel = "Notification Settings";
-
-    protected static ?string $navigationGroup = "Settings";
-
-    protected static ?int $navigationSort = 90;
-
     protected static string $view = "filament.pages.notification-settings";
-
     public ?array $data = [];
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __("dashboard.System Settings");
+    }
 
     public function mount(NotificationSettings $settings): void
     {
@@ -125,7 +124,7 @@ class NotificationSettingsPage extends Page implements HasForms
                             )
                         )
                         ->columnSpan(1)
-                    : Placeholder::make("spacer")->content("")->columnSpan(1),
+                    : Placeholder::make("")->content("")->columnSpan(1),
             ]);
         }
 
