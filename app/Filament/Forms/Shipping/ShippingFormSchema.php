@@ -53,7 +53,8 @@ class ShippingFormSchema
             Forms\Components\Group::make([
                 Forms\Components\TextInput::make("reference_number")
                     ->label(__("dashboard.tracking_number"))
-                    ->placeholder("Will be auto-generated if Empty")
+                    ->disabled()
+                    ->placeholder("Will be auto-generated")
                     ->maxLength(255),
 
                 Forms\Components\Select::make("driver_id")
