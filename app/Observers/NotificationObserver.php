@@ -17,7 +17,7 @@ class NotificationObserver
     {
         try {
             $this->notificationService->sendAndSave($class, $rent);
-        } catch (ConnectionException | ResponseException $e) {
+        } catch (ConnectionException | ResponseException | \Exception $e) {
             logger()->error(
                 "Failed to send rent notification: " . $e->getMessage(),
                 [

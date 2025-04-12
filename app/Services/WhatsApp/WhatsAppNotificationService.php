@@ -42,6 +42,9 @@ class WhatsAppNotificationService
         $template = app(WhatsAppTemplateService::class)->resolveTemplate(
             $handler
         );
+        if ($data->hasNotificationBeenSent($template->name)) {
+            throw new Exception("Notification already sent.");
+        }
         //2- send template message
         $this->send($handler, $data, $recipients);
         //3- save sent message to the database

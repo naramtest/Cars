@@ -27,6 +27,7 @@ class BookingObserver extends NotificationObserver
     public function updated(Booking $booking): void
     {
         // Check if status was changed from pending to confirmed
+
         if (
             $booking->check(
                 ReservationStatus::Confirmed,
