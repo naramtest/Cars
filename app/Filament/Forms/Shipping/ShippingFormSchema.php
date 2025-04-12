@@ -4,6 +4,8 @@ namespace App\Filament\Forms\Shipping;
 
 use App\Enums\Shipping\ShippingStatus;
 use App\Models\Shipping;
+use Awcodes\TableRepeater\Components\TableRepeater;
+use Awcodes\TableRepeater\Header;
 use Filament\Forms;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
@@ -149,27 +151,29 @@ class ShippingFormSchema
      */
     public static function getItemsRepeater(): Forms\Components\Section
     {
-        //TODO: change to the package repeater to make the design better
         return Forms\Components\Section::make(
             __("dashboard.shipping_items")
         )->schema([
-            Forms\Components\Repeater::make("items")
-                ->relationship()
+            TableRepeater::make("items")
+                ->relationship("items")
+                ->hiddenLabel()
+                ->headers([
+                    Header::make(__("dashboard.name"))->markAsRequired(),
+                    Header::make(__("dashboard.quantity"))->markAsRequired(),
+                    Header::make(__("dashboard.weight"))->markAsRequired(),
+                ])
                 ->schema([
                     Forms\Components\TextInput::make("name")
-                        ->label(__("dashboard.name"))
                         ->required()
                         ->maxLength(255),
 
                     Forms\Components\TextInput::make("quantity")
-                        ->label(__("dashboard.quantity"))
                         ->numeric()
                         ->minValue(1)
                         ->default(1)
                         ->required(),
 
                     Forms\Components\TextInput::make("weight")
-                        ->label(__("dashboard.weight"))
                         ->numeric()
                         ->minValue(0)
                         ->suffix("kg")
@@ -178,7 +182,6 @@ class ShippingFormSchema
                 ->columns(3)
                 ->itemLabel(fn(array $state): ?string => $state["name"] ?? null)
                 ->addActionLabel(__("dashboard.add_item"))
-                ->reorderable(false)
                 ->defaultItems(0)
                 ->afterStateUpdated(function (Forms\Get $get, Forms\Set $set) {
                     // This will be used to trigger a recalculation in the save handler

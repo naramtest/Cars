@@ -81,7 +81,6 @@ class Shipping extends Model
         return $query->whereIn("status", [
             ShippingStatus::Pending->value,
             ShippingStatus::Picked_Up->value,
-            ShippingStatus::In_Transit->value,
         ]);
     }
 
