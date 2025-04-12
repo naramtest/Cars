@@ -40,6 +40,7 @@ class Shipping extends Model
         "total_weight" => "float",
         "received_at" => "datetime",
         "delivered_at" => "datetime",
+        "pick_up_at" => "datetime",
     ];
 
     /**
