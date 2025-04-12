@@ -50,7 +50,8 @@ class NotificationSettingsPage extends Page implements HasForms
                         $this->getDriverTab(),
                         $this->getCustomerTab(),
                     ])
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->contained(false),
             ])
             ->statePath("data");
     }
