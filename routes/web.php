@@ -47,6 +47,6 @@ Route::get("/", function () {
     app(
         \App\Services\WhatsApp\WhatsAppUpdateTemplateService::class
     )->updateTemplate(
-        \App\Services\WhatsApp\Driver\Shipping\DSNewHandler::class
+        \App\Services\WhatsApp\Driver\Shipping\DSReminderHandler::class
     );
 });

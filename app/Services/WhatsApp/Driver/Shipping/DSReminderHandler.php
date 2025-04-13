@@ -2,7 +2,6 @@
 
 namespace App\Services\WhatsApp\Driver\Shipping;
 
-use App\Helpers\TokenHelper;
 use App\Models\Shipping;
 use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
 
@@ -38,13 +37,6 @@ class DSReminderHandler extends WhatsAppAbstractHandler
 
     public function prepareButtonData($modelData): array
     {
-        // Generate a token containing shipping and driver info
-        $token = TokenHelper::generatePickupToken(
-            $modelData->id,
-            $modelData->driver_id,
-            $modelData->pick_up_at
-        );
-
         return [
             [
                 "type" => "button",
@@ -53,7 +45,7 @@ class DSReminderHandler extends WhatsAppAbstractHandler
                 "parameters" => [
                     [
                         "type" => "text",
-                        "text" => $token,
+                        "text" => $modelData->reference_number ?? "N/A",
                     ],
                 ],
             ],
@@ -100,12 +92,12 @@ class DSReminderHandler extends WhatsAppAbstractHandler
                         [
                             "type" => "URL",
                             "text" => "Confirm Pickup",
-                            "url" => route("shipping.driver.pickup", [
-                                "token" => "PLACEHOLDER_VALUE",
-                            ]),
-                            "example" => [
-                                "eyJpdiI6IktJWXJic0I4cTZZK05md1dRUGVPc3c9PSIsInZhbHVlIjoic1pwcFZaUzg5L0U1Q1cyOCtrZVY5OFFJUm0rMXZSaTlYblpiTTZSM0Nkd01aS3FPc2lXTm93Q0ZIaVJDMzlnVG4wM3pUMG8wQmMwMDhVaDhVcU51VWc9PSIsIm1hYyI6ImMxYTUyYzUzNzFmN2IzYThkNzAyNDhiNjljMDAzODExYjBhNDA5MjUyZjUxYThlYTdjMjhlYTQ2ZjE5OGQ2ZGUiLCJ0YWciOiIifQ==",
-                            ],
+                            "url" => templateUrlReplaceParameter(
+                                route("shipping.driver.pickup", [
+                                    "shipping" => "PLACEHOLDER_VALUE",
+                                ])
+                            ),
+                            "example" => ["SHP-202503-0001"],
                         ],
                     ],
                 ],
