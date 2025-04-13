@@ -37,9 +37,5 @@ Route::get("/webhook", [WhatsAppWebhookController::class, "verify"]);
 Route::post("/webhook", [WhatsAppWebhookController::class, "handleWebhook"]);
 
 Route::get("/", function () {
-    app(
-        \App\Services\WhatsApp\WhatsAppUpdateTemplateService::class
-    )->updateTemplate(
-        \App\Services\WhatsApp\Driver\Shipping\DSDeliveryHandler::class
-    );
+    return view("welcome");
 });
