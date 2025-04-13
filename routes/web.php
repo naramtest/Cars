@@ -21,9 +21,10 @@ Route::controller(DriverActionController::class)->group(function () {
         "confirmBookingCompletion"
     )->name("booking.driver.confirmation");
 
-    Route::get("/driver/shipping/delivery/{token}", "confirmDelivery")->name(
-        "shipping.driver.delivery"
-    );
+    Route::get(
+        "shipping/delivery/{shipping:reference_number}",
+        "confirmDelivery"
+    )->name("shipping.driver.delivery");
 
     Route::get(
         "/shipping/pickup/{shipping:reference_number}",
@@ -47,6 +48,6 @@ Route::get("/", function () {
     app(
         \App\Services\WhatsApp\WhatsAppUpdateTemplateService::class
     )->updateTemplate(
-        \App\Services\WhatsApp\Driver\Shipping\DSReminderHandler::class
+        \App\Services\WhatsApp\Driver\Shipping\DSDeliveryHandler::class
     );
 });

@@ -24,7 +24,11 @@
                 method="POST"
             >
                 @csrf
-                <input type="hidden" name="token" value="{{ $token }}" />
+                <input
+                    type="hidden"
+                    name="shipping_id"
+                    value="{{ $shipping->id }}"
+                />
 
                 <div class="mb-4">
                     <label
