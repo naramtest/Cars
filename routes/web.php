@@ -3,8 +3,10 @@
 use App\Http\Controllers\DriverActionController;
 use App\Http\Controllers\WhatsAppWebhookController;
 use App\Models\Booking;
+use App\Services\WhatsApp\Customer\Booking\CBNewHandler;
 use App\Services\WhatsApp\Driver\Booking\DBNewHandler;
 use App\Services\WhatsApp\WhatsAppNotificationService;
+use App\Services\WhatsApp\WhatsAppUpdateTemplateService;
 use App\Settings\InfoSettings;
 use Illuminate\Support\Facades\Route;
 
@@ -40,11 +42,7 @@ Route::get("/test", function (WhatsAppNotificationService $whatsAppService) {
 });
 
 Route::get("/", function () {
-    $shipping = \App\Models\Shipping::first();
-    $token = \App\Helpers\TokenHelper::generatePickupToken(
-        $shipping->id,
-        $shipping->driver_id,
-        $shipping->pick_up_at
+    app(WhatsAppUpdateTemplateService::class)->updateTemplate(
+        CBNewHandler::class
     );
-    dd(\route("shipping.driver.pickup", $token));
 });

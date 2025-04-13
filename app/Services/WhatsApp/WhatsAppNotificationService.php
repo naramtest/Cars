@@ -48,7 +48,7 @@ class WhatsAppNotificationService
         //2- send template message
         $this->send($handler, $data, $recipients);
         //3- save sent message to the database
-        //        $data->recordNotification($template->name);
+        $data->recordNotification($template->name);
     }
 
     /**

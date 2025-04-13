@@ -84,7 +84,7 @@ class CBNewHandler extends WhatsAppAbstractHandler
                         [
                             "type" => "URL",
                             "text" => "Contact Support",
-                            "url" => route("whatsapp.contact"),
+                            "url" => templateUrl(route("whatsapp.contact")),
                         ],
                     ],
                 ],
