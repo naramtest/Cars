@@ -2,9 +2,6 @@
 
 use App\Http\Controllers\DriverActionController;
 use App\Http\Controllers\WhatsAppWebhookController;
-use App\Models\Booking;
-use App\Services\WhatsApp\Driver\Booking\DBNewHandler;
-use App\Services\WhatsApp\WhatsAppNotificationService;
 use App\Settings\InfoSettings;
 use Illuminate\Support\Facades\Route;
 
@@ -38,11 +35,6 @@ Route::controller(DriverActionController::class)->group(function () {
 
 Route::get("/webhook", [WhatsAppWebhookController::class, "verify"]);
 Route::post("/webhook", [WhatsAppWebhookController::class, "handleWebhook"]);
-
-Route::get("/test", function (WhatsAppNotificationService $whatsAppService) {
-    $result = $whatsAppService->send(new DBNewHandler(), Booking::first());
-    dd($result);
-});
 
 Route::get("/", function () {
     app(
