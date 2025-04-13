@@ -3,10 +3,8 @@
 use App\Http\Controllers\DriverActionController;
 use App\Http\Controllers\WhatsAppWebhookController;
 use App\Models\Booking;
-use App\Services\WhatsApp\Customer\Booking\CBNewHandler;
 use App\Services\WhatsApp\Driver\Booking\DBNewHandler;
 use App\Services\WhatsApp\WhatsAppNotificationService;
-use App\Services\WhatsApp\WhatsAppUpdateTemplateService;
 use App\Settings\InfoSettings;
 use Illuminate\Support\Facades\Route;
 
@@ -22,12 +20,16 @@ Route::controller(DriverActionController::class)->group(function () {
         "/bookings/complete/{booking:reference_number}",
         "confirmBookingCompletion"
     )->name("booking.driver.confirmation");
+
     Route::get("/driver/shipping/delivery/{token}", "confirmDelivery")->name(
         "shipping.driver.delivery"
     );
-    Route::get("/driver/shipping/pickup/{token}", "confirmPickup")->name(
-        "shipping.driver.pickup"
-    );
+
+    Route::get(
+        "/shipping/pickup/{shipping:reference_number}",
+        "confirmPickup"
+    )->name("shipping.driver.pickup");
+
     Route::post("/driver/shipping/process-delivery", "processDelivery")->name(
         "shipping.driver.process-delivery"
     );
@@ -42,7 +44,9 @@ Route::get("/test", function (WhatsAppNotificationService $whatsAppService) {
 });
 
 Route::get("/", function () {
-    app(WhatsAppUpdateTemplateService::class)->updateTemplate(
-        CBNewHandler::class
+    app(
+        \App\Services\WhatsApp\WhatsAppUpdateTemplateService::class
+    )->updateTemplate(
+        \App\Services\WhatsApp\Driver\Shipping\DSNewHandler::class
     );
 });

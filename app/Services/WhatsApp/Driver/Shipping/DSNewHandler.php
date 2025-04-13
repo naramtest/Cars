@@ -2,7 +2,7 @@
 
 namespace App\Services\WhatsApp\Driver\Shipping;
 
-use App\Helpers\TokenHelper;
+use App\Filament\Resources\ShippingResource;
 use App\Models\Shipping;
 use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
 
@@ -33,12 +33,6 @@ class DSNewHandler extends WhatsAppAbstractHandler
     /** @var Shipping $modelData */
     public function prepareButtonData($modelData): array
     {
-        $token = TokenHelper::generatePickupToken(
-            $modelData->id,
-            $modelData->driver_id,
-            $modelData->pick_up_at
-        );
-
         return [
             [
                 "type" => "button",
@@ -47,7 +41,7 @@ class DSNewHandler extends WhatsAppAbstractHandler
                 "parameters" => [
                     [
                         "type" => "text",
-                        "text" => $token,
+                        "text" => $modelData->id,
                     ],
                 ],
             ],
@@ -92,13 +86,11 @@ class DSNewHandler extends WhatsAppAbstractHandler
                     "buttons" => [
                         [
                             "type" => "URL",
-                            "text" => "Confirm Receipt",
-                            "url" => route("shipping.driver.pickup", [
-                                "token" => "PLACEHOLDER_VALUE",
-                            ]),
-                            "example" => [
-                                "eyJpdiI6IktJWXJic0I4cTZZK05md1dRUGVPc3c9PSIsInZhbHVlIjoic1pwcFZaUzg5L0U1Q1cyOCtrZVY5OFFJUm0rMXZSaTlYblpiTTZSM0Nkd01aS3FPc2lXTm93Q0ZIaVJDMzlnVG4wM3pUMG8wQmMwMDhVaDhVcU51VWc9PSIsIm1hYyI6ImMxYTUyYzUzNzFmN2IzYThkNzAyNDhiNjljMDAzODExYjBhNDA5MjUyZjUxYThlYTdjMjhlYTQ2ZjE5OGQ2ZGUiLCJ0YWciOiIifQ==",
-                            ],
+                            "text" => "View  Details",
+                            "url" => templateUrl(
+                                ShippingResource::getUrl() . "/{{1}}"
+                            ),
+                            "example" => ["1"],
                         ],
                     ],
                 ],
