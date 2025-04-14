@@ -33,6 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->id("admin")
             ->path("admin")
             ->login()
+            ->sidebarWidth("md")
             ->viteTheme("resources/css/filament/admin/theme.css")
             ->databaseNotifications()
             ->colors([

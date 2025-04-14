@@ -13,3 +13,41 @@
     justify-content: center;
     height: 80%;
 }
+
+.w-max:has(.toggle-button) {
+    width: 100%;
+}
+
+.seo-success {
+    @apply text-green-600
+}
+
+.seo-warning {
+    @apply text-[#ffcc00]
+}
+
+.seo-danger {
+    @apply text-red-600
+}
+
+
+/* width */
+.fi-sidebar-nav::-webkit-scrollbar {
+    width: 4px;
+}
+
+/* Track */
+.fi-sidebar-nav::-webkit-scrollbar-track {
+    background: #b9b9b9;
+}
+
+/* Handle */
+.fi-sidebar-nav::-webkit-scrollbar-thumb {
+    background: #7f7f7f;
+    border-radius: 0.2rem /* 4px */;
+}
+
+/* Handle on hover */
+.fi-sidebar-nav::-webkit-scrollbar-thumb:hover {
+    background: #949494;
+}
