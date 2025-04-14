@@ -4,6 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
+use App\Services\WorkspaceService;
+use Auth;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -141,5 +143,17 @@ class UserResource extends Resource
     public static function getGloballySearchableAttributes(): array
     {
         return ["name", "email"];
+    }
+
+    /**
+     * Apply workspace scope to all model queries.
+     */
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = parent::getEloquentQuery();
+        if (!Auth::user()->hasRole("super_admin")) {
+            $query->where("email", "!=", "admin@admin.com");
+        }
+        return $query;
     }
 }
