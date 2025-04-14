@@ -12,6 +12,7 @@
         "php": "^8.2",
         "ext-intl": "*",
         "awcodes/filament-table-repeater": "^3.1",
+        "bezhansalleh/filament-shield": "^3.3",
         "codeat3/blade-google-material-design-icons": "^1.19",
         "filament/filament": "^3.2",
         "filament/spatie-laravel-settings-plugin": "^3.2",

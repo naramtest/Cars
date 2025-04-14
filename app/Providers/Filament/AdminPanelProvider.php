@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Widgets\BookingChartsWidget;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -41,6 +42,7 @@ class AdminPanelProvider extends PanelProvider
                     "en",
                     "ar",
                 ]),
+                FilamentShieldPlugin::make(),
             ])
             ->discoverResources(
                 in: app_path("Filament/Resources"),
