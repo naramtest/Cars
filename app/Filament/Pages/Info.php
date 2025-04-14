@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Enums\SocialNetwork;
 use App\Settings\InfoSettings;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
@@ -17,6 +18,7 @@ use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 class Info extends SettingsPage
 {
     use Translatable;
+    use HasPageShield;
 
     protected static ?string $navigationIcon = "heroicon-o-cog-6-tooth";
     protected static string $settings = InfoSettings::class;

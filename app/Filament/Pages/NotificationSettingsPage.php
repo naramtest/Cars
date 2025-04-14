@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Settings\NotificationSettings;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
@@ -20,6 +21,7 @@ use Illuminate\Support\Str;
 class NotificationSettingsPage extends Page implements HasForms
 {
     use InteractsWithForms;
+    use HasPageShield;
 
     protected static ?string $navigationIcon = "heroicon-o-bell-alert";
 
