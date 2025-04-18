@@ -78,6 +78,7 @@ class ExpenseTableSchema
                 Tables\Actions\ExportBulkAction::make()->exporter(
                     ExpenseExporter::class
                 ),
-            ]);
+            ])
+            ->defaultSort("created_at", "desc");
     }
 }

@@ -15,6 +15,7 @@ class TypeTableSchema
     public static function schema(Table $table, TypesEnum $type): Table
     {
         return $table
+            ->defaultSort("created_at", "desc")
             ->columns([
                 TextColumn::make("order")
                     ->label(__("dashboard.Order"))

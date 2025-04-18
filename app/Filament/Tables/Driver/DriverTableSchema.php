@@ -63,6 +63,7 @@ class DriverTableSchema
                 Tables\Actions\ExportBulkAction::make()->exporter(
                     DriverExporter::class
                 ),
-            ]);
+            ])
+            ->defaultSort("created_at", "desc");
     }
 }

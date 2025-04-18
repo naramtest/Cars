@@ -91,10 +91,12 @@ class RentFormSchema
                 Forms\Components\Select::make("status")
                     ->label(__("dashboard.status"))
                     ->options(ReservationStatus::class)
-                    ->default(ReservationStatus::Pending)
+                    ->default(ReservationStatus::Confirmed)
                     ->visible(fn($operation) => $operation === "create")
                     ->required(),
-                MoneyInput::make("total_price")->required(),
+                MoneyInput::make("total_price")
+                    ->required()
+                    ->label(__("dashboard.total_price")),
             ])->columnSpan(1),
             Forms\Components\Section::make()
                 ->extraAttributes([
@@ -152,7 +154,7 @@ class RentFormSchema
                 Forms\Components\Select::make("status")
                     ->hiddenLabel()
                     ->options(ReservationStatus::class)
-                    ->default(ReservationStatus::Pending)
+                    ->default(ReservationStatus::Confirmed)
                     ->required(),
             ]),
             Forms\Components\Section::make(

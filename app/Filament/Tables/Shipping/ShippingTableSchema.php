@@ -23,6 +23,7 @@ class ShippingTableSchema
     public static function schema(Table $table): Table
     {
         return $table
+            ->defaultSort("created_at", "desc")
             ->columns([
                 Tables\Columns\TextColumn::make("reference_number")
                     ->label(__("dashboard.tracking_number"))

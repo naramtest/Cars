@@ -114,7 +114,7 @@ class BookingFormSchema
                     Forms\Components\Select::make("status")
                         ->label(__("dashboard.status"))
                         ->options(ReservationStatus::class)
-                        ->default(ReservationStatus::Pending)
+                        ->default(ReservationStatus::Confirmed)
                         ->visible(fn($operation) => $operation === "create")
                         ->required(),
                     MoneyInput::make("total_price")->required(),
@@ -194,7 +194,7 @@ class BookingFormSchema
                 Forms\Components\Select::make("status")
                     ->hiddenLabel()
                     ->options(ReservationStatus::class)
-                    ->default(ReservationStatus::Pending)
+                    ->default(ReservationStatus::Confirmed)
                     ->required(),
             ]),
             Forms\Components\Section::make(

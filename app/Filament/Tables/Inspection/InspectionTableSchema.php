@@ -178,6 +178,7 @@ class InspectionTableSchema
                 Tables\Actions\ExportBulkAction::make()->exporter(
                     InspectionExporter::class
                 ),
-            ]);
+            ])
+            ->defaultSort("created_at", "desc");
     }
 }

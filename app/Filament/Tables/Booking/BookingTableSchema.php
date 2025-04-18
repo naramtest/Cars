@@ -109,6 +109,7 @@ class BookingTableSchema
                 Tables\Actions\ExportBulkAction::make()
                     ->label(__("dashboard.export_selected"))
                     ->exporter(BookingExporter::class),
-            ]);
+            ])
+            ->defaultSort("created_at", "desc");
     }
 }

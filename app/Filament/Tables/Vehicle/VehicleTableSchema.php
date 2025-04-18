@@ -18,6 +18,7 @@ class VehicleTableSchema
     public static function schema(Table $table): Table
     {
         return $table
+            ->defaultSort("created_at", "desc")
             ->columns([
                 Tables\Columns\TextColumn::make("name")
                     ->label(__("dashboard.name"))
