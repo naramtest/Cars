@@ -36,13 +36,27 @@ trait HasReferenceNumber
         $year = now()->format("Y");
         $month = now()->format("m");
 
-        $latestRecord = static::where(
+        // Get model class
+        $modelClass = get_class($this);
+
+        // Use withTrashed() to include soft deleted records when checking for existing reference numbers
+        $query = $modelClass::where(
             $column,
             "like",
             "{$prefix}-{$year}{$month}-%"
-        )
-            ->orderBy("id", "desc")
-            ->first();
+        );
+
+        // Check if the model uses soft deletes
+        if (
+            in_array(
+                "Illuminate\Database\Eloquent\SoftDeletes",
+                class_uses_recursive($modelClass)
+            )
+        ) {
+            $query = $query->withTrashed();
+        }
+
+        $latestRecord = $query->orderBy("id", "desc")->first();
 
         $sequence = 1;
         if ($latestRecord) {

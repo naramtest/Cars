@@ -84,6 +84,7 @@ class BookingTableSchema
                 DateColumn::make("updated_at", __("dashboard.updated_at")),
             ])
             ->filters([
+                Tables\Filters\TrashedFilter::make(),
                 SelectFilter::make("status")
                     ->label(__("dashboard.status"))
                     ->options(fn(): string => ReservationStatus::class)
@@ -98,6 +99,8 @@ class BookingTableSchema
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ForceDeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
                 ReservationActions::make(),
             ])
             ->bulkActions([

@@ -27,9 +27,11 @@ class ObserverProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        ShippingItem::observe(ShippingItemObserver::class);
-        Booking::observe(BookingObserver::class);
-        Rent::observe(RentObserver::class);
-        Shipping::observe(ShippingObserver::class);
+        if (\App::isProduction()) {
+            ShippingItem::observe(ShippingItemObserver::class);
+            Booking::observe(BookingObserver::class);
+            Rent::observe(RentObserver::class);
+            Shipping::observe(ShippingObserver::class);
+        }
     }
 }
