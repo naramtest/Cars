@@ -6,8 +6,10 @@ trait CheckStatus
 {
     public function check($value, $original = null): bool
     {
-        return $this->isDirty("status") &&
-            $this->status === $value &&
-            $this->getOriginal("status") === $original ?? $value;
+        $result = $this->isDirty("status") && $this->status === $value;
+        if ($original) {
+            return $result && $this->getOriginal("status") === $original;
+        }
+        return $result;
     }
 }

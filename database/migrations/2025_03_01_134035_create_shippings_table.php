@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->id();
             // Client Information
             $table->string("client_name");
-            $table->string("client_email");
+            $table->string("client_email")->nullable();
             $table->string("client_phone");
 
             // Addresses
