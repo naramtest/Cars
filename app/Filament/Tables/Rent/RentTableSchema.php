@@ -97,6 +97,7 @@ class RentTableSchema
                 DateColumn::make("updated_at", __("dashboard.updated_at")),
             ])
             ->filters([
+                Tables\Filters\TrashedFilter::make(),
                 SelectFilter::make("status")
                     ->label(__("dashboard.status"))
                     ->options(ReservationStatus::class)

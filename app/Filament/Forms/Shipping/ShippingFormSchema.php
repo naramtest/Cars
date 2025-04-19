@@ -114,6 +114,7 @@ class ShippingFormSchema
                         ->email()
                         ->maxLength(255),
                     PhoneInput::make("client_phone")
+                        ->initialCountry("AE")
                         ->label(__("dashboard.phone_number"))
                         ->required(),
                 ])

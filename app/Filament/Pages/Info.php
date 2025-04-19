@@ -60,6 +60,7 @@ class Info extends SettingsPage
                                 ->maxLength(250)
                                 ->translatable(),
                             PhoneInput::make("support_whatsapp_number")
+                                ->initialCountry("AE")
                                 ->label(__("dashboard.support_whatsapp_number"))
                                 ->prefixIcon("gmdi-whatsapp-o")
                                 ->columnSpan(1),
@@ -72,6 +73,7 @@ class Info extends SettingsPage
                             Repeater::make("phones")
                                 ->schema([
                                     PhoneInput::make("value")
+                                        ->initialCountry("AE")
                                         ->label("Phone Number")
                                         ->required()
                                         ->hiddenLabel(),
@@ -100,6 +102,7 @@ class Info extends SettingsPage
                                 ->hiddenLabel()
                                 ->schema([
                                     PhoneInput::make("number")
+                                        ->initialCountry("AE")
                                         ->label(__("dashboard.phone"))
                                         ->required()
                                         ->columnSpan(1)

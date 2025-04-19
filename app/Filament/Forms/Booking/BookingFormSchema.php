@@ -63,6 +63,8 @@ class BookingFormSchema
                         ->email()
                         ->maxLength(255),
                     PhoneInput::make("client_phone")
+                        ->initialCountry("AE")
+                        ->enableIpLookup()
                         ->label(__("dashboard.phone_number"))
                         ->required(),
                 ])

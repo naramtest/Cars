@@ -62,6 +62,7 @@ class DriverFormSchema
                 ->required()
                 ->maxLength(255),
             PhoneInput::make("phone_number")
+                ->initialCountry("AE")
                 ->label(__("dashboard.phone_number"))
                 ->required(),
             Forms\Components\Select::make("gender")
