@@ -121,13 +121,14 @@ class BookingFormSchema
                         ->required(),
                     MoneyInput::make("total_price")->required(),
                 ])
-                ->columnSpan(1)
+                ->columnSpan(["sm" => 2, "md" => 2, "lg" => 1, "xl" => 1])
                 ->columns(1),
 
             Forms\Components\Section::make()
                 ->extraAttributes([
                     "class" => "booking",
                 ])
+                ->columnSpan(["sm" => 2, "md" => 2, "lg" => 1, "xl" => 1])
                 ->schema([
                     Forms\Components\DateTimePicker::make("start_datetime")
                         ->label(__("dashboard.start_datetime"))
@@ -140,7 +141,6 @@ class BookingFormSchema
                         ->required()
                         ->afterOrEqual(fn(Get $get) => $get("start_datetime")),
                 ])
-                ->columnSpan(1)
                 ->heading(__("dashboard.reservation_period")),
             Forms\Components\Group::make()
                 ->schema([
