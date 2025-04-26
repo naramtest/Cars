@@ -3,6 +3,9 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\CustomerResource\Pages;
+use App\Filament\Resources\CustomerResource\RelationManagers\BookingsRelationManager;
+use App\Filament\Resources\CustomerResource\RelationManagers\RentsRelationManager;
+use App\Filament\Resources\CustomerResource\RelationManagers\ShippingsRelationManager;
 use App\Models\Customer;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -116,8 +119,10 @@ class CustomerResource extends Resource
     public static function getRelations(): array
     {
         return [
-                //
-            ];
+            BookingsRelationManager::class,
+            RentsRelationManager::class,
+            ShippingsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
