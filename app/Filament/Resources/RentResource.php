@@ -18,6 +18,8 @@ class RentResource extends Resource
 
     protected static ?string $navigationIcon = "gmdi-car-rental-o";
 
+    protected static ?int $navigationSort = 3;
+
     public static function form(Form $form): Form
     {
         return $form->columns(3)->schema(RentFormSchema::schema());

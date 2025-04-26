@@ -18,6 +18,8 @@ class BookingResource extends Resource
 
     protected static ?string $navigationIcon = "gmdi-event-o";
 
+    protected static ?int $navigationSort = 2;
+
     public static function form(Form $form): Form
     {
         return $form->columns(3)->schema(BookingFormSchema::schema());

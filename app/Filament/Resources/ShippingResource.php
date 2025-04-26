@@ -17,6 +17,7 @@ class ShippingResource extends Resource
     protected static ?string $model = Shipping::class;
 
     protected static ?string $navigationIcon = "gmdi-local-shipping-o";
+    protected static ?int $navigationSort = 4;
 
     public static function form(Form $form): Form
     {

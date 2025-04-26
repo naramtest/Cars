@@ -259,4 +259,8 @@ return [
     "Phone numbers that will receive WhatsApp notifications" =>
         "Phone numbers that will receive WhatsApp notifications",
     "Password" => "Password",
+    "Customer" => "Customer",
+    "Customers" => "Customers",
+    "Select or Create Customer" => "Select or Create Customer",
+    "selected_customers" => "Selected Customers",
 ];
