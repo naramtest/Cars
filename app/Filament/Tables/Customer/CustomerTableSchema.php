@@ -2,6 +2,7 @@
 
 namespace App\Filament\Tables\Customer;
 
+use App\Filament\Exports\CustomerExporter;
 use Exception;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -72,6 +73,9 @@ class CustomerTableSchema
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
                 ]),
+                Tables\Actions\ExportBulkAction::make()->exporter(
+                    CustomerExporter::class
+                ),
             ]);
     }
 }
