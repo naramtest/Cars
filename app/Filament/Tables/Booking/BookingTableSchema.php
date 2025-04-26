@@ -4,6 +4,7 @@ namespace App\Filament\Tables\Booking;
 
 use App\Enums\ReservationStatus;
 use App\Filament\Actions\Reservation\ReservationActions;
+use App\Filament\Component\Customer\CustomerTableComponent;
 use App\Filament\Component\DateColumn;
 use App\Filament\Exports\BookingExporter;
 use Exception;
@@ -12,7 +13,6 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 use Pelmered\FilamentMoneyField\Tables\Columns\MoneyColumn;
-use Ysfkaya\FilamentPhoneInput\Tables\PhoneColumn;
 
 class BookingTableSchema
 {
@@ -27,22 +27,8 @@ class BookingTableSchema
                     ->label(__("dashboard.reference_number"))
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make("client_name")
-                    ->label(__("dashboard.client_name"))
-                    ->searchable()
-                    ->sortable(),
 
-                Tables\Columns\TextColumn::make("client_email")
-                    ->label(__("dashboard.client_email"))
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                PhoneColumn::make("client_phone")
-                    ->label(__("dashboard.client_phone"))
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable(),
+                ...CustomerTableComponent::make(),
 
                 Tables\Columns\TextColumn::make("vehicle.name")
                     ->label(__("dashboard.Vehicle"))

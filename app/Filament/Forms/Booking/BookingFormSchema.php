@@ -3,14 +3,13 @@
 namespace App\Filament\Forms\Booking;
 
 use App\Enums\ReservationStatus;
+use App\Filament\Component\Customer\CustomerFormComponent;
 use App\Models\Booking;
 use App\Models\Driver;
 use App\Models\Vehicle;
 use Filament\Forms;
 use Filament\Forms\Get;
-use Illuminate\Support\HtmlString;
 use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
-use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class BookingFormSchema
 {
@@ -27,7 +26,9 @@ class BookingFormSchema
                         __("dashboard.client_information")
                     )
                         ->icon("gmdi-person-o")
-                        ->schema(self::clientInformationSchema()),
+                        ->schema(
+                            CustomerFormComponent::clientInformationSchema()
+                        ),
 
                     Forms\Components\Tabs\Tab::make(
                         __("dashboard.booking_details")
@@ -47,64 +48,6 @@ class BookingFormSchema
                 ]),
 
             self::statusInfoSection(),
-        ];
-    }
-
-    private static function clientInformationSchema(): array
-    {
-        return [
-            Forms\Components\Grid::make()
-                ->schema([
-                    // TODO: show phone number also not just the customer name in select
-                    Forms\Components\Select::make("customers")
-                        ->label(__("dashboard.Customer"))
-                        ->relationship("customers", "name")
-                        ->preload()
-                        ->searchable(["name", "email", "phone_number"])
-                        ->createOptionForm([
-                            Forms\Components\TextInput::make("name")
-                                ->label(__("dashboard.name"))
-                                ->required()
-                                ->maxLength(255),
-                            Forms\Components\TextInput::make("email")
-                                ->label(__("dashboard.email"))
-                                ->email()
-                                ->maxLength(255),
-                            PhoneInput::make("phone_number")
-                                ->label(__("dashboard.phone_number"))
-                                ->required(),
-                            Forms\Components\Textarea::make("notes")
-                                ->label(__("dashboard.notes"))
-                                ->maxLength(1000),
-                        ])
-                        ->required()
-                        ->helperText(__("dashboard.Select or Create Customer")),
-
-                    // Display the selected customers if in edit mode
-                    Forms\Components\Placeholder::make("customer_list")
-                        ->label(__("dashboard.selected_customers"))
-                        ->content(function (
-                            callable $get,
-                            callable $set,
-                            ?Booking $record
-                        ) {
-                            if (!$record) {
-                                return "";
-                            }
-
-                            $customerList = "";
-                            foreach ($record->customers as $customer) {
-                                $customerList .= "• $customer->name ($customer->phone_number)<br>";
-                            }
-
-                            return new HtmlString($customerList);
-                        })
-                        ->visible(
-                            fn(string $operation): bool => $operation === "edit"
-                        ),
-                ])
-                ->columns(1)
-                ->columnSpan(1),
         ];
     }
 

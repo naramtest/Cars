@@ -3,11 +3,11 @@
 namespace App\Filament\Forms\Shipping;
 
 use App\Enums\Shipping\ShippingStatus;
+use App\Filament\Component\Customer\CustomerFormComponent;
 use App\Models\Shipping;
 use Awcodes\TableRepeater\Components\TableRepeater;
 use Awcodes\TableRepeater\Header;
 use Filament\Forms;
-use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class ShippingFormSchema
 {
@@ -29,7 +29,9 @@ class ShippingFormSchema
                         __("dashboard.client_information")
                     )
                         ->icon("gmdi-person-o")
-                        ->schema(self::clientInformationSchema())
+                        ->schema(
+                            CustomerFormComponent::clientInformationSchema()
+                        )
                         ->columns(),
                     Forms\Components\Tabs\Tab::make(
                         __("dashboard.delivery_information")
@@ -97,33 +99,6 @@ class ShippingFormSchema
                     ->required()
                     ->maxLength(65535),
             ])->columnSpan(1),
-        ];
-    }
-
-    private static function clientInformationSchema(): array
-    {
-        return [
-            Forms\Components\Group::make()
-                ->schema([
-                    Forms\Components\TextInput::make("client_name")
-                        ->label(__("dashboard.name"))
-                        ->required()
-                        ->maxLength(255),
-                    Forms\Components\TextInput::make("client_email")
-                        ->label(__("dashboard.email"))
-                        ->email()
-                        ->maxLength(255),
-                    PhoneInput::make("client_phone")
-                        ->initialCountry("AE")
-                        ->label(__("dashboard.phone_number"))
-                        ->required(),
-                ])
-                ->columnSpan(1),
-            Forms\Components\Textarea::make("notes")
-                ->label(__("dashboard.notes"))
-                ->rows(5)
-                ->maxLength(65535)
-                ->columnSpan(1),
         ];
     }
 

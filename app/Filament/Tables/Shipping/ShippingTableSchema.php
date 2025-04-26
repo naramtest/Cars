@@ -3,6 +3,7 @@
 namespace App\Filament\Tables\Shipping;
 
 use App\Enums\Shipping\ShippingStatus;
+use App\Filament\Component\Customer\CustomerTableComponent;
 use App\Filament\Component\DateColumn;
 use App\Filament\Exports\ShippingExporter;
 use App\Models\Shipping;
@@ -13,7 +14,6 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
-use Ysfkaya\FilamentPhoneInput\Tables\PhoneColumn;
 
 class ShippingTableSchema
 {
@@ -30,22 +30,7 @@ class ShippingTableSchema
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make("client_name")
-                    ->label(__("dashboard.client_name"))
-                    ->searchable()
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make("client_email")
-                    ->label(__("dashboard.client_email"))
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                PhoneColumn::make("client_phone")
-                    ->label(__("dashboard.client_phone"))
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable(),
+                ...CustomerTableComponent::make(),
 
                 Tables\Columns\TextColumn::make("driver.full_name")
                     ->label(__("dashboard.Driver"))

@@ -3,11 +3,11 @@
 namespace App\Filament\Forms\Rent;
 
 use App\Enums\ReservationStatus;
+use App\Filament\Component\Customer\CustomerFormComponent;
 use App\Models\Rent;
 use Filament\Forms;
 use Filament\Forms\Get;
 use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
-use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class RentFormSchema
 {
@@ -23,7 +23,9 @@ class RentFormSchema
                         __("dashboard.client_information")
                     )
                         ->icon("gmdi-person-o")
-                        ->schema(self::clientInformationSchema()),
+                        ->schema(
+                            CustomerFormComponent::clientInformationSchema()
+                        ),
 
                     Forms\Components\Tabs\Tab::make(
                         __("dashboard.rent_details")
@@ -46,29 +48,6 @@ class RentFormSchema
                 ]),
 
             self::statusInfoSection(),
-        ];
-    }
-
-    private static function clientInformationSchema(): array
-    {
-        return [
-            Forms\Components\Grid::make()
-                ->schema([
-                    Forms\Components\TextInput::make("client_name")
-                        ->label(__("dashboard.name"))
-                        ->required()
-                        ->maxLength(255),
-                    Forms\Components\TextInput::make("client_email")
-                        ->label(__("dashboard.email"))
-                        ->email()
-                        ->maxLength(255),
-                    PhoneInput::make("client_phone")
-                        ->initialCountry("AE")
-                        ->label(__("dashboard.phone_number"))
-                        ->required(),
-                ])
-                ->columns(1)
-                ->columnSpan(1),
         ];
     }
 
