@@ -9,6 +9,7 @@ use App\Traits\HasNotifications;
 use App\Traits\HasReferenceNumber;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Money\Money;
 
@@ -100,6 +101,14 @@ class Booking extends MoneyModel
     public function getTotalPriceMoneyAttribute(): Money
     {
         return $this->currencyService->money($this->total_price);
+    }
+
+    public function customers(): MorphToMany
+    {
+        return $this->morphToMany(
+            Customer::class,
+            "customerable"
+        )->withTimestamps();
     }
 
     protected function getReferenceNumberPrefix(): string

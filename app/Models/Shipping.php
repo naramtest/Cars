@@ -9,6 +9,7 @@ use App\Traits\HasReferenceNumber;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Shipping extends Model
@@ -94,6 +95,14 @@ class Shipping extends Model
     public function scopeStatus($query, ShippingStatus $status)
     {
         return $query->where("status", $status);
+    }
+
+    public function customers(): MorphToMany
+    {
+        return $this->morphToMany(
+            Customer::class,
+            "customerable"
+        )->withTimestamps();
     }
 
     protected function getReferenceNumberPrefix(): string

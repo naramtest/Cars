@@ -8,6 +8,7 @@ use App\Traits\CheckStatus;
 use App\Traits\HasNotifications;
 use App\Traits\HasReferenceNumber;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Money\Money;
 
@@ -82,6 +83,14 @@ class Rent extends MoneyModel
     public function scopeStatus($query, ReservationStatus $status)
     {
         return $query->where("status", $status);
+    }
+
+    public function customers(): MorphToMany
+    {
+        return $this->morphToMany(
+            Customer::class,
+            "customerable"
+        )->withTimestamps();
     }
 
     protected function getReferenceNumberPrefix(): string
