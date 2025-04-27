@@ -3,20 +3,18 @@
 namespace App\Models;
 
 use App\Enums\Gender;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Storage;
 
 class Driver extends Model
 {
-    use HasFactory, SoftDeletes;
+    use SoftDeletes;
 
     protected $fillable = [
-        "first_name",
-        "last_name",
-        "email",
+        "user_id",
         "phone_number",
         "gender",
         "birth_date",
@@ -37,8 +35,6 @@ class Driver extends Model
         "gender" => Gender::class,
     ];
 
-    // Helper accessor to get full name
-
     protected static function booted(): void
     {
         static::forceDeleted(function (Driver $driver) {
@@ -52,13 +48,23 @@ class Driver extends Model
         });
     }
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function getFullNameAttribute(): string
     {
-        return "{$this->first_name} {$this->last_name}";
+        return $this->user ? $this->user->name : "";
     }
 
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class);
+    }
+
+    public function shippings(): HasMany
+    {
+        return $this->hasMany(Shipping::class);
     }
 }

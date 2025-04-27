@@ -31,8 +31,8 @@ class VehicleTableSchema
                     ->sortable(),
                 Tables\Columns\TextColumn::make("driver.full_name")
                     ->label(__("dashboard.Driver"))
-                    ->searchable(["driver.first_name", "driver.last_name"])
-                    ->sortable(["driver.first_name", "driver.last_name"]),
+                    ->searchable(["driver.user.name"])
+                    ->sortable(["driver.user.name"]),
 
                 Tables\Columns\TextColumn::make("license_plate")
                     ->label(__("dashboard.license_plate"))
