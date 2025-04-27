@@ -9,6 +9,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 use Pelmered\FilamentMoneyField\Tables\Columns\MoneyColumn;
 
 class BookingsRelationManager extends RelationManager
@@ -59,6 +60,9 @@ class BookingsRelationManager extends RelationManager
                 DateColumn::make("created_at", __("dashboard.created_at")),
             ])
             ->filters([
+                DateRangeFilter::make("create_at")->label(
+                    __("dashboard.Created at")
+                ),
                 Tables\Filters\SelectFilter::make("status")
                     ->label(__("dashboard.status"))
                     ->options(ReservationStatus::class)

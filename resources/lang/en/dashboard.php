@@ -263,4 +263,5 @@ return [
     "Customers" => "Customers",
     "Select or Create Customer" => "Select or Create Customer",
     "selected_customers" => "Selected Customer",
+    "Created at" => "Created at",
 ];

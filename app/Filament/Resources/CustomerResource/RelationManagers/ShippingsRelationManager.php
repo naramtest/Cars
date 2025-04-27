@@ -9,6 +9,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 
 class ShippingsRelationManager extends RelationManager
 {
@@ -50,6 +51,9 @@ class ShippingsRelationManager extends RelationManager
                 DateColumn::make("created_at", __("dashboard.created_at")),
             ])
             ->filters([
+                DateRangeFilter::make("create_at")->label(
+                    __("dashboard.Created at")
+                ),
                 Tables\Filters\SelectFilter::make("status")
                     ->label(__("dashboard.status"))
                     ->options(ShippingStatus::class)
