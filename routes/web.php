@@ -1,17 +1,15 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DriverActionController;
 use App\Http\Controllers\WhatsAppWebhookController;
-use App\Settings\InfoSettings;
 use Illuminate\Support\Facades\Route;
 
-Route::get("/whatsapp/contact", function (InfoSettings $infoSettings) {
-    return redirect()->away(
-        "https://wa.me/$infoSettings->support_whatsapp_number"
-    );
-})->name("whatsapp.contact");
+Route::controller(ContactController::class)->group(function () {
+    Route::get("/whatsapp/contact", "whatsapp")->name("whatsapp.contact");
+    Route::get("/driver/contact/{driver}", "driver")->name("driver.contact");
+});
 
-// Add this to routes/web.php
 Route::controller(DriverActionController::class)->group(function () {
     Route::get(
         "/bookings/complete/{booking:reference_number}",

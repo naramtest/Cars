@@ -33,7 +33,21 @@ class CSNewHandler extends WhatsAppAbstractHandler
 
     public function prepareButtonData($modelData): array
     {
-        return []; // No buttons for customer shipping notifications
+        $driver = $modelData->driver;
+
+        return [
+            [
+                "type" => "button",
+                "sub_type" => "url",
+                "index" => 1,
+                "parameters" => [
+                    [
+                        "type" => "text",
+                        "text" => $driver->phone_number,
+                    ],
+                ],
+            ],
+        ];
     }
 
     public function facebookTemplateData(): array
@@ -70,6 +84,17 @@ class CSNewHandler extends WhatsAppAbstractHandler
                 [
                     "type" => "BUTTONS",
                     "buttons" => [
+                        [
+                            "type" => "URL",
+                            "text" => "Contact Driver",
+
+                            "url" => templateUrlReplaceParameter(
+                                route("driver.contact", [
+                                    "driver" => "PLACEHOLDER_VALUE",
+                                ])
+                            ),
+                            "example" => ["1"],
+                        ],
                         [
                             "type" => "URL",
                             "text" => "Contact Support",
