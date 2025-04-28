@@ -23,8 +23,8 @@ class ASDeliveredHandler extends WhatsAppAbstractHandler
 
         return $this->formatBodyParameters([
             $modelData->reference_number ?: "Undefined", // 1 - Shipping reference
-            $modelData->client_name, // 2 - Customer name
-            $modelData->client_phone, // 3 - Customer phone
+            $modelData->getCustomer()->name, // 2 - Customer name
+            $modelData->getCustomer()->phone_number, // 3 - Customer phone
             $driver ? $driver->full_name : "Not assigned", // 4 - Driver name
             $modelData->pickup_address, // 5 - Pickup address
             $modelData->delivery_address, // 6 - Delivery address

@@ -18,7 +18,7 @@ class CRNewHandler extends WhatsAppAbstractHandler
         $vehicle = $modelData->vehicle;
 
         return $this->formatBodyParameters([
-            $modelData->customer->name, // 1 - Customer name
+            $modelData->getCustomer()->name, // 1 - Customer name
             $modelData->reference_number, // 2 - Rent reference number
             $vehicle->name, // 3 - Vehicle name
             $vehicle->model, // 4 - Vehicle model
@@ -105,6 +105,6 @@ class CRNewHandler extends WhatsAppAbstractHandler
     public function phoneNumbers($data)
     {
         /** @var Rent $data */
-        return $data->customer->phone_number;
+        return $data->getCustomer()->phone_number;
     }
 }

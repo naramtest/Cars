@@ -14,13 +14,13 @@ class CustomerTableComponent
             TextColumn::make("customer.name")
                 ->label(__("dashboard.client_name"))
                 ->searchable()
-                ->url(
-                    fn($record) => $record->customer
+                ->url(function ($record) {
+                    return $record->getCustomer()
                         ? CustomerResource::getUrl("view", [
-                            "record" => $record->customer->id,
+                            "record" => $record->getCustomer()->id,
                         ])
-                        : null
-                )
+                        : null;
+                })
                 ->openUrlInNewTab()
                 ->color("primary")
                 ->sortable(),
@@ -29,8 +29,8 @@ class CustomerTableComponent
                 ->label(__("dashboard.client_phone"))
                 ->searchable()
                 ->url(
-                    fn($record) => $record->customer
-                        ? "tel:" . $record->customer->phone_number
+                    fn($record) => $record->getCustomer()
+                        ? "tel:" . $record->getCustomer()->phone_number
                         : null
                 )
                 ->color("info")

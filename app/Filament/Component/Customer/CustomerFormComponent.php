@@ -56,21 +56,22 @@ class CustomerFormComponent
                             $customerList = "";
                             // Generate URL to customer view page
                             $url = CustomerResource::getUrl("view", [
-                                "record" => $record->customer,
+                                "record" => $record->getCustomer(),
                             ]);
 
                             // Create a clickable link to the customer view page
                             $customerList .= sprintf(
                                 '• <a href="%s" target="_blank" class="text-primary-600 hover:underline">%s</a> (%s)<br>',
                                 $url,
-                                e($record->customer->name),
-                                e($record->customer->phone_number)
+                                e($record->getCustomer()->name),
+                                e($record->getCustomer()->phone_number)
                             );
 
                             return new HtmlString($customerList);
                         })
                         ->visible(
-                            fn(string $operation): bool => $operation === "edit"
+                            fn(string $operation): bool => $operation !==
+                                "create"
                         ),
                 ])
                 ->columns(1)

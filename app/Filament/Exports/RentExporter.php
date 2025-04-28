@@ -2,6 +2,7 @@
 
 namespace App\Filament\Exports;
 
+use App\Helpers\HasCustomerExport;
 use App\Models\Rent;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
@@ -18,15 +19,7 @@ class RentExporter extends Exporter
             ExportColumn::make("reference_number")->label(
                 __("dashboard.reference_number")
             ),
-            ExportColumn::make("client_name")->label(
-                __("dashboard.client_name")
-            ),
-            ExportColumn::make("client_email")->label(
-                __("dashboard.client_email")
-            ),
-            ExportColumn::make("client_phone")->label(
-                __("dashboard.client_phone")
-            ),
+            ...HasCustomerExport::get(),
             ExportColumn::make("vehicle.name")->label(__("dashboard.Vehicle")),
             ExportColumn::make("rental_start_date")->label(
                 __("dashboard.start_datetime")

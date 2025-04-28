@@ -8,7 +8,6 @@ use App\Traits\CheckStatus;
 use App\Traits\HasNotifications;
 use App\Traits\HasReferenceNumber;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Money\Money;
 
@@ -22,9 +21,6 @@ class Rent extends MoneyModel
 
     protected $fillable = [
         "reference_number",
-        "client_name",
-        "client_email",
-        "client_phone",
         "rental_start_date",
         "rental_end_date",
         "pickup_address",
@@ -85,9 +81,19 @@ class Rent extends MoneyModel
         return $query->where("status", $status);
     }
 
-    public function customer(): MorphOne
+    public function getCustomer()
     {
-        return $this->morphOne(Customer::class, "customerable");
+        return $this->customer()->first();
+    }
+
+    // Helper method to get the single customer
+
+    public function customer()
+    {
+        return $this->morphToMany(Customer::class, "customerable")
+            ->withTimestamps()
+            ->orderByPivot("created_at", "desc")
+            ->limit(1); // Limit to one customer
     }
 
     protected function getReferenceNumberPrefix(): string

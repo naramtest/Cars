@@ -25,8 +25,8 @@ class DSReminderHandler extends WhatsAppAbstractHandler
         return $this->formatBodyParameters([
             $modelData->driver->full_name ?? "Driver", // 1 - Driver name
             $modelData->reference_number ?: "Undefined", // 2 - Shipping reference
-            $modelData->client_name, // 3 - Customer name
-            $modelData->client_phone, // 4 - Customer phone
+            $modelData->getCustomer()->name, // 2 - Customer name
+            $modelData->getCustomer()->phone_number, // 3 - Customer phone
             $modelData->pickup_address, // 5 - Pickup address
             $modelData->delivery_address, // 6 - Delivery address
             $pickupTime, // 7 - Pickup time

@@ -9,7 +9,6 @@ use App\Traits\HasNotifications;
 use App\Traits\HasReferenceNumber;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Money\Money;
 
@@ -21,9 +20,6 @@ class Booking extends MoneyModel
     use CheckStatus;
 
     protected $fillable = [
-        "client_name",
-        "client_email",
-        "client_phone",
         "start_datetime",
         "end_datetime",
         "vehicle_id",
@@ -103,9 +99,19 @@ class Booking extends MoneyModel
         return $this->currencyService->money($this->total_price);
     }
 
-    public function customer(): MorphOne
+    public function getCustomer()
     {
-        return $this->morphOne(Customer::class, "customerable");
+        return $this->customer()->first();
+    }
+
+    // Helper method to get the single customer
+
+    public function customer()
+    {
+        return $this->morphToMany(Customer::class, "customerable")
+            ->withTimestamps()
+            ->orderByPivot("created_at", "desc")
+            ->limit(1); // Limit to one customer
     }
 
     protected function getReferenceNumberPrefix(): string

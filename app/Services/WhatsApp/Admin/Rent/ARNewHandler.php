@@ -23,8 +23,8 @@ class ARNewHandler extends WhatsAppAbstractHandler
 
         return $this->formatBodyParameters([
             $modelData->reference_number ?: "Undefined", // 1 - Rent reference
-            $modelData->client_name, // 2 - Customer name
-            $modelData->client_phone, // 3 - Customer phone
+            $modelData->getCustomer()->name, // 3 - Customer name
+            $modelData->getCustomer()->phone_number, // 4 - Customer phone
             $vehicle->name, // 4 - Vehicle name
             $vehicle->model, // 5 - Vehicle model
             $vehicle->license_plate, // 6 - Vehicle plate

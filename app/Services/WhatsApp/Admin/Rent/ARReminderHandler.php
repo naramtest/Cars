@@ -10,7 +10,7 @@ use App\Traits\HasAdminPhoneNumbers;
 class ARReminderHandler extends WhatsAppAbstractHandler
 {
     use HasAdminPhoneNumbers;
-    
+
     // Define reminder types as constants
     const TYPE_START = "start";
     const TYPE_END = "end";
@@ -49,8 +49,8 @@ class ARReminderHandler extends WhatsAppAbstractHandler
 
         return $this->formatBodyParameters([
             $modelData->reference_number ?: "Undefined", // 1 - Rent reference
-            $modelData->client_name, // 2 - Customer name
-            $modelData->client_phone, // 3 - Customer phone
+            $modelData->getCustomer()->name, // 2 - Customer name
+            $modelData->getCustomer()->phone_number, // 3 - Customer phone
             $vehicle->name, // 4 - Vehicle name
             $vehicle->model, // 5 - Vehicle model
             $vehicle->license_plate, // 6 - Vehicle plate

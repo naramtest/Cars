@@ -9,7 +9,6 @@ use App\Traits\HasReferenceNumber;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Shipping extends Model
@@ -21,9 +20,6 @@ class Shipping extends Model
     use CheckStatus;
 
     protected $fillable = [
-        "client_name",
-        "client_email",
-        "client_phone",
         "pickup_address",
         "delivery_address",
         "driver_id",
@@ -97,9 +93,19 @@ class Shipping extends Model
         return $query->where("status", $status);
     }
 
-    public function customer(): MorphOne
+    public function getCustomer()
     {
-        return $this->morphOne(Customer::class, "customerable");
+        return $this->customer()->first();
+    }
+
+    // Helper method to get the single customer
+
+    public function customer()
+    {
+        return $this->morphToMany(Customer::class, "customerable")
+            ->withTimestamps()
+            ->orderByPivot("created_at", "desc")
+            ->limit(1); // Limit to one customer
     }
 
     protected function getReferenceNumberPrefix(): string

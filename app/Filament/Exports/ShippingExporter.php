@@ -2,6 +2,7 @@
 
 namespace App\Filament\Exports;
 
+use App\Helpers\HasCustomerExport;
 use App\Models\Shipping;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
@@ -18,15 +19,7 @@ class ShippingExporter extends Exporter
             ExportColumn::make("reference_number")->label(
                 __("dashboard.tracking_number")
             ),
-            ExportColumn::make("client_name")->label(
-                __("dashboard.client_name")
-            ),
-            ExportColumn::make("client_email")->label(
-                __("dashboard.client_email")
-            ),
-            ExportColumn::make("client_phone")->label(
-                __("dashboard.client_phone")
-            ),
+            ...HasCustomerExport::get(),
             ExportColumn::make("driver.full_name")->label(
                 __("dashboard.Driver")
             ),

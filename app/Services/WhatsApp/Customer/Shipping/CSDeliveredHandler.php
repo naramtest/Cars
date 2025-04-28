@@ -16,7 +16,7 @@ class CSDeliveredHandler extends WhatsAppAbstractHandler
     public function prepareBodyData($modelData): array
     {
         return $this->formatBodyParameters([
-            $modelData->customer->name, // 1 - Customer name
+            $modelData->getCustomer()->name, // 1 - Customer name
             $modelData->reference_number ?: "Undefined", // 2 - Shipping reference
             $modelData->pickup_address, // 3 - Pickup address
             $modelData->delivery_address, // 4 - Delivery address
@@ -113,6 +113,6 @@ class CSDeliveredHandler extends WhatsAppAbstractHandler
     public function phoneNumbers($data)
     {
         /** @var Shipping $data */
-        return $data->customer->phone_number;
+        return $data->getCustomer()->phone_number;
     }
 }
