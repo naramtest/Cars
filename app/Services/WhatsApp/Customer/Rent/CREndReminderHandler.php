@@ -23,7 +23,7 @@ class CREndReminderHandler extends WhatsAppAbstractHandler
             $hoursRemaining > 1 ? "$hoursRemaining hours" : "1 hour";
 
         return $this->formatBodyParameters([
-            $modelData->client_name, // 1 - Customer name
+            $modelData->customer->name, // 1 - Customer name
             $modelData->reference_number, // 2 - Rent reference number
             $vehicle->name, // 3 - Vehicle name
             $vehicle->model, // 4 - Vehicle model
@@ -99,6 +99,6 @@ class CREndReminderHandler extends WhatsAppAbstractHandler
     public function phoneNumbers($data)
     {
         /** @var Rent $data */
-        return $data->client_phone;
+        return $data->customer->phone_number;
     }
 }

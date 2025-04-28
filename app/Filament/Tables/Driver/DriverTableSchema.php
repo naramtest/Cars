@@ -18,15 +18,12 @@ class DriverTableSchema
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make("first_name")
-                    ->label(__("dashboard.first_name"))
+                Tables\Columns\TextColumn::make("user.name")
+                    ->label(__("dashboard.name"))
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make("last_name")
-                    ->label(__("dashboard.last_name"))
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make("email")
+
+                Tables\Columns\TextColumn::make("user.email")
                     ->label(__("dashboard.email"))
                     ->searchable(),
                 PhoneColumn::make("phone_number")

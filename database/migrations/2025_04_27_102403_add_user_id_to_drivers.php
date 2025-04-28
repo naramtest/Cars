@@ -6,6 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
+use Spatie\Permission\Models\Role;
 
 return new class extends Migration {
     /**
@@ -24,6 +25,8 @@ return new class extends Migration {
         });
 
         // Create users for existing drivers
+        $role = Role::firstOrCreate(["name" => "driver"]);
+
         $drivers = Driver::all();
         foreach ($drivers as $driver) {
             // Create user with driver's information
@@ -33,7 +36,7 @@ return new class extends Migration {
                 "password" => Hash::make("123123123"),
                 "email_verified_at" => now(),
             ]);
-
+            $user->assignRole($role);
             // Associate driver with the new user
             $driver->user_id = $user->id;
             $driver->save();

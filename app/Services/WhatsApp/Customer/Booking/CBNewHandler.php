@@ -14,7 +14,7 @@ class CBNewHandler extends WhatsAppAbstractHandler
         $vehicle = $modelData->vehicle;
 
         return $this->formatBodyParameters([
-            $modelData->client_name, // 1 - Client Name
+            $modelData->customer->name, // 1 - Client Name
             $modelData->reference_number ?: "Undefined", // 2 - Booking reference
             $vehicle->model, // 3 - Vehicle model
             $vehicle->license_plate, // 4 - Vehicle plate
@@ -54,7 +54,7 @@ class CBNewHandler extends WhatsAppAbstractHandler
 
     public function phoneNumbers($data)
     {
-        return $data->client_phone;
+        return $data->customer->phone_number;
     }
 
     public function facebookTemplateData(): array

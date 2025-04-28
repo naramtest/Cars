@@ -20,7 +20,7 @@ class CSNewHandler extends WhatsAppAbstractHandler
             : "As soon as possible";
 
         return $this->formatBodyParameters([
-            $modelData->client_name, // 1 - Customer name
+            $modelData->customer->name, // 1 - Customer name
             $modelData->reference_number ?: "Undefined", // 2 - Shipping reference
             $modelData->pickup_address, // 3 - Pickup address
             $modelData->delivery_address, // 4 - Delivery address
@@ -114,6 +114,6 @@ class CSNewHandler extends WhatsAppAbstractHandler
     public function phoneNumbers($data)
     {
         /** @var Shipping $data */
-        return $data->client_phone;
+        return $data->customer->phone_number;
     }
 }

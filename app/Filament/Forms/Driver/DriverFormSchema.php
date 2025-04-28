@@ -5,6 +5,8 @@ namespace App\Filament\Forms\Driver;
 use App\Enums\Gender;
 use App\Models\Driver;
 use Filament\Forms;
+use Filament\Forms\Components\Group;
+use Filament\Forms\Components\TextInput;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class DriverFormSchema
@@ -48,33 +50,41 @@ class DriverFormSchema
     private static function personalInformationSchema(): array
     {
         return [
-            Forms\Components\TextInput::make("first_name")
-                ->label(__("dashboard.first_name"))
-                ->required()
-                ->maxLength(255),
-            Forms\Components\TextInput::make("last_name")
-                ->label(__("dashboard.last_name"))
-                ->required()
-                ->maxLength(255),
-            Forms\Components\TextInput::make("email")
-                ->label(__("dashboard.email"))
-                ->email()
-                ->required()
-                ->maxLength(255),
-            PhoneInput::make("phone_number")
-                ->initialCountry("AE")
-                ->label(__("dashboard.phone_number"))
-                ->required(),
-            Forms\Components\Select::make("gender")
-                ->label(__("dashboard.gender"))
-                ->options(Gender::class)
-                ->required(),
-            Forms\Components\DatePicker::make("birth_date")
-                ->label(__("dashboard.birth_date"))
-                ->required(),
+            Group::make()
+                ->relationship("user")
+                ->schema([
+                    TextInput::make("name")
+                        ->required()
+                        ->live(onBlur: true)
+                        ->label("Name"),
+                    TextInput::make("email")
+                        ->required()
+                        ->unique(ignoreRecord: true)
+                        ->label("Email"),
+                    TextInput::make("password")
+                        ->label("Password")
+                        ->required(fn($operation) => $operation === "create")
+                        ->dehydrated(fn($operation, $state) => !is_null($state))
+                        ->password()
+                        ->revealable(),
+                ]),
+            Group::make([
+                PhoneInput::make("phone_number")
+                    ->initialCountry("AE")
+                    ->label(__("dashboard.phone_number"))
+                    ->required(),
+                Forms\Components\Select::make("gender")
+                    ->label(__("dashboard.gender"))
+                    ->options(Gender::class)
+                    ->required(),
+                Forms\Components\DatePicker::make("birth_date")
+                    ->label(__("dashboard.birth_date"))
+                    ->required(),
+            ]),
             Forms\Components\Textarea::make("address")
                 ->label(__("dashboard.address"))
                 ->required()
+                ->columnSpanFull()
                 ->maxLength(65535),
         ];
     }

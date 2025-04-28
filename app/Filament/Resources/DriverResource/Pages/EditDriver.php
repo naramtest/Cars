@@ -18,4 +18,12 @@ class EditDriver extends EditRecord
             Actions\RestoreAction::make(),
         ];
     }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        if ($data["password"] == null) {
+            unset($data["password"]);
+        }
+        return parent::mutateFormDataBeforeSave($data);
+    }
 }
