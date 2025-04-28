@@ -80,6 +80,7 @@ class RentsRelationManager extends RelationManager
                     ->options(ReservationStatus::class)
                     ->multiple(),
             ])
+            ->defaultSort("rents.created_at", "DESC")
             ->headerActions([Tables\Actions\CreateAction::make()])
             ->actions([
                 Tables\Actions\EditAction::make(),

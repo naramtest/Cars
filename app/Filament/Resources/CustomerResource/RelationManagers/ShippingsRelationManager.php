@@ -68,6 +68,7 @@ class ShippingsRelationManager extends RelationManager
                     ->options(ShippingStatus::class)
                     ->multiple(),
             ])
+            ->defaultSort("shippings.created_at", "DESC")
             ->headerActions([Tables\Actions\CreateAction::make()])
             ->actions([
                 //TODO : add action to convert status (Rent , shipping already exist in the resource but I have to add one for booking here and in Booking resource)
