@@ -7,6 +7,7 @@ use App\Filament\Resources\VehicleResource\Pages;
 use App\Filament\Resources\VehicleResource\RelationManagers;
 use App\Filament\Tables\Vehicle\VehicleTableSchema;
 use App\Models\Vehicle;
+use Auth;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
@@ -50,9 +51,19 @@ class VehicleResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->withoutGlobalScopes([
+        $query = parent::getEloquentQuery()->withoutGlobalScopes([
             SoftDeletingScope::class,
         ]);
+
+        // If the authenticated user is a driver, only show their bookings
+        if (Auth::user()->isDriver()) {
+            $driver = Auth::user()->driver;
+            if ($driver) {
+                $query->where("driver_id", $driver->id);
+            }
+        }
+
+        return $query;
     }
 
     public static function getNavigationLabel(): string

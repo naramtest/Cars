@@ -6,6 +6,7 @@ use App\Filament\Forms\Shipping\ShippingFormSchema;
 use App\Filament\Resources\ShippingResource\Pages;
 use App\Filament\Tables\Shipping\ShippingTableSchema;
 use App\Models\Shipping;
+use Auth;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
@@ -49,9 +50,19 @@ class ShippingResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->withoutGlobalScopes([
+        $query = parent::getEloquentQuery()->withoutGlobalScopes([
             SoftDeletingScope::class,
         ]);
+
+        // If the authenticated user is a driver, only show their Shipping
+        if (Auth::user()->isDriver()) {
+            $driver = Auth::user()->driver;
+            if ($driver) {
+                $query->where("driver_id", $driver->id);
+            }
+        }
+
+        return $query;
     }
 
     public static function getNavigationLabel(): string

@@ -63,7 +63,7 @@ class ShippingFormSchema
                     ->label(__("dashboard.Driver"))
                     ->relationship("driver", "first_name")
                     ->getOptionLabelFromRecordUsing(
-                        fn($record) => "$record->first_name $record->last_name"
+                        fn($record) => "$record->full_name"
                     )
                     ->searchable(["first_name", "last_name"])
                     ->preload()

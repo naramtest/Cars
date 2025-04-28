@@ -34,8 +34,8 @@ class ShippingTableSchema
 
                 Tables\Columns\TextColumn::make("driver.full_name")
                     ->label(__("dashboard.Driver"))
-                    ->searchable(["drivers.first_name", "drivers.last_name"])
                     ->sortable()
+                    ->visible(fn() => notDriver())
                     ->toggleable(),
 
                 Tables\Columns\TextColumn::make("total_weight")

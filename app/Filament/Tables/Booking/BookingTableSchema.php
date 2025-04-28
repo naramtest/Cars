@@ -39,6 +39,7 @@ class BookingTableSchema
                     ->label(__("dashboard.Driver"))
                     ->searchable(["drivers.first_name", "drivers.last_name"])
                     ->sortable()
+                    ->visible(fn() => notDriver())
                     ->toggleable(),
 
                 DateColumn::make(
@@ -59,6 +60,7 @@ class BookingTableSchema
                 MoneyColumn::make("total_price")
                     ->label(__("dashboard.total_price"))
                     ->sortable()
+                    ->visible(fn() => notDriver())
                     ->toggleable(),
 
                 Tables\Columns\TextColumn::make("status")
@@ -87,7 +89,8 @@ class BookingTableSchema
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\ForceDeleteAction::make(),
                 Tables\Actions\RestoreAction::make(),
-                ReservationActions::make(),
+
+                ReservationActions::make()->visible(fn() => notDriver()),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -14,3 +14,9 @@ if (!function_exists("templateUrlReplaceParameter")) {
         return str_replace("PLACEHOLDER_VALUE", "{{1}}", templateUrl($route));
     }
 }
+if (!function_exists("notDriver")) {
+    function notDriver(): string
+    {
+        return !\Auth::user()->isDriver();
+    }
+}

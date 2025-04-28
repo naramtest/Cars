@@ -6,6 +6,7 @@ use App\Filament\Forms\Booking\BookingFormSchema;
 use App\Filament\Resources\BookingResource\Pages;
 use App\Filament\Tables\Booking\BookingTableSchema;
 use App\Models\Booking;
+use Auth;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
@@ -50,9 +51,19 @@ class BookingResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->withoutGlobalScopes([
+        $query = parent::getEloquentQuery()->withoutGlobalScopes([
             SoftDeletingScope::class,
         ]);
+
+        // If the authenticated user is a driver, only show their bookings
+        if (Auth::user()->isDriver()) {
+            $driver = Auth::user()->driver;
+            if ($driver) {
+                $query->where("driver_id", $driver->id);
+            }
+        }
+
+        return $query;
     }
 
     public static function getNavigationLabel(): string

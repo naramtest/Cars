@@ -3,8 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
-use App\Services\WorkspaceService;
 use Auth;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
@@ -12,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -145,15 +144,18 @@ class UserResource extends Resource
         return ["name", "email"];
     }
 
-    /**
-     * Apply workspace scope to all model queries.
-     */
-    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
+
         if (!Auth::user()->hasRole("super_admin")) {
             $query->where("email", "!=", "admin@admin.com");
         }
+
+        $query->whereDoesntHave("roles", function ($query) {
+            $query->where("name", "driver");
+        });
+
         return $query;
     }
 }

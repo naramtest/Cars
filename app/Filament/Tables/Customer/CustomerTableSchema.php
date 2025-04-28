@@ -35,20 +35,24 @@ class CustomerTableSchema
                 Tables\Columns\TextColumn::make("bookings_count")
                     ->label(__("dashboard.Bookings"))
                     ->counts("bookings")
-                    ->sortable(),
+                    ->sortable()
+                    ->visible(fn() => notDriver()),
 
                 Tables\Columns\TextColumn::make("rents_count")
                     ->label(__("dashboard.Rents"))
                     ->counts("rents")
+                    ->visible(fn() => notDriver())
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make("shippings_count")
                     ->label(__("dashboard.Shippings"))
                     ->counts("shippings")
+                    ->visible(fn() => notDriver())
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make("created_at")
                     ->label(__("dashboard.created_at"))
+                    ->visible(fn() => notDriver())
                     ->dateTime("M j, Y")
                     ->sortable()
                     ->toggleable(),

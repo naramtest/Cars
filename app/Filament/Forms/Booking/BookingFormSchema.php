@@ -97,7 +97,9 @@ class BookingFormSchema
                         ->default(ReservationStatus::Confirmed)
                         ->visible(fn($operation) => $operation === "create")
                         ->required(),
-                    MoneyInput::make("total_price")->required(),
+                    MoneyInput::make("total_price")
+                        ->required()
+                        ->visible(fn() => notDriver()),
                 ])
                 ->columnSpan(["sm" => 2, "md" => 2, "lg" => 1, "xl" => 1])
                 ->columns(1),
