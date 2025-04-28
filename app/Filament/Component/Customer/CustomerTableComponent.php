@@ -11,13 +11,13 @@ class CustomerTableComponent
     public static function make()
     {
         return [
-            TextColumn::make("customers.name")
+            TextColumn::make("customer.name")
                 ->label(__("dashboard.client_name"))
                 ->searchable()
                 ->url(
-                    fn($record) => $record->customers->first()
+                    fn($record) => $record->customer
                         ? CustomerResource::getUrl("view", [
-                            "record" => $record->customers->first()->id,
+                            "record" => $record->customer->id,
                         ])
                         : null
                 )
@@ -25,12 +25,12 @@ class CustomerTableComponent
                 ->color("primary")
                 ->sortable(),
 
-            PhoneColumn::make("customers.phone_number")
+            PhoneColumn::make("customer.phone_number")
                 ->label(__("dashboard.client_phone"))
                 ->searchable()
                 ->url(
-                    fn($record) => $record->customers->first()
-                        ? "tel:" . $record->customers->first()->phone_number
+                    fn($record) => $record->customer
+                        ? "tel:" . $record->customer->phone_number
                         : null
                 )
                 ->color("info")

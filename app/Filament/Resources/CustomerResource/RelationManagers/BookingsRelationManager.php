@@ -4,10 +4,12 @@ namespace App\Filament\Resources\CustomerResource\RelationManagers;
 
 use App\Enums\ReservationStatus;
 use App\Filament\Component\DateColumn;
+use Auth;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 use Pelmered\FilamentMoneyField\Tables\Columns\MoneyColumn;
@@ -15,6 +17,13 @@ use Pelmered\FilamentMoneyField\Tables\Columns\MoneyColumn;
 class BookingsRelationManager extends RelationManager
 {
     protected static string $relationship = "bookings";
+
+    public static function canViewForRecord(
+        Model $ownerRecord,
+        string $pageClass
+    ): bool {
+        return !Auth::user()->isDriver();
+    }
 
     public function table(Table $table): Table
     {
@@ -59,6 +68,7 @@ class BookingsRelationManager extends RelationManager
 
                 DateColumn::make("created_at", __("dashboard.created_at")),
             ])
+            ->defaultSort("bookings.created_at", "DESC")
             ->filters([
                 DateRangeFilter::make("create_at")->label(
                     __("dashboard.Created at")

@@ -16,9 +16,9 @@ class CustomerFormComponent
             Forms\Components\Grid::make()
                 ->schema([
                     // TODO: show phone number also not just the customer name in select
-                    Forms\Components\Select::make("customers")
+                    Forms\Components\Select::make("customer")
                         ->label(__("dashboard.Customer"))
-                        ->relationship("customers", "name")
+                        ->relationship("customer", "name")
                         ->preload()
                         ->searchable(["name", "email", "phone_number"])
                         ->createOptionForm([
@@ -54,20 +54,18 @@ class CustomerFormComponent
                             }
 
                             $customerList = "";
-                            foreach ($record->customers as $customer) {
-                                // Generate URL to customer view page
-                                $url = CustomerResource::getUrl("view", [
-                                    "record" => $customer,
-                                ]);
+                            // Generate URL to customer view page
+                            $url = CustomerResource::getUrl("view", [
+                                "record" => $record->customer,
+                            ]);
 
-                                // Create a clickable link to the customer view page
-                                $customerList .= sprintf(
-                                    '• <a href="%s" target="_blank" class="text-primary-600 hover:underline">%s</a> (%s)<br>',
-                                    $url,
-                                    e($customer->name),
-                                    e($customer->phone_number)
-                                );
-                            }
+                            // Create a clickable link to the customer view page
+                            $customerList .= sprintf(
+                                '• <a href="%s" target="_blank" class="text-primary-600 hover:underline">%s</a> (%s)<br>',
+                                $url,
+                                e($record->customer->name),
+                                e($record->customer->phone_number)
+                            );
 
                             return new HtmlString($customerList);
                         })
