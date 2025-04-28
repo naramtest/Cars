@@ -69,10 +69,10 @@ class CustomerFormComponent
 
                             return new HtmlString($customerList);
                         })
-                        ->visible(
-                            fn(string $operation): bool => $operation !==
-                                "create"
-                        ),
+                        ->visible(function (string $operation, $record): bool {
+                            return $operation !== "create" and
+                                $record->getCustomer();
+                        }),
                 ])
                 ->columns(1)
                 ->columnSpan(1),

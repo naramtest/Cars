@@ -104,7 +104,6 @@ class Shipping extends Model
     {
         return $this->morphToMany(Customer::class, "customerable")
             ->withTimestamps()
-            ->orderByPivot("created_at", "desc")
             ->limit(1); // Limit to one customer
     }
 
