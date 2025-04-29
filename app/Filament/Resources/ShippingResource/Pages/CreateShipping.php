@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ShippingResource\Pages;
 
+use App\Events\ShippingCreated;
 use App\Filament\Resources\ShippingResource;
 use Filament\Resources\Pages\CreateRecord;
 
@@ -13,5 +14,6 @@ class CreateShipping extends CreateRecord
     {
         // Calculate the total weight from the items
         $this->record->recalculateTotalWeight();
+        ShippingCreated::dispatch($this->record);
     }
 }

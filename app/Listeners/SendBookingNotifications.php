@@ -27,7 +27,6 @@ class SendBookingNotifications implements ShouldQueue
      */
     public function handle(BookingCreated $event): void
     {
-        logger("naram");
         $booking = $event->booking;
 
         try {
