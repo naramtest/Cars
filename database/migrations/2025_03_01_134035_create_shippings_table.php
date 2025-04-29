@@ -31,7 +31,7 @@ return new class extends Migration {
 
             // Tracking and Status
             $table->string("tracking_number")->unique();
-            $table->string("status")->default(ShippingStatus::Draft->value);
+            $table->string("status")->default(ShippingStatus::Pending);
 
             // Items
             $table->float("total_weight")->default(0);

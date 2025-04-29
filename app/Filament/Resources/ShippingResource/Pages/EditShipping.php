@@ -27,7 +27,7 @@ class EditShipping extends EditRecord
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
-        // Make sure the total weight is up to date when loading the form
+        // Make sure the total weight is up-to-date when loading the form
         if (isset($data["id"])) {
             $shipping = $this->getRecord();
             $shipping->recalculateTotalWeight();

@@ -35,7 +35,11 @@ class SendShippingReminders extends BaseNotificationCommand
             ])
                 ->whereNotNull("pick_up_at")
                 ->whereBetween("pick_up_at", [now(), $minutesFromNow])
-                ->where("status", ShippingStatus::Pending->value)
+                ->where(function ($query) use ($template) {
+                    $query
+                        ->where("status", ShippingStatus::Pending->value)
+                        ->orWhere("status", ShippingStatus::Confirmed->value);
+                })
                 ->whereDoesntHave("notifications", function ($query) use (
                     $template
                 ) {

@@ -57,7 +57,7 @@ class ShippingObserver extends NotificationObserver
     protected function shouldSendUpdateNotification(Shipping $shipping): bool
     {
         // Only send updates for confirmed or pending shipping orders
-        if ($shipping->status === ShippingStatus::Confirmed) {
+        if ($shipping->status !== ShippingStatus::Confirmed) {
             return false;
         }
 
