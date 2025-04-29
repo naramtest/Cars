@@ -19,7 +19,7 @@ class SendVehicleInspectionReminders extends BaseNotificationCommand
             if (!$this->notificationEnabled($handler)) {
                 return;
             }
-         
+
             $template = $this->whatsAppTemplateService->resolveTemplate(
                 $handler
             );
@@ -67,7 +67,6 @@ class SendVehicleInspectionReminders extends BaseNotificationCommand
                     count($vehicles) .
                     " vehicles requiring inspection reminders"
             );
-
             foreach ($vehicles as $vehicle) {
                 $this->sendNotification($vehicle, $handler, $template->name);
             }
