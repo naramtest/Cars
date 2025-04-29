@@ -78,7 +78,7 @@ class NotificationSettingsPage extends Page implements HasForms
             $isReminderType = Str::contains($name, ["reminder"]);
 
             $schema[] = Grid::make(3)->schema([
-                Toggle::make("enabled_templates")
+                Toggle::make("enabled_templates.$name")
                     ->label(Str::headline($name))
                     ->helperText(
                         $descriptions[$name] ?? "No description available"
@@ -98,9 +98,7 @@ class NotificationSettingsPage extends Page implements HasForms
                         $component->state(
                             in_array($name, $settings->enabled_templates)
                         );
-                    })
-                    ->dehydrated(false),
-
+                    }),
                 // If it's a reminder type, add a timing input
                 $isReminderType
                     ? Select::make("reminder_timings.$name")
@@ -157,17 +155,11 @@ class NotificationSettingsPage extends Page implements HasForms
     {
         $settings = app(NotificationSettings::class);
         $formData = $this->form->getState();
-
         // Process enabled_templates
         $enabledTemplates = [];
-        $templateGroups = config("notification_templates", []);
-
-        foreach ($templateGroups as $group => $templates) {
-            foreach ($templates as $name => $class) {
-                $isEnabled = $this->getToggleState($name);
-                if ($isEnabled) {
-                    $enabledTemplates[] = $name;
-                }
+        foreach ($formData["enabled_templates"] as $name => $value) {
+            if ($value) {
+                $enabledTemplates[] = $name;
             }
         }
 
@@ -180,22 +172,5 @@ class NotificationSettingsPage extends Page implements HasForms
             ->title("Settings saved successfully")
             ->success()
             ->send();
-    }
-
-    private function getToggleState(string $templateName): bool
-    {
-        $formName = "enabled_templates";
-
-        // Check if this specific toggle exists in the request
-        if (
-            request()->has("data.$formName") &&
-            is_array(request("data.$formName"))
-        ) {
-            return in_array($templateName, request("data.$formName"));
-        }
-
-        // Default to the current setting
-        $settings = app(NotificationSettings::class);
-        return in_array($templateName, $settings->enabled_templates);
     }
 }

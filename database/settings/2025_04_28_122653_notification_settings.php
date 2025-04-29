@@ -7,7 +7,6 @@ return new class extends SettingsMigration {
     {
         // Get all available templates from the config
         $allTemplates = $this->getAllTemplateNames();
-
         // Create default descriptions for each template
         $descriptions = $this->getDefaultDescriptions();
 
@@ -90,6 +89,12 @@ return new class extends SettingsMigration {
                 "Sent to customer when their package is picked up",
             "customer_shipping_delivered" =>
                 "Sent to customer when their package is delivered",
+            "customer_booking_update" =>
+                "Sent to customer when their booking details are updated",
+            "customer_rent_update" =>
+                "Sent to customer when their rental details are updated",
+            "customer_shipping_update" =>
+                "Sent to customer when their shipping details are updated",
         ];
     }
 
