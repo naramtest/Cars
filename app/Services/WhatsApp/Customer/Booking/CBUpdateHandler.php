@@ -35,22 +35,6 @@ class CBUpdateHandler extends WhatsAppAbstractHandler
     {
         $driver = $modelData->driver;
 
-        if (!$driver) {
-            return [
-                [
-                    "type" => "button",
-                    "sub_type" => "url",
-                    "index" => 0,
-                    "parameters" => [
-                        [
-                            "type" => "text",
-                            "text" => route("whatsapp.contact"),
-                        ],
-                    ],
-                ],
-            ];
-        }
-
         return [
             [
                 "type" => "button",
@@ -59,7 +43,7 @@ class CBUpdateHandler extends WhatsAppAbstractHandler
                 "parameters" => [
                     [
                         "type" => "text",
-                        "text" => $driver->phone_number,
+                        "text" => $driver->id,
                     ],
                 ],
             ],

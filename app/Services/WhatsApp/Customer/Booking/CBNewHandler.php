@@ -34,11 +34,11 @@ class CBNewHandler extends WhatsAppAbstractHandler
             [
                 "type" => "button",
                 "sub_type" => "url",
-                "index" => 1,
+                "index" => 0,
                 "parameters" => [
                     [
                         "type" => "text",
-                        "text" => $driver->phone_number,
+                        "text" => $driver->id,
                     ],
                 ],
             ],

@@ -21,7 +21,7 @@ class EditDriver extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        if ($data["password"] == null) {
+        if (array_key_exists("password", $data) and $data["password"] == null) {
             unset($data["password"]);
         }
         return parent::mutateFormDataBeforeSave($data);
