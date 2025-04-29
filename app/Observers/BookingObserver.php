@@ -11,16 +11,6 @@ use App\Services\WhatsApp\Driver\Booking\DBUpdatedHandler;
 
 class BookingObserver extends NotificationObserver
 {
-    //    public function created(Booking $booking): void
-    //    {
-    //        $this->sendAndSave(ABNewHandler::class, $booking);
-    //
-    //        if ($booking->status === ReservationStatus::Confirmed) {
-    //            $this->sendAndSave(DBNewHandler::class, $booking);
-    //            $this->sendAndSave(CBNewHandler::class, $booking);
-    //        }
-    //    }
-
     /**
      * Handle the Booking "updated" event.
      */
