@@ -4,6 +4,7 @@ namespace App\Filament\Forms\Shipping;
 
 use App\Enums\Shipping\ShippingStatus;
 use App\Filament\Component\Customer\CustomerFormComponent;
+use App\Filament\Component\DriverSelectField;
 use App\Models\Shipping;
 use Awcodes\TableRepeater\Components\TableRepeater;
 use Awcodes\TableRepeater\Header;
@@ -58,16 +59,7 @@ class ShippingFormSchema
                     ->disabled()
                     ->placeholder("Will be auto-generated")
                     ->maxLength(255),
-
-                Forms\Components\Select::make("driver_id")
-                    ->label(__("dashboard.Driver"))
-                    ->relationship("driver", "first_name")
-                    ->getOptionLabelFromRecordUsing(
-                        fn($record) => "$record->full_name"
-                    )
-                    ->searchable(["first_name", "last_name"])
-                    ->preload()
-                    ->nullable(),
+                DriverSelectField::make()->nullable(),
 
                 Forms\Components\Select::make("status")
                     ->label(__("dashboard.status"))

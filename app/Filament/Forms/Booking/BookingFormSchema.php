@@ -4,8 +4,8 @@ namespace App\Filament\Forms\Booking;
 
 use App\Enums\ReservationStatus;
 use App\Filament\Component\Customer\CustomerFormComponent;
+use App\Filament\Component\DriverSelectField;
 use App\Models\Booking;
-use App\Models\Driver;
 use App\Models\Vehicle;
 use Filament\Forms;
 use Filament\Forms\Get;
@@ -77,20 +77,7 @@ class BookingFormSchema
                                 ?string $state
                             ) => self::updateDriverInfo($get, $set, $state)
                         ),
-                    Forms\Components\Select::make("driver_id")
-                        ->label(__("dashboard.Driver"))
-                        ->relationship("driver", "first_name")
-                        ->live()
-                        ->getOptionLabelFromRecordUsing(
-                            fn(Driver $record) => "$record->full_name"
-                        )
-                        ->searchable([
-                            "first_name",
-                            "last_name",
-                            "license_number",
-                        ])
-                        ->preload(),
-
+                    DriverSelectField::make()->live(),
                     Forms\Components\Select::make("status")
                         ->label(__("dashboard.status"))
                         ->options(ReservationStatus::class)
