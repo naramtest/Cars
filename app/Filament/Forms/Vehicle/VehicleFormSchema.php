@@ -17,19 +17,47 @@ class VehicleFormSchema
         return [
             Forms\Components\Section::make(__("dashboard.inspection_period"))
                 ->schema([
-                    Forms\Components\TextInput::make("inspection_period_days")
-                        ->label(__("dashboard.inspection_period_days"))
-                        ->numeric()
-                        ->hiddenLabel()
-                        ->minValue(1)
-                        ->nullable()
-                        ->suffixIcon("heroicon-m-calendar")
-                        ->suffix(__("dashboard.days")),
-                    Forms\Components\Toggle::make("notify_before_inspection")
-                        ->label(__("dashboard.notify_before_inspection"))
-                        ->default(true),
+                    Forms\Components\Group::make([
+                        Forms\Components\Toggle::make(
+                            "notify_before_inspection"
+                        )
+                            ->label(__("dashboard.notify_before_inspection"))
+                            ->default(true)
+                            ->columnSpanFull(),
+
+                        Forms\Components\TextInput::make(
+                            "inspection_period_days"
+                        )
+                            ->label(__("dashboard.inspection_period_days"))
+                            ->numeric()
+                            ->minValue(1)
+                            ->nullable()
+                            ->helperText(
+                                "* This will calculate the next inspection date by adding the entered days to today’s date."
+                            )
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (
+                                $operation,
+                                Forms\Set $set,
+                                $state
+                            ) {
+                                $carbon = now()->addDays((int) $state);
+                                $set(
+                                    "next_inspection_date",
+                                    $carbon->toDateString()
+                                );
+                            })
+                            ->suffixIcon("heroicon-m-calendar")
+                            ->suffix(__("dashboard.days")),
+                        Forms\Components\DatePicker::make(
+                            "next_inspection_date"
+                        )
+                            ->default(now())
+                            ->live()
+                            ->label(__("dashboard.next_inspection_date")),
+                    ]),
                 ])
-                ->columns(3),
+                ->columns(),
         ];
     }
 
@@ -201,8 +229,6 @@ class VehicleFormSchema
                                 ? $record->updated_at->diffForHumans()
                                 : "-"
                         ),
-                ]),
-                Forms\Components\Section::make("Inspection")->schema([
                     Forms\Components\Placeholder::make("next_inspection_date")
                         ->label("Latest Inspection")
                         ->visible(function (?Vehicle $record): bool {
@@ -217,19 +243,6 @@ class VehicleFormSchema
                                 ->latest()
                                 ->first();
                             return $inspection->inspection_date->format(
-                                "M j, Y"
-                            ) ?? "-";
-                        }),
-                    Forms\Components\Placeholder::make("next_inspection_date")
-                        ->visible(function (?Vehicle $record): bool {
-                            return (bool) $record
-                                ->inspections()
-                                ->latest()
-                                ->first();
-                        })
-                        ->label(__("dashboard.next_inspection_date"))
-                        ->content(function (?Vehicle $record): string {
-                            return $record->next_inspection_date->format(
                                 "M j, Y"
                             ) ?? "-";
                         }),

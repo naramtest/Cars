@@ -40,10 +40,12 @@ class Vehicle extends MoneyModel
         "notes",
         "inspection_period_days",
         "notify_before_inspection",
+        "next_inspection_date",
     ];
 
     protected $casts = [
         "registration_expiry_date" => "date",
+        "next_inspection_date" => "date",
         "gearbox" => GearboxType::class,
         "fuel_type" => FuelType::class,
         "kilometer" => "integer",
@@ -62,17 +64,15 @@ class Vehicle extends MoneyModel
         });
 
         static::creating(function (Vehicle $vehicle) {
+            if (empty($vehicle->next_inspection_date)) {
+                $vehicle->next_inspection_date = now();
+            }
             if (empty($vehicle->currency_code)) {
                 $vehicle->currency_code = $vehicle->currencyService->getDefaultCurrency();
             }
         });
     }
 
-    /**
-     * Get the daily rate as a Money object
-     *
-     * @return Money
-     */
     public function getDailyRateMoneyAttribute(): Money
     {
         return $this->currencyService->money(
@@ -121,22 +121,6 @@ class Vehicle extends MoneyModel
         return $this->hasMany(Booking::class);
     }
 
-    public function getNextInspectionDateAttribute(): ?Carbon
-    {
-        if (!$this->inspection_period_days) {
-            return null;
-        }
-        $inspection = $this->inspections()->latest()->first();
-
-        $start_date = $inspection->inspection_date ?? $this->created_at;
-
-        return Carbon::parse($start_date)->addDays(
-            $this->inspection_period_days
-        );
-    }
-
-    // Calculate next inspection date based on period days
-
     /**
      * Get inspections for this vehicle.
      */
@@ -153,17 +137,6 @@ class Vehicle extends MoneyModel
             return null;
         }
 
-        return Carbon::now()->diffInDays($this->next_inspection_date, false);
-    }
-
-    // Check if inspection is due based on setting
-    public function getIsInspectionDueAttribute(): bool
-    {
-        if (!$this->next_inspection_date || !$this->notify_before_inspection) {
-            return false;
-        }
-
-        $notificationDays = config("inspections.notification_days_before", 7);
-        return $this->days_until_next_inspection <= $notificationDays;
+        return Carbon::now()->diffInDays($this->next_inspection_date);
     }
 }
