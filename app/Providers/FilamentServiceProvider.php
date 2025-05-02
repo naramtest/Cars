@@ -5,6 +5,7 @@ namespace App\Providers;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Field;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 use Illuminate\Support\ServiceProvider;
 
 class FilamentServiceProvider extends ServiceProvider
@@ -22,6 +23,9 @@ class FilamentServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Table::configureUsing(function (Table $table): void {
+            $table->defaultSort("created_at", "desc");
+        });
         Filament::serving(function () {
             Field::macro("translate", function (bool $isInline = false) {
                 if ($isInline) {
