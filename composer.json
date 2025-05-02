@@ -23,6 +23,7 @@
         "livewire/livewire": "^3.5",
         "malzariey/filament-daterangepicker-filter": "^3.2",
         "netflie/whatsapp-cloud-api": "^2.2",
+        "opcodesio/log-viewer": "^3.15",
         "outerweb/filament-translatable-fields": "^2.1",
         "pelmered/filament-money-field": "^1.4",
         "spatie/laravel-settings": "^3.4",
