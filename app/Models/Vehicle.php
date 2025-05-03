@@ -137,6 +137,6 @@ class Vehicle extends MoneyModel
             return null;
         }
 
-        return Carbon::now()->diffInDays($this->next_inspection_date);
+        return ceil(Carbon::now()->diffInDays($this->next_inspection_date));
     }
 }

@@ -36,8 +36,11 @@ class SendDriverVehicleInspectionReminders extends BaseNotificationCommand
                 ->get()
                 ->filter(function ($vehicle) use ($notificationDays) {
                     // Check if due for inspection
-                    return $vehicle->days_until_next_inspection <=
-                        $notificationDays &&
+                    return !$vehicle->next_inspection_date->isSameDay(
+                        $vehicle->created_at
+                    ) &&
+                        $vehicle->days_until_next_inspection <=
+                            $notificationDays &&
                         $vehicle->days_until_next_inspection >= 0;
                 })
                 ->filter(function ($vehicle) use ($template) {
