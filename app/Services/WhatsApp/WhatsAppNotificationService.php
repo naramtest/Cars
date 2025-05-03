@@ -2,6 +2,7 @@
 
 namespace App\Services\WhatsApp;
 
+use App\Models\Template;
 use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
 use Exception;
 use Illuminate\Http\Client\ConnectionException;
@@ -27,7 +28,8 @@ class WhatsAppNotificationService
     public function sendAndSave(
         string|WhatsAppAbstractHandler $handlerClass,
         $data,
-        $recipients = null
+        $recipients = null,
+        bool $isUpdate = false
     ): void {
         $handler = HandlerResolver::resolve($handlerClass);
 
@@ -42,13 +44,23 @@ class WhatsAppNotificationService
         $template = app(WhatsAppTemplateService::class)->resolveTemplate(
             $handler
         );
-        if ($data->hasNotificationBeenSent($template->name)) {
+
+        $name = $this->getName($isUpdate, $template);
+
+        if (!$isUpdate && $data->hasNotificationBeenSent($template->name)) {
             throw new Exception("Notification already sent.");
         }
         //2- send template message
         $this->send($handler, $data, $recipients);
         //3- save sent message to the database
-        $data->recordNotification($template->name);
+        $data->recordNotification($name);
+    }
+
+    public function getName(bool $isUpdate, Template $template): mixed
+    {
+        return $isUpdate
+            ? $template->name . "-" . now()->timestamp
+            : $template->name;
     }
 
     /**

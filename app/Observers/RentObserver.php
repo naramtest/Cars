@@ -24,7 +24,7 @@ class RentObserver extends NotificationObserver
 
         // Send update notification if important fields were changed
         if ($this->shouldSendUpdateNotification($rent)) {
-            $this->sendAndSave(CRUpdateHandler::class, $rent);
+            $this->sendAndSave(CRUpdateHandler::class, $rent, true);
         }
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App;
 use App\Models\Booking;
 use App\Models\Rent;
 use App\Models\Shipping;
@@ -27,7 +28,7 @@ class ObserverProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (\App::isProduction()) {
+        if (App::isProduction()) {
             ShippingItem::observe(ShippingItemObserver::class);
             Booking::observe(BookingObserver::class);
             Rent::observe(RentObserver::class);

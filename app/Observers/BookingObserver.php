@@ -29,10 +29,10 @@ class BookingObserver extends NotificationObserver
 
         // Send DBUpdatedHandler if other fields were changed
         if ($this->shouldSendUpdateNotification($booking)) {
-            $this->sendAndSave(DBUpdatedHandler::class, $booking);
+            $this->sendAndSave(DBUpdatedHandler::class, $booking, true);
 
             // Also send to customer
-            $this->sendAndSave(CBUpdateHandler::class, $booking);
+            $this->sendAndSave(CBUpdateHandler::class, $booking, true);
         }
     }
 

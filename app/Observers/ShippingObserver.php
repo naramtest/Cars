@@ -47,7 +47,7 @@ class ShippingObserver extends NotificationObserver
 
         // Send update notification for changes to important fields
         if ($this->shouldSendUpdateNotification($shipping)) {
-            $this->sendAndSave(CSUpdateHandler::class, $shipping);
+            $this->sendAndSave(CSUpdateHandler::class, $shipping, true);
         }
     }
 
