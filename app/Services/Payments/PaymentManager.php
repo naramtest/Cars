@@ -3,7 +3,7 @@
 namespace App\Services\Payments;
 
 use App\Enums\Payments\PaymentType;
-use App\Services\Payments\Providers\StripePaymentLinksProvider;
+use App\Services\Payments\Providers\Stripe\StripePaymentLinksProvider;
 
 class PaymentManager
 {

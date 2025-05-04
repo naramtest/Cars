@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Services\Payments\PaymentManager;
-use App\Services\Payments\Providers\StripePaymentLinksProvider;
+use App\Services\Payments\Providers\Stripe\StripePaymentLinksProvider;
 use Illuminate\Support\ServiceProvider;
 
 class SingletonProvider extends ServiceProvider

@@ -41,10 +41,4 @@ return [
         "api_version" => env("WHATSAPP_API_VERSION"),
         "production_app_base_url" => env("PRODUCTION_APP_BASE_URL"),
     ],
-
-    "stripe" => [
-        "key" => env("STRIPE_KEY"),
-        "secret" => env("STRIPE_SECRET"),
-        "webhook" => env("STRIPE_WEBHOOK_SECRET"),
-    ],
 ];

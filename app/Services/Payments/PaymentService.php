@@ -10,6 +10,15 @@ class PaymentService
 {
     public function __construct(protected PaymentProviderInterface $provider) {}
 
+    public function linkPayment(
+        Payable $payable,
+        int $amount,
+        string $currency
+    ): string {
+        $payment = $this->pay($payable, $amount, $currency);
+        return $payment->payment_link;
+    }
+
     public function pay(
         Payable $payable,
         int $amount,
