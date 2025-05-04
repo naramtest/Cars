@@ -13,7 +13,7 @@ class PaymentService
     public function linkPayment(
         Payable $payable,
         int $amount,
-        ?string $currency
+        ?string $currency = null
     ): string {
         $payment = $this->pay($payable, $amount, $currency);
         return $payment->payment_link;
@@ -22,7 +22,7 @@ class PaymentService
     public function pay(
         Payable $payable,
         int $amount,
-        ?string $currency
+        ?string $currency = null
     ): Payment {
         $currency ??= config("app.money_currency");
         //1- create payment object

@@ -5,6 +5,7 @@ use App\Services\WhatsApp\Admin\Rent\{ARNewHandler, ARReminderHandler};
 use App\Services\WhatsApp\Admin\Shipping\{ASDeliveredHandler, ASNewHandler, ASReminderHandler};
 use App\Services\WhatsApp\Admin\Vehicle\{VehicleInspectionReminderHandler, VehicleRegistrationExpiryHandler};
 use App\Services\WhatsApp\Customer\Booking\{CBNewHandler, CBUpdateHandler};
+use App\Services\WhatsApp\Customer\Payment\{CPaymentLinkHandler};
 use App\Services\WhatsApp\Customer\Rent\{CREndReminderHandler, CRNewHandler, CRUpdateHandler};
 use App\Services\WhatsApp\Customer\Shipping\{CSDeliveredHandler, CSNewHandler, CSPickedUpHandler, CSUpdateHandler};
 use App\Services\WhatsApp\Driver\Booking\{DBNewHandler, DBReminderHandler, DBUpdatedHandler};
@@ -56,5 +57,8 @@ return [
         "customer_shipping_picked_up" => CSPickedUpHandler::class,
         "customer_shipping_delivered" => CSDeliveredHandler::class,
         "customer_shipping_update" => CSUpdateHandler::class,
+
+        //Payment
+        "customer_payment_link" => CPaymentLinkHandler::class,
     ],
 ];
