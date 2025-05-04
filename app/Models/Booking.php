@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ReservationStatus;
-use App\Models\Abstract\MoneyModel;
+use App\Models\Abstract\Payable;
 use App\Traits\CheckStatus;
 use App\Traits\HasNotifications;
 use App\Traits\HasReferenceNumber;
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Money\Money;
 
-class Booking extends MoneyModel
+class Booking extends Payable
 {
     use SoftDeletes;
     use HasReferenceNumber;

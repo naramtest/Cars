@@ -14,7 +14,7 @@ class WhatsAppServiceProvider extends ServiceProvider
     public function register(): void
     {
         // Register WhatsAppCloudApi
-        $this->app->singleton(WhatsAppCloudApi::class, function ($app) {
+        $this->app->singleton(WhatsAppCloudApi::class, function () {
             return new WhatsAppCloudApi([
                 "from_phone_number_id" => config("services.whatsapp.phone_id"),
                 "access_token" => config("services.whatsapp.token"),

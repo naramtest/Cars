@@ -1,8 +1,12 @@
 <?php
 
+use App\Enums\Payments\PaymentType;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DriverActionController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\WhatsAppWebhookController;
+use App\Models\Booking;
+use App\Services\Payments\PaymentManager;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(ContactController::class)->group(function () {
@@ -35,5 +39,18 @@ Route::get("/webhook", [WhatsAppWebhookController::class, "verify"]);
 Route::post("/webhook", [WhatsAppWebhookController::class, "handleWebhook"]);
 
 Route::get("/", function () {
+    app(PaymentManager::class)
+        ->driver(PaymentType::STRIPE_LINK)
+        ->pay(Booking::first(), 10000, "AED");
     return view("welcome");
 });
+
+Route::get("/payments/{payment}/success", [
+    PaymentController::class,
+    "success",
+])->name("payment.success");
+
+Route::get("/payments/{payment}/cancel", [
+    PaymentController::class,
+    "cancel",
+])->name("payment.cancel");

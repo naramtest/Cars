@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Services\Payments;
+
+use App\Enums\Payments\PaymentStatus;
+use App\Models\Abstract\Payable;
+use App\Models\Payment;
+
+class PaymentService
+{
+    public function __construct(protected PaymentProviderInterface $provider) {}
+
+    public function pay(
+        Payable $payable,
+        int $amount,
+        string $currency
+    ): Payment {
+        //1- create payment object
+        $payment = new Payment([
+            "amount" => $amount,
+            "currency_code" => $currency,
+            "payment_method" => $this->provider->getProviderName(),
+            "status" => PaymentStatus::PENDING,
+        ]);
+        $payable->payments()->save($payment);
+
+        //2- pay
+        $payment = $this->provider->pay($payment);
+
+        //3- save after pay
+        $payment->save();
+
+        //4-  Create initial payment attempt record
+        $payment->attempts()->create([
+            "status" => PaymentStatus::PENDING,
+            "provider_data" => [
+                "source" => "creation",
+                "provider" => $this->provider->getProviderName(),
+            ],
+        ]);
+        return $payment;
+    }
+}
