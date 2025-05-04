@@ -25,13 +25,13 @@ class PaymentService
         string $currency
     ): Payment {
         //1- create payment object
-        $payment = new Payment([
+
+        $payment = $payable->updatePayment([
             "amount" => $amount,
             "currency_code" => $currency,
             "payment_method" => $this->provider->getProviderName(),
             "status" => PaymentStatus::PENDING,
         ]);
-        $payable->payments()->save($payment);
 
         //2- pay
         $payment = $this->provider->pay($payment);

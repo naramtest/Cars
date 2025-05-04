@@ -19,6 +19,11 @@ return new class extends Migration {
             $table->string("provider_id")->nullable();
             $table->json("metadata")->nullable();
             $table->timestamps();
+
+            $table->unique(
+                ["payable_type", "payable_id"],
+                "payments_payable_unique"
+            );
         });
     }
 
