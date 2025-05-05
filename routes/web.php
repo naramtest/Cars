@@ -3,6 +3,7 @@
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DriverActionController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\WebhooksController;
 use App\Http\Controllers\WhatsAppWebhookController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +35,10 @@ Route::controller(DriverActionController::class)->group(function () {
 
 Route::get("/webhook", [WhatsAppWebhookController::class, "verify"]);
 Route::post("/webhook", [WhatsAppWebhookController::class, "handleWebhook"]);
+
+Route::controller(WebhooksController::class)->group(function () {
+    Route::post("/webhooks/stripe", "stripe")->name("webhooks.stripe");
+});
 
 Route::get("/", function () {
     return view("welcome");

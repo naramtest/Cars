@@ -25,6 +25,7 @@ class StripePaymentLinksProvider extends StripeProvider implements
         $paymentLink = $this->createPaymentLink($payment);
         $payment->payment_link = $paymentLink->url;
         $payment->provider_id = $paymentLink->id;
+
         $payment->payment_link_expires_at = $this->getExpirationAt();
         return $payment;
     }
@@ -64,6 +65,11 @@ class StripePaymentLinksProvider extends StripeProvider implements
                         "url" => route("payment.success", [
                             "payment" => $payment->id,
                         ]),
+                    ],
+                ],
+                "payment_intent_data" => [
+                    "metadata" => [
+                        "payment_id" => $payment->id,
                     ],
                 ],
                 "metadata" => [
