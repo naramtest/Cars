@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\CustomerResource\Pages;
 
+use App\Filament\Actions\Customers\ExportCustomerOrdersAction;
 use App\Filament\Resources\CustomerResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
@@ -12,8 +13,6 @@ class ViewCustomer extends ViewRecord
 
     protected function getHeaderActions(): array
     {
-        return [
-            Actions\EditAction::make(),
-        ];
+        return [ExportCustomerOrdersAction::make(), Actions\EditAction::make()];
     }
 }

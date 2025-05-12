@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\CustomerResource\Pages;
 
+use App\Filament\Actions\Customers\ExportCustomerOrdersAction;
 use App\Filament\Resources\CustomerResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -13,6 +14,7 @@ class EditCustomer extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            ExportCustomerOrdersAction::make(),
             Actions\ViewAction::make(),
             Actions\DeleteAction::make(),
         ];

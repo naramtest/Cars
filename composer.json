@@ -21,6 +21,7 @@
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
+        "maatwebsite/excel": "^3.1",
         "malzariey/filament-daterangepicker-filter": "^3.2",
         "netflie/whatsapp-cloud-api": "^2.2",
         "opcodesio/log-viewer": "^3.15",
