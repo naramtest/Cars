@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Settings\InfoSettings;
+use Auth;
 use Illuminate\Support\ServiceProvider;
+use LogViewer;
 use View;
 
 class AppServiceProvider extends ServiceProvider
@@ -26,6 +28,10 @@ class AppServiceProvider extends ServiceProvider
             InfoSettings $infoSettings
         ) {
             $view->with("info", $infoSettings);
+        });
+
+        LogViewer::auth(function ($request) {
+            return Auth::user()->hasRole("super_admin");
         });
     }
 }
