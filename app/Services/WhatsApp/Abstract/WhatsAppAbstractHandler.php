@@ -28,7 +28,7 @@ abstract class WhatsAppAbstractHandler implements WhatsAppNotificationInterface
             /** @var NotificationSettings $settings */
             $settings = app(NotificationSettings::class);
             return $settings->isEnabled($this->getTemplateName() ?? "");
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // Fallback to true if settings are not available yet
             return true;
         }
@@ -76,10 +76,29 @@ abstract class WhatsAppAbstractHandler implements WhatsAppNotificationInterface
         foreach ($parameters as $value) {
             $components_body[] = [
                 "type" => "text",
-                "text" => (string) $value,
+                "text" => $this->sanitizeText((string) $value),
             ];
         }
 
         return $components_body;
+    }
+
+    /**
+     * Sanitize text for WhatsApp API (remove newlines, tabs, and excessive spaces)
+     *
+     * @param string|null $text
+     * @return string
+     */
+    protected function sanitizeText(?string $text): string
+    {
+        if (empty($text)) {
+            return "";
+        }
+        // Replace newlines and tabs with a single space
+        $text = preg_replace('/[\r\n\t]+/', " ", $text);
+        // Replace multiple spaces with a single space
+        $text = preg_replace("/\s{2,}/", " ", $text);
+        // Trim the text
+        return trim($text);
     }
 }
