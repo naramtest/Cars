@@ -56,9 +56,6 @@ class StripeWebhookService
 
     protected function handleCheckoutCompleted($session): array
     {
-        logger("checkout.session.completed");
-        logger($session);
-
         try {
             $payment = $this->findPaymentFromSession($session);
             return $this->updatePaymentStatus($payment, PaymentStatus::PAID, [
@@ -73,17 +70,19 @@ class StripeWebhookService
     /**
      * @throws ModelNotFoundException When payment cannot be found
      */
-    protected function findPaymentFromSession($session): ?Payment
+    protected function findPaymentFromSession($session): Payment
     {
         if (isset($session->metadata->payment_id)) {
             return Payment::find($session->metadata->payment_id);
         }
 
-        if ($session->payment_link) {
-            return Payment::where(
+        if (
+            $payment = Payment::where(
                 "provider_id",
-                $session->payment_link
-            )->first();
+                $session->payment_intent ?? $session->id
+            )->first()
+        ) {
+            return $payment;
         }
 
         Log::error("Payment not found for Stripe session: " . $session->id);
@@ -116,10 +115,6 @@ class StripeWebhookService
 
     protected function handlePaymentIntentSucceeded($paymentIntent): array
     {
-        logger("payment_intent.succeeded");
-
-        logger($paymentIntent);
-
         try {
             $payment = $this->findPaymentFromSession($paymentIntent);
             // Update status to paid
@@ -134,8 +129,6 @@ class StripeWebhookService
 
     protected function handlePaymentFailed($paymentIntent): array
     {
-        logger($paymentIntent);
-
         try {
             $payment = $this->findPaymentFromSession($paymentIntent);
 
@@ -153,8 +146,6 @@ class StripeWebhookService
 
     protected function handleSessionExpired($session): array
     {
-        logger($session);
-
         try {
             $payment = $this->findPaymentFromSession($session);
 
@@ -172,8 +163,6 @@ class StripeWebhookService
 
     protected function handleRefund($charge): array
     {
-        logger($charge);
-
         try {
             $payment = $this->findPaymentFromSession($charge);
 
