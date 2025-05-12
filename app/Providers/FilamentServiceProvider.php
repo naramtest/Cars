@@ -30,7 +30,7 @@ class FilamentServiceProvider extends ServiceProvider
             Table::macro("dimCompleted", function (array $statuses = []) {
                 return $this->recordClasses(function ($record) use ($statuses) {
                     if (in_array($record->status, $statuses)) {
-                        return "bg-slate-100 dark:bg-gray-800 opacity-25";
+                        return "bg-slate-100 dark:bg-gray-800 table-opacity";
                     }
 
                     return "";

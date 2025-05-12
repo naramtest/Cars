@@ -30,6 +30,10 @@
     @apply text-red-600
 }
 
+.table-opacity {
+    opacity: 0.25;
+}
+
 
 /* width */
 .fi-sidebar-nav::-webkit-scrollbar {
