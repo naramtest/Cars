@@ -68,6 +68,36 @@ class Booking extends Payable
             ->diffInDays($this->end_datetime->startOfDay()) + 1;
     }
 
+    public function getFormattedDurationAttribute(): string
+    {
+        if (!$this->end_datetime || !$this->start_datetime) {
+            return "0 days";
+        }
+
+        // Get exact duration in hours
+        $durationInHours = $this->start_datetime->diffInHours(
+            $this->end_datetime
+        );
+
+        // Calculate days and remaining hours
+        $days = floor($durationInHours / 24);
+        $hours = $durationInHours % 24;
+
+        if ($days == 0) {
+            return $hours . " " . ($hours == 1 ? "hour" : "hours");
+        } elseif ($hours == 0) {
+            return $days . " " . ($days == 1 ? "day" : "days");
+        } else {
+            return $days .
+                " " .
+                ($days == 1 ? "day" : "days") .
+                " and " .
+                $hours .
+                " " .
+                ($hours == 1 ? "hour" : "hours");
+        }
+    }
+
     /**
      * Scope a query to only include bookings of a given status.
      */

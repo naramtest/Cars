@@ -192,9 +192,7 @@ class BookingFormSchema
                     ->inlineLabel()
                     ->content(
                         fn(?Booking $record): string => $record
-                            ? $record->duration_in_days .
-                                " " .
-                                __("dashboard.days")
+                            ? $record->formatted_duration
                             : "-"
                     )
                     ->hidden(fn(string $operation) => $operation === "create"),

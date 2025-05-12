@@ -51,13 +51,43 @@ class Rent extends Payable
      */
     public function getDurationInDaysAttribute(): int
     {
-        if (!$this->end_datetime || !$this->start_datetime) {
+        if (!$this->rental_end_date || !$this->rental_start_date) {
             return 0;
         }
 
-        return $this->start_datetime
+        return $this->rental_start_date
             ->startOfDay()
-            ->diffInDays($this->end_datetime->startOfDay()) + 1;
+            ->diffInDays($this->rental_end_date->startOfDay()) + 1;
+    }
+
+    public function getFormattedDurationAttribute(): string
+    {
+        if (!$this->rental_end_date || !$this->rental_start_date) {
+            return "0 days";
+        }
+
+        // Get exact duration in hours
+        $durationInHours = $this->rental_start_date->diffInHours(
+            $this->rental_end_date
+        );
+
+        // Calculate days and remaining hours
+        $days = floor($durationInHours / 24);
+        $hours = $durationInHours % 24;
+
+        if ($days == 0) {
+            return $hours . " " . ($hours == 1 ? "hour" : "hours");
+        } elseif ($hours == 0) {
+            return $days . " " . ($days == 1 ? "day" : "days");
+        } else {
+            return $days .
+                " " .
+                ($days == 1 ? "day" : "days") .
+                " and " .
+                $hours .
+                " " .
+                ($hours == 1 ? "hour" : "hours");
+        }
     }
 
     public function getFormattedTotalPriceAttribute(): string

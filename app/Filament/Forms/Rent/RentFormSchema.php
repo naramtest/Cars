@@ -164,9 +164,7 @@ class RentFormSchema
                     ->content(
                         fn(?Rent $record): string => $record &&
                         $record->rental_end_date
-                            ? $record->duration_in_days .
-                                " " .
-                                __("dashboard.days")
+                            ? $record->formatted_duration
                             : "-"
                     )
                     ->hidden(fn(string $operation) => $operation !== "edit"),
