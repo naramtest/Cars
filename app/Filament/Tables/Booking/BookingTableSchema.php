@@ -22,6 +22,10 @@ class BookingTableSchema
     public static function schema(Table $table): Table
     {
         return $table
+            ->dimCompleted([
+                ReservationStatus::Completed,
+                ReservationStatus::Cancelled,
+            ])
             ->columns([
                 Tables\Columns\TextColumn::make("reference_number")
                     ->label(__("dashboard.reference_number"))

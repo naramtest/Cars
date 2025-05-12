@@ -23,6 +23,10 @@ class ShippingTableSchema
     public static function schema(Table $table): Table
     {
         return $table
+            ->dimCompleted([
+                ShippingStatus::Delivered,
+                ShippingStatus::Cancelled,
+            ])
             ->defaultSort("created_at", "desc")
             ->columns([
                 Tables\Columns\TextColumn::make("reference_number")

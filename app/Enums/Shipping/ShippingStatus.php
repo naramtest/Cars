@@ -2,8 +2,10 @@
 
 namespace App\Enums\Shipping;
 
+use Filament\Resources\Components\Tab;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
+use Illuminate\Database\Eloquent\Builder;
 
 enum ShippingStatus: string implements HasLabel, HasColor
 {
@@ -12,6 +14,19 @@ enum ShippingStatus: string implements HasLabel, HasColor
     case Picked_Up = "picked_up";
     case Delivered = "delivered";
     case Cancelled = "cancelled";
+
+    public static function tabs(): array
+    {
+        $tabs = [
+            "All" => Tab::make(),
+        ];
+        foreach (self::cases() as $status) {
+            $tabs[$status->getLabel()] = Tab::make()->modifyQueryUsing(
+                fn(Builder $query) => $query->where("status", "=", $status)
+            );
+        }
+        return $tabs;
+    }
 
     public function getLabel(): ?string
     {

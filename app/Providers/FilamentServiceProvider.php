@@ -27,6 +27,15 @@ class FilamentServiceProvider extends ServiceProvider
             $table->defaultSort("created_at", "desc");
         });
         Filament::serving(function () {
+            Table::macro("dimCompleted", function (array $statuses = []) {
+                return $this->recordClasses(function ($record) use ($statuses) {
+                    if (in_array($record->status, $statuses)) {
+                        return "bg-slate-100 dark:bg-gray-800 opacity-25";
+                    }
+
+                    return "";
+                });
+            });
             Field::macro("translate", function (bool $isInline = false) {
                 if ($isInline) {
                     $this->helperText(

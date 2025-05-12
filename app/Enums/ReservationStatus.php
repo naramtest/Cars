@@ -2,16 +2,31 @@
 
 namespace App\Enums;
 
+use Filament\Resources\Components\Tab;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
+use Illuminate\Database\Eloquent\Builder;
 
 enum ReservationStatus: string implements HasLabel, HasColor
 {
-    case Cancelled = "cancelled";
-    case Completed = "completed";
-    case Active = "active";
     case Pending = "pending";
     case Confirmed = "confirmed";
+    case Active = "active";
+    case Completed = "completed";
+    case Cancelled = "cancelled";
+
+    public static function tabs(): array
+    {
+        $tabs = [
+            "All" => Tab::make(),
+        ];
+        foreach (self::cases() as $status) {
+            $tabs[$status->getLabel()] = Tab::make()->modifyQueryUsing(
+                fn(Builder $query) => $query->where("status", "=", $status)
+            );
+        }
+        return $tabs;
+    }
 
     public function getLabel(): ?string
     {

@@ -23,6 +23,10 @@ class RentTableSchema
     public static function schema(Table $table): Table
     {
         return $table
+            ->dimCompleted([
+                ReservationStatus::Completed,
+                ReservationStatus::Cancelled,
+            ])
             ->defaultSort("created_at", "desc")
             ->columns([
                 Tables\Columns\TextColumn::make("reference_number")
