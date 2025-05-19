@@ -36,9 +36,7 @@ trait HasPaymentActions
         if (!$existingPayment) {
             $paymentService->pay($record, $record->total_price);
         }
-        if (\App::isProduction()) {
-            $this->handleSendingPaymentLink($record);
-        }
+        $this->handleSendingPaymentLink($record);
     }
 
     protected function handleSendingPaymentLink(Payable $record): void

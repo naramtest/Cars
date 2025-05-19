@@ -11,5 +11,7 @@ class WebhooksController extends Controller
     {
         $stripeWebhook = app(StripeWebhookService::class);
         $result = $stripeWebhook->handleWebhook($request);
+        //TODO: retrun 200 for stripe
+        logger($result);
     }
 }

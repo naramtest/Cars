@@ -17,7 +17,9 @@ class StripeWebhookService
     {
         $payload = $request->getContent();
         $sigHeader = $request->header("Stripe-Signature");
-        $endpointSecret = config("payment.providers.stripe.webhook");
+        //        $endpointSecret = config("payment.providers.stripe.webhook");
+        $endpointSecret =
+            "whsec_a79ea5ac3ca1ace533d5c9b599b4fa263615a97e75a6a93604d1e65caec818ef";
 
         try {
             // Verify the webhook signature
@@ -26,6 +28,7 @@ class StripeWebhookService
                 $sigHeader,
                 $endpointSecret
             );
+
             return match ($event->type) {
                 "checkout.session.completed" => $this->handleCheckoutCompleted(
                     $event->data->object
@@ -58,7 +61,7 @@ class StripeWebhookService
     {
         try {
             $payment = $this->findPaymentFromSession($session);
-            return $this->updatePaymentStatus($payment, PaymentStatus::PAID, [
+            return $payment->updatePaymentStatus(PaymentStatus::PAID, [
                 "stripe_session_id" => $session->id,
                 "paid_at" => now()->toIso8601String(),
             ]);
@@ -72,6 +75,8 @@ class StripeWebhookService
      */
     protected function findPaymentFromSession($session): Payment
     {
+        logger($session);
+
         if (isset($session->metadata->payment_id)) {
             return Payment::find($session->metadata->payment_id);
         }
@@ -91,34 +96,12 @@ class StripeWebhookService
         );
     }
 
-    protected function updatePaymentStatus(
-        Payment $payment,
-        PaymentStatus $newStatus,
-        array $metadataUpdates = []
-    ): array {
-        $oldStatus = $payment->status;
-        $payment->status = $newStatus;
-
-        // Update metadata
-        $payment->metadata = array_merge(
-            $payment->metadata ?? [],
-            $metadataUpdates
-        );
-        $payment->save();
-        return [
-            "status" => "success",
-            "payment_id" => $payment->id,
-            "old_status" => $oldStatus->value,
-            "new_status" => $newStatus->value,
-        ];
-    }
-
     protected function handlePaymentIntentSucceeded($paymentIntent): array
     {
         try {
             $payment = $this->findPaymentFromSession($paymentIntent);
             // Update status to paid
-            return $this->updatePaymentStatus($payment, PaymentStatus::PAID, [
+            return $payment->updatePaymentStatus(PaymentStatus::PAID, [
                 "stripe_payment_intent_id" => $paymentIntent->id,
                 "paid_at" => now()->toIso8601String(),
             ]);
@@ -132,7 +115,7 @@ class StripeWebhookService
         try {
             $payment = $this->findPaymentFromSession($paymentIntent);
 
-            return $this->updatePaymentStatus($payment, PaymentStatus::FAILED, [
+            return $payment->updatePaymentStatus(PaymentStatus::FAILED, [
                 "error_code" =>
                     $paymentIntent->last_payment_error->code ?? null,
                 "error_message" =>
@@ -149,13 +132,9 @@ class StripeWebhookService
         try {
             $payment = $this->findPaymentFromSession($session);
 
-            return $this->updatePaymentStatus(
-                $payment,
-                PaymentStatus::CANCELED,
-                [
-                    "expired_at" => now()->toIso8601String(),
-                ]
-            );
+            return $payment->updatePaymentStatus(PaymentStatus::CANCELED, [
+                "expired_at" => now()->toIso8601String(),
+            ]);
         } catch (Exception) {
             return ["status" => "error", "message" => "Payment not found"];
         }
@@ -166,14 +145,10 @@ class StripeWebhookService
         try {
             $payment = $this->findPaymentFromSession($charge);
 
-            return $this->updatePaymentStatus(
-                $payment,
-                PaymentStatus::REFUNDED,
-                [
-                    "refunded_at" => now()->toIso8601String(),
-                    "refund_id" => $charge->refunds->data[0]->id ?? null,
-                ]
-            );
+            return $payment->updatePaymentStatus(PaymentStatus::REFUNDED, [
+                "refunded_at" => now()->toIso8601String(),
+                "refund_id" => $charge->refunds->data[0]->id ?? null,
+            ]);
         } catch (Exception) {
             return ["status" => "error", "message" => "Payment not found"];
         }

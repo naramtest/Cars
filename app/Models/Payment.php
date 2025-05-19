@@ -70,4 +70,22 @@ class Payment extends MoneyModel
             $this->currency_code
         );
     }
+
+    public function updatePaymentStatus(
+        PaymentStatus $newStatus,
+        array $metadataUpdates = []
+    ): array {
+        $oldStatus = $this->status;
+        $this->status = $newStatus;
+
+        // Update metadata
+        $this->metadata = array_merge($this->metadata ?? [], $metadataUpdates);
+        $this->save();
+        return [
+            "status" => "success",
+            "payment_id" => $this->id,
+            "old_status" => $oldStatus->value,
+            "new_status" => $newStatus->value,
+        ];
+    }
 }
