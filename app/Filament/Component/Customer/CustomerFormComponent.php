@@ -3,6 +3,7 @@
 namespace App\Filament\Component\Customer;
 
 use App\Filament\Resources\CustomerResource;
+use App\Models\Customer;
 use Filament\Forms;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
@@ -15,12 +16,16 @@ class CustomerFormComponent
         return [
             Forms\Components\Grid::make()
                 ->schema([
-                    // TODO: show phone number also not just the customer name in select
                     Forms\Components\Select::make("customer")
                         ->label(__("dashboard.Customer"))
                         ->relationship("customer", "name")
                         ->preload()
                         ->searchable(["name", "email", "phone_number"])
+                        ->getOptionLabelFromRecordUsing(
+                            fn(
+                                Customer $record
+                            ) => "$record->name | $record->phone_number"
+                        )
                         ->createOptionForm([
                             Forms\Components\TextInput::make("name")
                                 ->label(__("dashboard.name"))
