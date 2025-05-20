@@ -11,6 +11,7 @@ use App\Models\Vehicle;
 use Filament\Forms;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Get;
+use Illuminate\Support\HtmlString;
 use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
 
 class BookingFormSchema
@@ -167,16 +168,21 @@ class BookingFormSchema
     public static function statusInfoSection(): Forms\Components\Group
     {
         return Forms\Components\Group::make([
-            Forms\Components\Section::make(__("dashboard.client_information"))
-                ->icon("gmdi-person-o")
-                ->schema(CustomerFormComponent::clientInformationSchema()),
             Forms\Components\Section::make(__("dashboard.Status"))->schema([
                 Forms\Components\Select::make("status")
                     ->hiddenLabel()
+                    ->helperText(
+                        new HtmlString(
+                            '<span class="text-danger-600 dark:text-danger-400">Customer will not receive any notification until status becomes Confirmed</span>'
+                        )
+                    )
                     ->options(ReservationStatus::class)
                     ->default(ReservationStatus::Confirmed)
                     ->required(),
             ]),
+            Forms\Components\Section::make(__("dashboard.client_information"))
+                ->icon("gmdi-person-o")
+                ->schema(CustomerFormComponent::clientInformationSchema()),
 
             Forms\Components\Section::make(__("dashboard.booking_details"))
                 ->schema([

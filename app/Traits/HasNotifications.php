@@ -34,4 +34,11 @@ trait HasNotifications
             ->latest("sent_at")
             ->first();
     }
+
+    public function hasPaymentLinkNotification(): bool
+    {
+        return $this->notifications()
+            ->where("notification_type", "like", "%customer_payment_link%")
+            ->exists();
+    }
 }

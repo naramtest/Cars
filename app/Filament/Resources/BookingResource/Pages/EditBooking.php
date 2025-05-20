@@ -21,10 +21,22 @@ class EditBooking extends EditRecord
             Actions\ForceDeleteAction::make(),
             Actions\RestoreAction::make(),
             Actions\Action::make("generatePaymentLink")
-                ->label("Generate Payment Link")
+                ->label(function (Booking $record) {
+                    if ($record->hasPaymentLinkNotification()) {
+                        return "Resend Payment Link";
+                    }
+                    return "Send Payment Link";
+                })
                 ->icon("heroicon-o-credit-card")
-                ->action(function (Booking $booking) {
-                    $this->handlePaymentLinkGeneration($booking);
+                ->color(function (Booking $record) {
+                    if ($record->notifications()->exists()) {
+                        return "success";
+                    }
+                    return "primary";
+                })
+                ->action(function (Booking $record) {
+                    $this->handlePaymentLinkGeneration($record);
+                    $this->handleSendingPaymentLink($record);
                 })
                 ->visible(function (Booking $booking) {
                     return $this->isVisible($booking);

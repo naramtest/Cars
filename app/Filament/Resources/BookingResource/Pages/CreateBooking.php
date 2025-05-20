@@ -23,6 +23,7 @@ class CreateBooking extends CreateRecord
         }
         if ($this->shouldSendPaymentLink) {
             $this->handlePaymentLinkGeneration($this->record);
+            $this->handleSendingPaymentLink($this->record);
         }
     }
 

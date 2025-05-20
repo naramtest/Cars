@@ -2,6 +2,7 @@
 
 namespace App\Models\Abstract;
 
+use App\Enums\Payments\PaymentStatus;
 use App\Models\Payment;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
@@ -27,6 +28,6 @@ class Payable extends MoneyModel
      */
     public function isPaid(): bool
     {
-        return $this->payment && $this->payment->status === "paid";
+        return $this->payment && $this->payment->status === PaymentStatus::PAID;
     }
 }
