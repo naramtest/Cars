@@ -11,7 +11,7 @@ use Filament\Notifications\Notification;
 
 trait HasPaymentActions
 {
-    protected function handlePaymentLinkGeneration(Payable $record): void
+    protected function handlePaymentLinkGeneration(Payable $record): bool
     {
         $paymentService = app(PaymentManager::class)->driver(
             PaymentType::STRIPE_LINK
@@ -30,25 +30,27 @@ trait HasPaymentActions
                 ->success()
                 ->send();
 
-            return;
+            return false;
         }
 
         if (!$existingPayment) {
             $paymentService->pay($record, $record->total_price);
         }
-        $this->handleSendingPaymentLink($record);
+        $record->refresh();
+
+        return $this->handleSendingPaymentLink($record);
     }
 
-    protected function handleSendingPaymentLink(Payable $record): void
+    protected function handleSendingPaymentLink(Payable $record): bool
     {
-        if (!$record->payment || !$record->payment->payment_link) {
+        if ($record->payment and !$record->payment->payment_link) {
             Notification::make()
                 ->title("No Payment Link Available")
                 ->body("Please generate a payment link first.")
                 ->warning()
                 ->send();
 
-            return;
+            return false;
         }
 
         try {
@@ -62,12 +64,15 @@ trait HasPaymentActions
                 )
                 ->success()
                 ->send();
+            return true;
         } catch (\Exception $e) {
+            logger($e);
             Notification::make()
                 ->title("Failed to Send Payment Link")
                 ->body("Error: " . $e->getMessage())
                 ->danger()
                 ->send();
+            return false;
         }
     }
 

@@ -264,4 +264,5 @@ return [
     "Select or Create Customer" => "Select or Create Customer",
     "selected_customers" => "Selected Customer",
     "Created at" => "Created at",
+    "Create & Send PayLink" => "Create & Send PayLink",
 ];
