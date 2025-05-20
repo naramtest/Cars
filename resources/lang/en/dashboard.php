@@ -265,4 +265,5 @@ return [
     "selected_customers" => "Selected Customer",
     "Created at" => "Created at",
     "Create & Send PayLink" => "Create & Send PayLink",
+    "Payment" => "Payment",
 ];

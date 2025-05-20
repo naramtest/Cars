@@ -2,12 +2,14 @@
 
 namespace App\Filament\Forms\Booking;
 
+use App\Enums\Payments\PaymentStatus;
 use App\Enums\ReservationStatus;
 use App\Filament\Component\Customer\CustomerFormComponent;
 use App\Filament\Component\DriverSelectField;
 use App\Models\Booking;
 use App\Models\Vehicle;
 use Filament\Forms;
+use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Get;
 use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
 
@@ -17,19 +19,9 @@ class BookingFormSchema
     {
         return [
             Forms\Components\Tabs::make()
-                ->columnSpan(
-                    fn(string $operation) => $operation == "create" ? 3 : 2
-                )
+                ->columnSpan(fn(string $operation) => 2)
                 ->columns()
                 ->tabs([
-                    Forms\Components\Tabs\Tab::make(
-                        __("dashboard.client_information")
-                    )
-                        ->icon("gmdi-person-o")
-                        ->schema(
-                            CustomerFormComponent::clientInformationSchema()
-                        ),
-
                     Forms\Components\Tabs\Tab::make(
                         __("dashboard.booking_details")
                     )
@@ -45,6 +37,27 @@ class BookingFormSchema
                                 self::additionalInformationSchema()
                             ),
                         ]),
+                    Forms\Components\Tabs\Tab::make(__("dashboard.Payment"))
+                        ->icon("gmdi-payments-o")
+                        ->schema([
+                            Forms\Components\Group::make([
+                                Forms\Components\Select::make("status")
+                                    ->label("Payment Status")
+                                    ->options(PaymentStatus::class)
+                                    ->required(),
+                                Forms\Components\TextInput::make(
+                                    "provider_id"
+                                )->label("Payment ID / Reference"),
+                                KeyValue::make("metadata")->label(
+                                    "Payment Additional information"
+                                ),
+                            ])
+                                ->relationship("payment")
+                                ->columnSpanFull(),
+                        ])
+                        ->visible(function (string $operation) {
+                            return $operation === "edit";
+                        }),
                 ]),
 
             self::statusInfoSection(),
@@ -78,12 +91,7 @@ class BookingFormSchema
                             ) => self::updateDriverInfo($get, $set, $state)
                         ),
                     DriverSelectField::make()->live(),
-                    Forms\Components\Select::make("status")
-                        ->label(__("dashboard.status"))
-                        ->options(ReservationStatus::class)
-                        ->default(ReservationStatus::Confirmed)
-                        ->visible(fn($operation) => $operation === "create")
-                        ->required(),
+
                     MoneyInput::make("total_price")
                         ->required()
                         ->visible(fn() => notDriver()),
@@ -159,6 +167,9 @@ class BookingFormSchema
     public static function statusInfoSection(): Forms\Components\Group
     {
         return Forms\Components\Group::make([
+            Forms\Components\Section::make(__("dashboard.client_information"))
+                ->icon("gmdi-person-o")
+                ->schema(CustomerFormComponent::clientInformationSchema()),
             Forms\Components\Section::make(__("dashboard.Status"))->schema([
                 Forms\Components\Select::make("status")
                     ->hiddenLabel()
@@ -166,39 +177,40 @@ class BookingFormSchema
                     ->default(ReservationStatus::Confirmed)
                     ->required(),
             ]),
-            Forms\Components\Section::make(
-                __("dashboard.booking_details")
-            )->schema([
-                Forms\Components\Placeholder::make("created_at")
-                    ->label(__("dashboard.created_at"))
-                    ->inlineLabel()
-                    ->content(
-                        fn(?Booking $record): string => $record
-                            ? $record->created_at->diffForHumans()
-                            : "-"
-                    ),
 
-                Forms\Components\Placeholder::make("updated_at")
-                    ->label(__("dashboard.updated_at"))
-                    ->inlineLabel()
-                    ->content(
-                        fn(?Booking $record): string => $record
-                            ? $record->updated_at->diffForHumans()
-                            : "-"
-                    ),
+            Forms\Components\Section::make(__("dashboard.booking_details"))
+                ->schema([
+                    Forms\Components\Placeholder::make("created_at")
+                        ->label(__("dashboard.created_at"))
+                        ->inlineLabel()
+                        ->content(
+                            fn(?Booking $record): string => $record
+                                ? $record->created_at->diffForHumans()
+                                : "-"
+                        ),
 
-                Forms\Components\Placeholder::make("duration")
-                    ->label(__("dashboard.duration"))
-                    ->inlineLabel()
-                    ->content(
-                        fn(?Booking $record): string => $record
-                            ? $record->formatted_duration
-                            : "-"
-                    )
-                    ->hidden(fn(string $operation) => $operation === "create"),
-            ]),
-        ])
-            ->hidden(fn(string $operation) => $operation === "create")
-            ->columnSpan(["lg" => 1]);
+                    Forms\Components\Placeholder::make("updated_at")
+                        ->label(__("dashboard.updated_at"))
+                        ->inlineLabel()
+                        ->content(
+                            fn(?Booking $record): string => $record
+                                ? $record->updated_at->diffForHumans()
+                                : "-"
+                        ),
+
+                    Forms\Components\Placeholder::make("duration")
+                        ->label(__("dashboard.duration"))
+                        ->inlineLabel()
+                        ->content(
+                            fn(?Booking $record): string => $record
+                                ? $record->formatted_duration
+                                : "-"
+                        )
+                        ->hidden(
+                            fn(string $operation) => $operation === "create"
+                        ),
+                ])
+                ->hidden(fn(string $operation) => $operation === "create"),
+        ])->columnSpan(["lg" => 1]);
     }
 }
