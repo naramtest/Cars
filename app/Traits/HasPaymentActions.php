@@ -38,7 +38,7 @@ trait HasPaymentActions
         try {
             return app(PaymentManager::class)
                 ->driver(PaymentType::STRIPE_LINK)
-                ->pay($record, $data["amount"]);
+                ->pay($record, $data["amount"], note: $data["note"]);
             // TODO: Add note to payment and send with the notification
         } catch (Exception $e) {
             throw new PaymentProcessException(

@@ -19,6 +19,7 @@ class Payment extends MoneyModel
         "payment_link_expires_at",
         "provider_id",
         "metadata",
+        "note",
     ];
 
     protected $casts = [

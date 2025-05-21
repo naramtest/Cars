@@ -155,6 +155,7 @@ class PaymentsRelationManager extends RelationManager
             TextInput::make("provider_id")
                 ->label("Payment ID / Reference")
                 ->columnSpanFull(),
+            Textarea::make("note")->label("Note")->columnSpanFull(),
             KeyValue::make("metadata")
                 ->label("Payment Additional information")
                 ->columnSpanFull(),

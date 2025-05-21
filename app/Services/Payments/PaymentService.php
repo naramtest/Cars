@@ -22,7 +22,8 @@ class PaymentService
     public function pay(
         Payable $payable,
         int $amount,
-        ?string $currency = null
+        ?string $currency = null,
+        ?string $note = null
     ): Payment {
         $currency ??= config("app.money_currency");
 
@@ -32,6 +33,7 @@ class PaymentService
             "currency_code" => $currency,
             "payment_method" => $this->provider->getProviderName(),
             "status" => PaymentStatus::PENDING,
+            "note" => $note,
         ]);
 
         // Process payment with provider

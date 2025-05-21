@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::table("payments", function (Blueprint $table) {
             // Drop the unique constraint
             $table->dropUnique("payments_payable_unique");
+            $table->text("note")->nullable();
         });
     }
 
@@ -27,6 +28,7 @@ return new class extends Migration {
                 ["payable_type", "payable_id"],
                 "payments_payable_unique"
             );
+            $table->dropColumn("note");
         });
     }
 };
