@@ -21,14 +21,11 @@ class CreateBooking extends CreateRecord
         if (\App::isProduction()) {
             BookingCreated::dispatch($this->record);
         }
-        if ($this->shouldSendPaymentLink) {
-            $this->handlePaymentLinkGeneration($this->record);
-            $this->handleSendingPaymentLink($this->record);
-        }
     }
 
     protected function getHeaderActions(): array
     {
+        //TODO: add createandCreateOnther and cancel buttons here and in the footer (at every other resource also)
         return [
             Action::make("create")
                 ->label(
@@ -40,14 +37,14 @@ class CreateBooking extends CreateRecord
                 ->action(function () {
                     $this->create();
                 }),
-            Action::make("create and send payment link")
-                ->label(__("dashboard.Create & Send PayLink"))
-                ->icon("gmdi-credit-card-o")
-                ->color("success")
-                ->action(function () {
-                    $this->shouldSendPaymentLink = true;
-                    $this->create();
-                }),
+            //            Action::make("create and send payment link")
+            //                ->label(__("dashboard.Create & Send PayLink"))
+            //                ->icon("gmdi-credit-card-o")
+            //                ->color("success")
+            //                ->action(function () {
+            //                    $this->shouldSendPaymentLink = true;
+            //                    $this->create();
+            //                }),
         ];
     }
 

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Forms\Booking\BookingFormSchema;
+use App\Filament\RelationManagers\PaymentsRelationManager;
 use App\Filament\Resources\BookingResource\Pages;
 use App\Filament\Tables\Booking\BookingTableSchema;
 use App\Models\Booking;
@@ -36,7 +37,7 @@ class BookingResource extends Resource
 
     public static function getRelations(): array
     {
-        return [];
+        return [PaymentsRelationManager::class];
     }
 
     public static function getPages(): array

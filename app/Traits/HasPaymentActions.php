@@ -3,7 +3,9 @@
 namespace App\Traits;
 
 use App\Enums\Payments\PaymentType;
+use App\Exceptions\PaymentProcessException;
 use App\Models\Abstract\Payable;
+use App\Models\Payment;
 use App\Services\Payments\PaymentManager;
 use App\Services\WhatsApp\Customer\Payment\CPaymentLinkHandler;
 use App\Services\WhatsApp\WhatsAppNotificationService;
@@ -12,79 +14,111 @@ use Filament\Notifications\Notification;
 
 trait HasPaymentActions
 {
-    protected function handlePaymentLinkGeneration(Payable $record): bool
+    public function generateAndSend(Payable $record, array $data): void
     {
-        $paymentService = app(PaymentManager::class)->driver(
-            PaymentType::STRIPE_LINK
-        );
-
-        $existingPayment = $record->payment;
-
-        if ($existingPayment and $existingPayment->isPaid()) {
-            Notification::make()
-                ->title("Payment Already Processed")
-                ->body(
-                    "This " .
-                        class_basename($record) .
-                        " has already been paid for. No additional payment is required."
-                )
-                ->success()
-                ->send();
-
-            return false;
+        try {
+            $payment = $this->generateCustomPaymentLink($record, $data);
+            $this->sendPaymentLink($payment);
+            $this->notifySuccess(
+                "Payment link generated & sent",
+                "A new payment link has been generated & sent to the customer."
+            );
+        } catch (PaymentProcessException $e) {
+            $this->notifyError($e);
         }
-
-        //TODO: if total price changes and payment is not paid update payment and payment link
-        if (!$existingPayment) {
-            $paymentService->pay($record, $record->total_price);
-        }
-        $record->refresh();
-
-        return true;
     }
 
-    protected function handleSendingPaymentLink(Payable $record): bool
-    {
-        if ($record->payment and !$record->payment->payment_link) {
-            Notification::make()
-                ->title("No Payment Link Available")
-                ->body("Please generate a payment link first.")
-                ->warning()
-                ->send();
+    /**
+     * @throws PaymentProcessException
+     */
+    private function generateCustomPaymentLink(
+        Payable $record,
+        array $data
+    ): Payment {
+        try {
+            return app(PaymentManager::class)
+                ->driver(PaymentType::STRIPE_LINK)
+                ->pay($record, $data["amount"]);
+            // TODO: Add note to payment and send with the notification
+        } catch (Exception $e) {
+            throw new PaymentProcessException(
+                "Failed to generate payment link",
+                $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
+        }
+    }
 
-            return false;
+    /**
+     * @throws PaymentProcessException
+     */
+    private function sendPaymentLink(Payment $payment): void
+    {
+        if (!$payment->payment_link) {
+            throw new PaymentProcessException(
+                "No Payment Link Available",
+                "Please generate a payment link first."
+            );
         }
 
         try {
-            $whatsAppService = app(WhatsAppNotificationService::class);
-            $whatsAppService->sendAndSave(
+            $payable = $payment->payable;
+
+            app(WhatsAppNotificationService::class)->sendAndSave(
                 CPaymentLinkHandler::class,
-                $record,
+                $payable,
                 isUpdate: true
             );
-
-            Notification::make()
-                ->title("Payment Link Sent")
-                ->body(
-                    "The payment link has been sent to the customer via WhatsApp."
-                )
-                ->success()
-                ->send();
-            return true;
         } catch (Exception $e) {
-            logger($e);
-            Notification::make()
-                ->title("Failed to Send Payment Link")
-                ->body("Error: " . $e->getMessage())
-                ->danger()
-                ->send();
-            return false;
+            throw new PaymentProcessException(
+                "Failed to send payment link",
+                $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
         }
     }
 
-    protected function isVisible(Payable $record): bool
+    private function notifySuccess(string $title, string $body): void
     {
-        return !$record->isPaid() &&
-            in_array($record->status->value, ["pending", "confirmed"]);
+        Notification::make()->title($title)->body($body)->success()->send();
+    }
+
+    public function send(Payment $payment): void
+    {
+        try {
+            $this->sendPaymentLink($payment);
+            $this->notifySuccess(
+                "Payment link sent",
+                "The payment link has been sent to the customer."
+            );
+        } catch (PaymentProcessException $e) {
+            $this->notifyError($e);
+        }
+    }
+
+    private function notifyError(PaymentProcessException $e): void
+    {
+        Notification::make()
+            ->title($e->getNotificationTitle())
+            ->body("Error: " . $e->getMessage())
+            ->danger()
+            ->send();
+    }
+
+    public function generate(Payable $record, array $data): ?Payment
+    {
+        try {
+            $payment = $this->generateCustomPaymentLink($record, $data);
+            $this->notifySuccess(
+                "Payment link generated",
+                "A new payment link has been generated successfully."
+            );
+            return $payment;
+        } catch (PaymentProcessException $e) {
+            $this->notifyError($e);
+            return null;
+        }
     }
 }

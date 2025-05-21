@@ -2,14 +2,12 @@
 
 namespace App\Filament\Forms\Booking;
 
-use App\Enums\Payments\PaymentStatus;
 use App\Enums\ReservationStatus;
 use App\Filament\Component\Customer\CustomerFormComponent;
 use App\Filament\Component\DriverSelectField;
 use App\Models\Booking;
 use App\Models\Vehicle;
 use Filament\Forms;
-use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Get;
 use Illuminate\Support\HtmlString;
 use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
@@ -38,27 +36,6 @@ class BookingFormSchema
                                 self::additionalInformationSchema()
                             ),
                         ]),
-                    Forms\Components\Tabs\Tab::make(__("dashboard.Payment"))
-                        ->icon("gmdi-payments-o")
-                        ->schema([
-                            Forms\Components\Group::make([
-                                Forms\Components\Select::make("status")
-                                    ->label("Payment Status")
-                                    ->options(PaymentStatus::class)
-                                    ->required(),
-                                Forms\Components\TextInput::make(
-                                    "provider_id"
-                                )->label("Payment ID / Reference"),
-                                KeyValue::make("metadata")->label(
-                                    "Payment Additional information"
-                                ),
-                            ])
-                                ->relationship("payment")
-                                ->columnSpanFull(),
-                        ])
-                        ->visible(function (string $operation) {
-                            return $operation === "edit";
-                        }),
                 ]),
 
             self::statusInfoSection(),
