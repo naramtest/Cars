@@ -25,21 +25,20 @@ class PaymentService
         ?string $currency = null
     ): Payment {
         $currency ??= config("app.money_currency");
-        //1- create payment object
-        $payment = $payable->updatePayment([
+
+        // Create new payment
+        $payment = $payable->createPayment([
             "amount" => $amount,
             "currency_code" => $currency,
             "payment_method" => $this->provider->getProviderName(),
             "status" => PaymentStatus::PENDING,
         ]);
 
-        //2- pay
+        // Process payment with provider
         $payment = $this->provider->pay($payment);
-
-        //3- save after pay
         $payment->save();
 
-        //4-  Create initial payment attempt record
+        // Create initial payment attempt record
         $payment->attempts()->create([
             "status" => PaymentStatus::PENDING,
             "provider_data" => [
@@ -47,6 +46,7 @@ class PaymentService
                 "provider" => $this->provider->getProviderName(),
             ],
         ]);
+
         return $payment;
     }
 }

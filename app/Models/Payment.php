@@ -88,4 +88,14 @@ class Payment extends MoneyModel
             "new_status" => $newStatus->value,
         ];
     }
+
+    public function scopePaid($query)
+    {
+        return $query->where("status", PaymentStatus::PAID);
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where("status", PaymentStatus::PENDING);
+    }
 }

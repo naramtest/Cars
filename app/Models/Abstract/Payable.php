@@ -4,23 +4,27 @@ namespace App\Models\Abstract;
 
 use App\Enums\Payments\PaymentStatus;
 use App\Models\Payment;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Payable extends MoneyModel
 {
-    public function updatePayment(array $attributes): Payment
-    {
-        if ($this->payment) {
-            $this->payment->update($attributes);
-            return $this->payment->refresh();
-        }
-
-        return $this->payment()->create($attributes);
-    }
-
+    /**
+     * Get the latest payment for this model
+     */
     public function payment(): MorphOne
     {
-        return $this->morphOne(Payment::class, "payable");
+        return $this->morphOne(Payment::class, "payable")->latestOfMany();
+    }
+
+    /**
+     * Get the first successful payment
+     */
+    public function paidPayment(): MorphOne
+    {
+        return $this->morphOne(Payment::class, "payable")
+            ->where("status", PaymentStatus::PAID)
+            ->latestOfMany();
     }
 
     /**
@@ -28,6 +32,53 @@ class Payable extends MoneyModel
      */
     public function isPaid(): bool
     {
-        return $this->payment && $this->payment->status === PaymentStatus::PAID;
+        return $this->payments()
+            ->where("status", PaymentStatus::PAID)
+            ->exists();
+    }
+
+    /**
+     * Get all payments for this model
+     */
+    public function payments(): MorphMany
+    {
+        return $this->morphMany(Payment::class, "payable");
+    }
+
+    /**
+     * Get the total amount paid for this model
+     */
+    public function getTotalPaidAmount(): int
+    {
+        return $this->payments()
+            ->where("status", PaymentStatus::PAID)
+            ->sum("amount");
+    }
+
+    /**
+     * Update an existing payment or create a new one if no ID is provided
+     */
+    public function updatePayment(
+        array $attributes,
+        ?int $paymentId = null
+    ): Payment {
+        if ($paymentId) {
+            $payment = $this->payments()->findOrFail($paymentId);
+            $payment->update($attributes);
+            return $payment->refresh();
+        }
+
+        return $this->createPayment($attributes);
+    }
+
+    /**
+     * Create a new payment for this payable model
+     *
+     * @param array $attributes
+     * @return Payment
+     */
+    public function createPayment(array $attributes): Payment
+    {
+        return $this->payments()->create($attributes);
     }
 }
