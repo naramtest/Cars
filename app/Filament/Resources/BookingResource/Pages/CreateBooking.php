@@ -37,7 +37,14 @@ class CreateBooking extends CreateRecord
 
     protected function getHeaderActions(): array
     {
-        //TODO: add createandCreateOnther and cancel buttons here and in the footer (at every other resource also)
+        return $this->actions();
+    }
+
+    /**
+     * @return array
+     */
+    public function actions(): array
+    {
         return [
             Action::make("create")
                 ->label(
@@ -53,6 +60,7 @@ class CreateBooking extends CreateRecord
                 ->label(__("dashboard.Create & Send PayLink"))
                 ->icon("gmdi-credit-card-o")
                 ->color("success")
+                ->modalWidth("lg")
                 ->form([
                     MoneyInput::make("amount")
                         ->required()
@@ -82,11 +90,12 @@ class CreateBooking extends CreateRecord
                     $this->note = $data["note"];
                     $this->create();
                 }),
+            $this->getCancelFormAction(),
         ];
     }
 
     protected function getFormActions(): array
     {
-        return [$this->getCancelFormAction()];
+        return $this->actions();
     }
 }

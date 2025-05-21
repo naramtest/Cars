@@ -160,7 +160,14 @@ class BookingFormSchema
             Forms\Components\Section::make(__("dashboard.client_information"))
                 ->icon("gmdi-person-o")
                 ->schema(CustomerFormComponent::clientInformationSchema()),
-
+            Forms\Components\Section::make("Payment Status")
+                ->schema([
+                    Forms\Components\ViewField::make("payment_status")->view(
+                        "filament.components.payment-status-summary"
+                    ),
+                ])
+                ->hidden(fn(string $operation) => $operation === "create")
+                ->columnSpan(["lg" => 1]),
             Forms\Components\Section::make(__("dashboard.booking_details"))
                 ->schema([
                     Forms\Components\Placeholder::make("created_at")

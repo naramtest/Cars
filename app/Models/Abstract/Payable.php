@@ -46,16 +46,6 @@ class Payable extends MoneyModel
     }
 
     /**
-     * Get the total amount paid for this model
-     */
-    public function getTotalPaidAmount(): int
-    {
-        return $this->payments()
-            ->where("status", PaymentStatus::PAID)
-            ->sum("amount");
-    }
-
-    /**
      * Update an existing payment or create a new one if no ID is provided
      */
     public function updatePayment(
@@ -80,5 +70,40 @@ class Payable extends MoneyModel
     public function createPayment(array $attributes): Payment
     {
         return $this->payments()->create($attributes);
+    }
+
+    public function getPaymentStatusArray(): array
+    {
+        $totalPaid = $this->getTotalPaidAmount();
+        $totalPrice = $this->total_price ?? 0;
+        $balance = $totalPrice - $totalPaid;
+
+        return [
+            "total_price" => $totalPrice,
+            "total_paid" => $totalPaid,
+            "balance" => max($balance, 0),
+            "is_fully_paid" => $totalPaid >= $totalPrice,
+            "formatted_total" => $this->getFormattedTotalPriceAttribute(),
+            "formatted_paid" => $this->currencyService->format(
+                $this->currencyService->money($totalPaid)
+            ),
+            "formatted_balance" => $this->currencyService->format(
+                $this->currencyService->money(max($balance, 0))
+            ),
+            "payment_percentage" =>
+                $totalPrice > 0
+                    ? min(100, round(($totalPaid / $totalPrice) * 100))
+                    : 0,
+        ];
+    }
+
+    /**
+     * Get the total amount paid for this model
+     */
+    public function getTotalPaidAmount(): int
+    {
+        return $this->payments()
+            ->where("status", PaymentStatus::PAID)
+            ->sum("amount");
     }
 }
