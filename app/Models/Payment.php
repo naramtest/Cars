@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Payments\PaymentStatus;
+use App\Enums\Payments\PaymentType;
 use App\Models\Abstract\MoneyModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -20,12 +21,15 @@ class Payment extends MoneyModel
         "provider_id",
         "metadata",
         "note",
+        "paid_at",
     ];
 
     protected $casts = [
         "payment_link_expires_at" => "datetime",
         "metadata" => "array",
         "status" => PaymentStatus::class,
+        "paid_at" => "datetime",
+        "payment_method" => PaymentType::class,
     ];
 
     public function payable(): MorphTo
@@ -74,10 +78,12 @@ class Payment extends MoneyModel
 
     public function updatePaymentStatus(
         PaymentStatus $newStatus,
-        array $metadataUpdates = []
+        array $metadataUpdates = [],
+        $paid_at = null
     ): array {
         $oldStatus = $this->status;
         $this->status = $newStatus;
+        $this->paid_at = $paid_at;
 
         // Update metadata
         $this->metadata = array_merge($this->metadata ?? [], $metadataUpdates);
@@ -87,6 +93,25 @@ class Payment extends MoneyModel
             "payment_id" => $this->id,
             "old_status" => $oldStatus->value,
             "new_status" => $newStatus->value,
+        ];
+    }
+
+    public function updatePaymentToPaid(
+        array $metadataUpdates = [],
+        $paid_at = null
+    ): array {
+        $oldStatus = $this->status;
+        $this->status = PaymentStatus::PAID;
+        $this->paid_at = $paid_at ?? now()->toIso8601String();
+
+        // Update metadata
+        $this->metadata = array_merge($this->metadata ?? [], $metadataUpdates);
+        $this->save();
+        return [
+            "status" => "success",
+            "payment_id" => $this->id,
+            "old_status" => $oldStatus->value,
+            "new_status" => PaymentStatus::PAID,
         ];
     }
 

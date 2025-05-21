@@ -14,6 +14,7 @@ return new class extends Migration {
             // Drop the unique constraint
             $table->dropUnique("payments_payable_unique");
             $table->text("note")->nullable();
+            $table->dateTime("paid_at")->nullable();
         });
     }
 
@@ -29,6 +30,7 @@ return new class extends Migration {
                 "payments_payable_unique"
             );
             $table->dropColumn("note");
+            $table->dropColumn("paid_at");
         });
     }
 };

@@ -61,9 +61,8 @@ class StripeWebhookService
     {
         try {
             $payment = $this->findPaymentFromSession($session);
-            return $payment->updatePaymentStatus(PaymentStatus::PAID, [
+            return $payment->updatePaymentToPaid([
                 "stripe_session_id" => $session->id,
-                "paid_at" => now()->toIso8601String(),
             ]);
         } catch (Exception) {
             return ["status" => "error", "message" => "Payment not found"];
@@ -101,9 +100,8 @@ class StripeWebhookService
         try {
             $payment = $this->findPaymentFromSession($paymentIntent);
             // Update status to paid
-            return $payment->updatePaymentStatus(PaymentStatus::PAID, [
+            return $payment->updatePaymentToPaid([
                 "stripe_payment_intent_id" => $paymentIntent->id,
-                "paid_at" => now()->toIso8601String(),
             ]);
         } catch (Exception) {
             return ["status" => "error", "message" => "Payment not found"];

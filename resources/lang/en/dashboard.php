@@ -266,4 +266,7 @@ return [
     "Created at" => "Created at",
     "Create & Send PayLink" => "Create & Send PayLink",
     "Payment" => "Payment",
+
+    "amount_payment_note" =>
+        "Note: This amount cannot be changed after generating a payment link.",
 ];

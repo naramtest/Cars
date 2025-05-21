@@ -3,10 +3,12 @@
 namespace App\Filament\RelationManagers;
 
 use App\Enums\Payments\PaymentStatus;
+use App\Enums\Payments\PaymentType;
 use App\Filament\Component\DateColumn;
 use App\Models\Payment;
 use App\Traits\HasPaymentActions;
 use Exception;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -18,6 +20,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\HtmlString;
 use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
 use Pelmered\FilamentMoneyField\Tables\Columns\MoneyColumn;
 
@@ -40,12 +43,9 @@ class PaymentsRelationManager extends RelationManager
                     ->label(__("dashboard.amount"))
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make("payment_method")
-                    ->label("Method")
-                    ->formatStateUsing(
-                        fn(string $state) => str($state)->headline()
-                    ),
-
+                Tables\Columns\TextColumn::make("payment_method")->label(
+                    "Method"
+                ),
                 Tables\Columns\TextColumn::make("status")
                     ->label(__("dashboard.status"))
                     ->badge(),
@@ -77,13 +77,13 @@ class PaymentsRelationManager extends RelationManager
                                 $record = $livewire->getOwnerRecord();
                                 return $record->total_price ?? 0;
                             })
-                            ->helperText(function (RelationManager $livewire) {
-                                $record = $livewire->getOwnerRecord();
-                                return "Total is : " .
-                                    $record->formatted_total_price ??
-                                    0;
+                            ->helperText(function () {
+                                return new HtmlString(
+                                    '<span class="text-danger-600 dark:text-danger-400">' .
+                                        __("dashboard.amount_payment_note") .
+                                        "</span>"
+                                );
                             }),
-
                         Textarea::make("note")
                             ->label("Payment Note")
                             ->rows(2)
@@ -103,38 +103,50 @@ class PaymentsRelationManager extends RelationManager
                     ->modalWidth("lg"),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\Action::make("sendPaymentLink")
-                    ->label("Send Link")
-                    ->icon("heroicon-o-paper-airplane")
-                    ->color("primary")
-                    ->action(function (Payment $record) {
-                        $this->send($record);
-                    })
-                    ->visible(
-                        fn(Payment $record) => !empty($record->payment_link)
-                    ),
-                Tables\Actions\Action::make("markAsPaid")
-                    ->label("Mark as Paid")
-                    ->icon("heroicon-o-check-circle")
-                    ->color("success")
-                    ->action(function (Payment $record) {
-                        $record->updatePaymentStatus(PaymentStatus::PAID, [
-                            "manually_marked_as_paid" => true,
-                            "marked_paid_at" => now()->toIso8601String(),
-                        ]);
-                        Notification::make()
-                            ->title("Payment marked as paid")
-                            ->success()
-                            ->send();
-                    })
-                    ->requiresConfirmation()
-                    ->visible(
-                        fn(Payment $record) => $record->status ===
-                            PaymentStatus::PENDING or
-                            $record->status === PaymentStatus::PROCESSING
-                    ),
+                Tables\Actions\EditAction::make()->mutateRecordDataUsing(
+                    function (array $data): array {
+                        if ($data["status"] === PaymentStatus::PAID->value) {
+                            $data["paid_at"] = now()->toIso8601String();
+                            $data["metadata"] = [
+                                "manually_marked_as_paid" => true,
+                            ];
+                        }
+                        return $data;
+                    }
+                ),
                 Tables\Actions\DeleteAction::make(),
+
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\Action::make("sendPaymentLink")
+                        ->label("Send Link")
+                        ->icon("heroicon-o-paper-airplane")
+                        ->color("primary")
+                        ->action(function (Payment $record) {
+                            $this->send($record);
+                        })
+                        ->visible(
+                            fn(Payment $record) => !empty($record->payment_link)
+                        ),
+                    Tables\Actions\Action::make("markAsPaid")
+                        ->label("Mark as Paid")
+                        ->icon("heroicon-o-check-circle")
+                        ->color("success")
+                        ->action(function (Payment $record) {
+                            $record->updatePaymentToPaid([
+                                "manually_marked_as_paid" => true,
+                            ]);
+                            Notification::make()
+                                ->title("Payment marked as paid")
+                                ->success()
+                                ->send();
+                        })
+                        ->requiresConfirmation()
+                        ->visible(
+                            fn(Payment $record) => $record->status ===
+                                PaymentStatus::PENDING or
+                                $record->status === PaymentStatus::PROCESSING
+                        ),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -151,7 +163,11 @@ class PaymentsRelationManager extends RelationManager
                 ->label("Payment Status")
                 ->options(PaymentStatus::class)
                 ->required(),
-            MoneyInput::make("amount"),
+            MoneyInput::make("amount")->disabled(function ($operation) {
+                return $operation === "edit";
+            }),
+            DateTimePicker::make("paid_at"),
+            Select::make("payment_method")->options(PaymentType::class),
             TextInput::make("provider_id")
                 ->label("Payment ID / Reference")
                 ->columnSpanFull(),
