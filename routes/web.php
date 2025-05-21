@@ -48,8 +48,3 @@ Route::get("/payments/{payment}/success", [
     PaymentController::class,
     "success",
 ])->name("payment.success");
-
-Route::get("/payments/{payment}/cancel", [
-    PaymentController::class,
-    "cancel",
-])->name("payment.cancel");

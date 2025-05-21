@@ -3,16 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
+use App\Settings\InfoSettings;
 
 class PaymentController extends Controller
 {
-    public function success(Payment $payment)
+    public function success(Payment $payment, InfoSettings $infoSettings)
     {
-        dd($payment);
-    }
-
-    public function cancel(Payment $payment)
-    {
-        dd($payment);
+        return view("payment.success", ["payment" => $payment]);
     }
 }
