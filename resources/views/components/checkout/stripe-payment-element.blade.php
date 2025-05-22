@@ -5,7 +5,7 @@
 <div
     wire:ignore
     x-data="stripePayment()"
-    x-init="mount('{{ config("payment.providers.stripe.key") }}', {{ $total }})"
+    x-init="mount()"
     x-effect="updateAmount({{ $total }})"
     class="w-full"
 >
@@ -29,17 +29,19 @@
                 paymentElement: null,
                 errorMessage: '',
 
-                mount(key, amount) {
+                mount() {
                     if (this.stripe) return;
-                    this.stripe = Stripe(key);
+                    this.stripe = Stripe(
+                        '{{ config("payment.providers.stripe.key") }}',
+                    );
                     window.stripe = this.stripe;
-                    this.initializeElements(amount);
+                    this.initializeElements();
                 },
 
-                async initializeElements(amount) {
+                async initializeElements() {
                     this.elements = this.stripe.elements({
                         mode: 'payment',
-                        amount: amount,
+                        amount: {{ $total }},
                         currency: 'aed',
                         appearance: {
                             theme: 'stripe',

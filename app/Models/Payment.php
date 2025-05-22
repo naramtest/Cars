@@ -16,8 +16,6 @@ class Payment extends MoneyModel
         "currency_code",
         "payment_method",
         "status",
-        "payment_link",
-        "payment_link_expires_at",
         "provider_id",
         "metadata",
         "note",
@@ -25,7 +23,6 @@ class Payment extends MoneyModel
     ];
 
     protected $casts = [
-        "payment_link_expires_at" => "datetime",
         "metadata" => "array",
         "status" => PaymentStatus::class,
         "paid_at" => "datetime",
@@ -52,15 +49,9 @@ class Payment extends MoneyModel
         return $this->status === PaymentStatus::PAID;
     }
 
-    public function isFailed(): bool
+    public function isRefunded(): bool
     {
-        return $this->status === PaymentStatus::FAILED;
-    }
-
-    public function isLinkExpired(): bool
-    {
-        return $this->payment_link_expires_at &&
-            $this->payment_link_expires_at->isPast();
+        return $this->status === PaymentStatus::REFUNDED;
     }
 
     public function getFormattedAmountAttribute(): string
@@ -73,6 +64,17 @@ class Payment extends MoneyModel
         return $this->currencyService->money(
             $this->amount,
             $this->currency_code
+        );
+    }
+
+    public function updatePaymentToPaid(
+        array $metadataUpdates = [],
+        $paid_at = null
+    ): array {
+        return $this->updatePaymentStatus(
+            PaymentStatus::PAID,
+            $metadataUpdates,
+            $paid_at ?? now()->toIso8601String()
         );
     }
 
@@ -93,25 +95,6 @@ class Payment extends MoneyModel
             "payment_id" => $this->id,
             "old_status" => $oldStatus->value,
             "new_status" => $newStatus->value,
-        ];
-    }
-
-    public function updatePaymentToPaid(
-        array $metadataUpdates = [],
-        $paid_at = null
-    ): array {
-        $oldStatus = $this->status;
-        $this->status = PaymentStatus::PAID;
-        $this->paid_at = $paid_at ?? now()->toIso8601String();
-
-        // Update metadata
-        $this->metadata = array_merge($this->metadata ?? [], $metadataUpdates);
-        $this->save();
-        return [
-            "status" => "success",
-            "payment_id" => $this->id,
-            "old_status" => $oldStatus->value,
-            "new_status" => PaymentStatus::PAID,
         ];
     }
 

@@ -12,8 +12,8 @@ class PaymentController extends Controller
         return view("payment.success", ["payment" => $payment]);
     }
 
-    public function stripePay(Payment $payment)
+    public function showPayment(Payment $payment)
     {
-        return view("payment.checkout", ["payment" => $payment]);
+        return view("payment.pay", ["payment" => $payment]);
     }
 }

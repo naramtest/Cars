@@ -41,6 +41,7 @@ class StripePaymentComponent extends Component
             $this->error = null;
             if ($this->payment->status === PaymentStatus::PAID) {
                 $this->error = "This payment already processed";
+                return;
             }
 
             $payment = app(PaymentManager::class)

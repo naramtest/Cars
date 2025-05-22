@@ -45,8 +45,8 @@ Route::controller(WebhooksController::class)->group(function () {
 });
 
 Route::controller(PaymentController::class)->group(function () {
-    Route::get("/payment/{payment}/pay", "stripePay")->name(
-        "payment.stripe.pay"
+    Route::get("/payment/{payment}/pay", "showPayment")->name(
+        "payment.pay.show"
     );
     Route::get("/payments/success", "success")->name("payment.success");
 });
