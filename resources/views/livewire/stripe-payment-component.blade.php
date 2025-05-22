@@ -53,15 +53,16 @@
                 id="submit-button"
                 class="flex w-full items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 wire:loading.attr="disabled"
-                wire:target="setProcessing"
+                wire:target="pay"
             >
-                <span wire:loading.remove wire:target="setProcessing">
+                <span wire:loading.remove wire:target="pay">
                     Pay {{ $payment->formatted_amount }}
                 </span>
+                {{-- TODO: make processing loading run using alpine js becuase using livwire will stop loading before redirect to success page by 3 seconds --}}
                 <span
-                    wire:loading
-                    wire:target="setProcessing"
-                    class="flex items-center"
+                    wire:loading.class="!flex"
+                    wire:target="pay"
+                    class="hidden items-center"
                 >
                     <svg
                         class="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
