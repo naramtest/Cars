@@ -7,6 +7,10 @@ use App\Http\Controllers\WebhooksController;
 use App\Http\Controllers\WhatsAppWebhookController;
 use Illuminate\Support\Facades\Route;
 
+Route::get("/", function () {
+    return view("welcome");
+});
+
 Route::controller(ContactController::class)->group(function () {
     Route::get("/whatsapp/contact", "whatsapp")->name("whatsapp.contact");
     Route::get("/driver/contact/{driver}", "driver")->name("driver.contact");
@@ -40,11 +44,9 @@ Route::controller(WebhooksController::class)->group(function () {
     Route::post("/webhooks/stripe", "stripe")->name("webhooks.stripe");
 });
 
-Route::get("/", function () {
-    return view("welcome");
+Route::controller(PaymentController::class)->group(function () {
+    Route::get("/payment/{payment}/pay", "stripePay")->name(
+        "payment.stripe.pay"
+    );
+    Route::get("/payments/success", "success")->name("payment.success");
 });
-
-Route::get("/payments/{payment}/success", [
-    PaymentController::class,
-    "success",
-])->name("payment.success");

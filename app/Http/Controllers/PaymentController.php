@@ -3,12 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
-use App\Settings\InfoSettings;
 
 class PaymentController extends Controller
 {
-    public function success(Payment $payment, InfoSettings $infoSettings)
+    public function success(\Request $request)
     {
+        dd($request);
         return view("payment.success", ["payment" => $payment]);
+    }
+
+    public function stripePay(Payment $payment)
+    {
+        return view("payment.checkout", ["payment" => $payment]);
     }
 }

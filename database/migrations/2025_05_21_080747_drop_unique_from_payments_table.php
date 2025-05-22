@@ -15,6 +15,11 @@ return new class extends Migration {
             $table->dropUnique("payments_payable_unique");
             $table->text("note")->nullable();
             $table->dateTime("paid_at")->nullable();
+            // Drop payment link related columns
+            $table->dropColumn(["payment_link", "payment_link_expires_at"]);
+
+            // Make payment_method nullable
+            $table->string("payment_method")->nullable()->change();
         });
     }
 
@@ -31,6 +36,11 @@ return new class extends Migration {
             );
             $table->dropColumn("note");
             $table->dropColumn("paid_at");
+            $table->text("payment_link")->nullable();
+            $table->timestamp("payment_link_expires_at")->nullable();
+
+            // Make payment_method required again
+            $table->string("payment_method")->nullable(false)->change();
         });
     }
 };

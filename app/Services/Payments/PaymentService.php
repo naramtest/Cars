@@ -10,16 +10,7 @@ class PaymentService
 {
     public function __construct(protected PaymentProviderInterface $provider) {}
 
-    public function linkPayment(
-        Payable $payable,
-        int $amount,
-        ?string $currency = null
-    ): string {
-        $payment = $this->pay($payable, $amount, $currency);
-        return $payment->payment_link;
-    }
-
-    public function pay(
+    public function generateAndPay(
         Payable $payable,
         int $amount,
         ?string $currency = null,
@@ -36,6 +27,24 @@ class PaymentService
             "note" => $note,
         ]);
 
+        // Process payment with provider
+        $payment = $this->provider->pay($payment);
+        $payment->save();
+
+        // Create initial payment attempt record
+        $payment->attempts()->create([
+            "status" => PaymentStatus::PENDING,
+            "provider_data" => [
+                "source" => "creation",
+                "provider" => $this->provider->getProviderName(),
+            ],
+        ]);
+
+        return $payment;
+    }
+
+    public function pay(Payment $payment): Payment
+    {
         // Process payment with provider
         $payment = $this->provider->pay($payment);
         $payment->save();

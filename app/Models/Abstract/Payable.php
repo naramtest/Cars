@@ -76,20 +76,16 @@ class Payable extends MoneyModel
     {
         $totalPaid = $this->getTotalPaidAmount();
         $totalPrice = $this->total_price ?? 0;
-        $balance = $totalPrice - $totalPaid;
 
         return [
             "total_price" => $totalPrice,
             "total_paid" => $totalPaid,
-            "balance" => max($balance, 0),
             "is_fully_paid" => $totalPaid >= $totalPrice,
             "formatted_total" => $this->getFormattedTotalPriceAttribute(),
             "formatted_paid" => $this->currencyService->format(
                 $this->currencyService->money($totalPaid)
             ),
-            "formatted_balance" => $this->currencyService->format(
-                $this->currencyService->money(max($balance, 0))
-            ),
+
             "payment_percentage" =>
                 $totalPrice > 0
                     ? min(100, round(($totalPaid / $totalPrice) * 100))

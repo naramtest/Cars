@@ -2,11 +2,9 @@
 
 namespace App\Traits;
 
-use App\Enums\Payments\PaymentType;
 use App\Exceptions\PaymentProcessException;
 use App\Models\Abstract\Payable;
 use App\Models\Payment;
-use App\Services\Payments\PaymentManager;
 use App\Services\WhatsApp\Customer\Payment\CPaymentLinkHandler;
 use App\Services\WhatsApp\WhatsAppNotificationService;
 use Exception;
@@ -36,9 +34,9 @@ trait HasPaymentActions
         array $data
     ): Payment {
         try {
-            return app(PaymentManager::class)
-                ->driver(PaymentType::STRIPE_LINK)
-                ->pay($record, $data["amount"], note: $data["note"]);
+            //            return app(PaymentManager::class)
+            //                ->driver(PaymentType::STRIPE_ELEMENTS)
+            //                ->pay($record, $data["amount"], note: $data["note"]);
             // TODO: Add note to payment and send with the notification
         } catch (Exception $e) {
             throw new PaymentProcessException(

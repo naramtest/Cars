@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\Payments\PaymentManager;
+use App\Services\Payments\Providers\Stripe\StripeElementsProvider;
 use App\Services\Payments\Providers\Stripe\StripePaymentLinksProvider;
 use Illuminate\Support\ServiceProvider;
 
@@ -15,6 +16,7 @@ class SingletonProvider extends ServiceProvider
     {
         $this->app->singleton(PaymentManager::class);
         $this->app->singleton(StripePaymentLinksProvider::class);
+        $this->app->singleton(StripeElementsProvider::class);
     }
 
     /**
