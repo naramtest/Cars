@@ -26,65 +26,13 @@
                 </div>
 
                 @if ($payment->isPaid())
-                    <!-- Already Paid Message -->
-                    <div class="px-4 py-8 text-center">
-                        <div class="mb-4 text-emerald-500">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="mx-auto h-16 w-16"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M5 13l4 4L19 7"
-                                />
-                            </svg>
-                        </div>
-                        <h2 class="mb-2 text-2xl font-bold text-gray-900">
-                            Already Paid!
-                        </h2>
-                        <p class="text-gray-600">
-                            This payment has already been completed
-                            successfully.
-                        </p>
-                        <p class="mt-2 text-sm text-gray-500">
-                            Amount: {{ $payment->formatted_amount }}
-                        </p>
-                    </div>
+                    <x-checkout.payment-status.paid :payment="$payment" />
                 @elseif ($payment->status->value === "refunded")
-                    <!-- Already Refunded Message -->
-                    <div class="px-4 py-8 text-center">
-                        <div class="mb-4 text-blue-500">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="mx-auto h-16 w-16"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z"
-                                />
-                            </svg>
-                        </div>
-                        <h2 class="mb-2 text-2xl font-bold text-gray-900">
-                            Payment Refunded
-                        </h2>
-                        <p class="text-gray-600">
-                            This payment has been refunded and cannot be
-                            processed again.
-                        </p>
-                        <p class="mt-2 text-sm text-gray-500">
-                            Amount: {{ $payment->formatted_amount }}
-                        </p>
-                    </div>
+                    <x-checkout.payment-status.refunded :payment="$payment" />
+                @elseif ($payment->status->value === "processing")
+                    <x-checkout.payment-status.processing
+                        :payment="$payment"
+                    />
                 @else
                     <!-- Payment Form for all other statuses -->
                     <livewire:stripe-payment-component :payment="$payment" />
@@ -104,8 +52,7 @@
             </div>
         </div>
     </div>
-
-    @unless ($payment->isPaid() || $payment->status->value === "refunded")
+    @unless ($payment->isPaid() || $payment->isRefunded() || $payment->isProcessing())
         @pushonce("scripts")
             <script src="https://js.stripe.com/v3/"></script>
         @endpushonce

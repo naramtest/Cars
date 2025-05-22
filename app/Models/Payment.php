@@ -54,6 +54,11 @@ class Payment extends MoneyModel
         return $this->status === PaymentStatus::REFUNDED;
     }
 
+    public function isProcessing(): bool
+    {
+        return $this->status === PaymentStatus::PROCESSING;
+    }
+
     public function getFormattedAmountAttribute(): string
     {
         return $this->currencyService->format($this->amount_money);
