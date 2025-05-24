@@ -36,4 +36,14 @@ enum PaymentStatus: string implements HasColor, HasLabel
             PaymentStatus::REFUNDED => "Refunded",
         };
     }
+
+    public function isFinal(): bool
+    {
+        // Check if the current status is in the provided statuses
+        return in_array($this, [
+            PaymentStatus::PAID,
+            PaymentStatus::PROCESSING,
+            PaymentStatus::REFUNDED,
+        ]);
+    }
 }
