@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Enums\Payments\PaymentStatus;
 use App\Models\Payment;
+use App\Settings\InfoSettings;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
-    public function success(Request $request)
+    public function success(Request $request, InfoSettings $infoSettings)
     {
         $paymentIntentId = $request->has("payment_id")
             ? $request->get("payment_id")
@@ -22,9 +23,16 @@ class PaymentController extends Controller
         if (!$payment) {
             abort(404);
         }
-        $payment->status = PaymentStatus::PROCESSING;
-        $payment->save();
-        return view("payment.success", ["payment" => $payment]);
+        // Always set to PROCESSING first, let webhook update to PAID when confirmed
+        if ($payment->status === PaymentStatus::PENDING) {
+            $payment->status = PaymentStatus::PROCESSING;
+            $payment->save();
+        }
+
+        return view("payment.success", [
+            "payment" => $payment,
+            "info" => $infoSettings,
+        ]);
     }
 
     public function showPayment(Payment $payment)

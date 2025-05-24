@@ -1,15 +1,15 @@
 <x-app-layout>
     <div class="min-h-screen bg-gray-100 py-12">
         <div class="mx-auto max-w-3xl">
-            <!-- Success Card -->
+            <!-- Processing Card -->
             <div class="overflow-hidden rounded-lg bg-white shadow">
-                <!-- Header with success icon -->
-                <div class="bg-emerald-500 px-4 py-5 sm:px-6">
+                <!-- Header with processing icon -->
+                <div class="bg-amber-500 px-4 py-5 sm:px-6">
                     <div class="flex justify-center">
                         <div class="rounded-full bg-white p-2">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
-                                class="h-12 w-12 text-emerald-500"
+                                class="h-12 w-12 animate-spin text-amber-500"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
@@ -18,22 +18,39 @@
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
                                     stroke-width="2"
-                                    d="M5 13l4 4L19 7"
+                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                                 />
                             </svg>
                         </div>
                     </div>
                 </div>
 
-                <!-- Thank you message -->
+                <!-- Processing message -->
                 <div class="px-4 py-5 text-center sm:px-6">
                     <h1 class="text-3xl font-extrabold text-gray-900">
-                        Payment Successful!
+                        Payment Processing
                     </h1>
                     <p class="mt-2 text-gray-600">
-                        Thank you for your payment. Your transaction has been
-                        completed successfully.
+                        Thank you for your payment. Your transaction is
+                        currently being processed. Once completed, you will
+                        receive a confirmation message with your invoice
+                        details.
                     </p>
+                    <div class="mt-4 flex justify-center">
+                        <div class="flex items-center space-x-2">
+                            <div
+                                class="h-2 w-2 animate-bounce rounded-full bg-amber-500"
+                            ></div>
+                            <div
+                                class="h-2 w-2 animate-bounce rounded-full bg-amber-500"
+                                style="animation-delay: 0.1s"
+                            ></div>
+                            <div
+                                class="h-2 w-2 animate-bounce rounded-full bg-amber-500"
+                                style="animation-delay: 0.2s"
+                            ></div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Order Details -->
@@ -102,22 +119,23 @@
                                 Status
                             </dt>
                             <dd
-                                class="mt-1 flex items-center text-sm font-medium text-emerald-600 sm:col-span-2 sm:mt-0"
+                                class="mt-1 flex items-center text-sm font-medium text-amber-600 sm:col-span-2 sm:mt-0"
                             >
                                 <svg
-                                    class="mr-1.5 h-5 w-5 flex-shrink-0 text-emerald-500"
+                                    class="mr-1.5 h-5 w-5 flex-shrink-0 animate-spin text-amber-500"
                                     xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
-                                    aria-hidden="true"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
                                 >
                                     <path
-                                        fill-rule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                        clip-rule="evenodd"
-                                    />
+                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                    ></path>
                                 </svg>
-                                Paid
+                                Processing
                             </dd>
                         </div>
                     </dl>
@@ -188,7 +206,10 @@
 
             <!-- Additional Information -->
             <div class="mt-8 text-center text-sm text-gray-500">
-                <p>A receipt has been sent to your email address.</p>
+                <p>
+                    Your payment is being processed. This may take a few
+                    moments.
+                </p>
                 <p class="mt-1">
                     If you have any questions, please contact our support team.
                 </p>
