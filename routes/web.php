@@ -8,6 +8,12 @@ use App\Http\Controllers\WhatsAppWebhookController;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", function () {
+    //    $result = app(
+    //        \App\Services\WhatsApp\WhatsAppUpdateTemplateService::class
+    //    )->updateTemplate(
+    //        \App\Services\WhatsApp\Customer\Payment\CPaymentLinkHandler::class
+    //    );
+    //    dd($result);
     return view("welcome");
 });
 
@@ -45,7 +51,7 @@ Route::controller(WebhooksController::class)->group(function () {
 });
 
 Route::controller(PaymentController::class)->group(function () {
-    Route::get("/payment/{payment}/pay", "showPayment")->name(
+    Route::get("/payment/pay/{payment}", "showPayment")->name(
         "payment.pay.show"
     );
     Route::get("/payments/success", "success")->name("payment.success");

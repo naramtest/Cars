@@ -82,6 +82,9 @@ class CreateBooking extends CreateRecord
                         ->placeholder(
                             "Enter a note about this payment (optional)"
                         )
+                        ->helperText(
+                            "Customer will receive this note in their payment notification"
+                        )
                         ->maxLength(255),
                 ])
                 ->action(function (array $data) {

@@ -24,7 +24,6 @@ class WhatsAppUpdateTemplateService
             data: $templateClass->facebookTemplateData()
         );
 
-        dd($response);
         return empty($response["data"])
             ? null
             : $this->saveFromRemoteData($response["data"][0]);

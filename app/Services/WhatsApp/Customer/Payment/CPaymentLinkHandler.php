@@ -3,13 +3,14 @@
 namespace App\Services\WhatsApp\Customer\Payment;
 
 use App\Models\Abstract\Payable;
+use App\Models\Payment;
 use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
-use Str;
 
 class CPaymentLinkHandler extends WhatsAppAbstractHandler
 {
     public function prepareBodyData($modelData): array
     {
+        /** @var Payment $payment */
         $payment = $modelData->payment;
         $modelType = class_basename($modelData);
 
@@ -18,16 +19,12 @@ class CPaymentLinkHandler extends WhatsAppAbstractHandler
             $modelType, // 2 - Model type (Booking, Rent, Shipping)
             $modelData->reference_number, // 3 - Reference number
             $payment->formatted_amount, // 4 - Formatted price
-            $payment->payment_link, // 5 - Payment link
-            $payment->payment_link_expires_at
-                ? $payment->payment_link_expires_at->format("Y-m-d")
-                : "Not specified", // 6 - Expiry date
+            $payment->note ?: "No additional notes", // 5 - Payment note
         ]);
     }
 
     public function prepareButtonData($modelData): array
     {
-        $paymentLink = Str::after($modelData->payment->payment_link, ".com/");
         return [
             [
                 "type" => "button",
@@ -36,7 +33,7 @@ class CPaymentLinkHandler extends WhatsAppAbstractHandler
                 "parameters" => [
                     [
                         "type" => "text",
-                        "text" => $paymentLink,
+                        "text" => $modelData->payment->id,
                     ],
                 ],
             ],
@@ -56,8 +53,8 @@ class CPaymentLinkHandler extends WhatsAppAbstractHandler
                         "Hello {{1}},\n\n" .
                         "Your payment for {{2}} with reference number {{3}} is pending.\n\n" .
                         "💰 Amount Due: {{4}}\n\n" .
-                        "Please use the link below to complete your payment:\n{{5}}\n\n" .
-                        "⏰ This payment link will expire on: {{6}}\n\n" .
+                        "📝 Note: {{5}}\n\n" .
+                        "Please use the link below to complete your payment.\n\n" .
                         "If you have any questions or need assistance, please contact our support team.",
                     "example" => [
                         "body_text" => [
@@ -66,8 +63,7 @@ class CPaymentLinkHandler extends WhatsAppAbstractHandler
                                 "Booking", // {{2}} Model type
                                 "BOK-202504-0001", // {{3}} Reference number
                                 "AED 2,500.00", // {{4}} Amount
-                                "https://buy.stripe.com/test_dR615hgyKeAg0wg8wG", // {{5}} Payment link
-                                "2025-05-15", // {{6}} Expiry date
+                                "Payment for booking services", // {{5}} Payment note
                             ],
                         ],
                     ],
@@ -78,8 +74,12 @@ class CPaymentLinkHandler extends WhatsAppAbstractHandler
                         [
                             "type" => "URL",
                             "text" => "Pay Now",
-                            "url" => "https://buy.stripe.com/{{1}}",
-                            "example" => ["test_dR615hgyKeAg0wg8wG"],
+                            "url" => templateUrlReplaceParameter(
+                                route("payment.pay.show", [
+                                    "payment" => "PLACEHOLDER_VALUE",
+                                ])
+                            ),
+                            "example" => ["1"],
                         ],
                         [
                             "type" => "URL",

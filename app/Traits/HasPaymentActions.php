@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Enums\Payments\PaymentStatus;
 use App\Exceptions\PaymentProcessException;
 use App\Models\Abstract\Payable;
 use App\Models\Payment;
@@ -34,9 +35,12 @@ trait HasPaymentActions
         array $data
     ): Payment {
         try {
-            //            return app(PaymentManager::class)
-            //                ->driver(PaymentType::STRIPE_ELEMENTS)
-            //                ->pay($record, $data["amount"], note: $data["note"]);
+            return $record->createPayment([
+                "amount" => $data["amount"],
+                "currency_code" => config("app.money_currency"),
+                "status" => PaymentStatus::PENDING,
+                "note" => $data["amount"],
+            ]);
             // TODO: Add note to payment and send with the notification
         } catch (Exception $e) {
             throw new PaymentProcessException(
@@ -53,13 +57,6 @@ trait HasPaymentActions
      */
     private function sendPaymentLink(Payment $payment): void
     {
-        if (!$payment->payment_link) {
-            throw new PaymentProcessException(
-                "No Payment Link Available",
-                "Please generate a payment link first."
-            );
-        }
-
         try {
             $payable = $payment->payable;
 
