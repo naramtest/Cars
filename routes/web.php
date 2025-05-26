@@ -2,18 +2,13 @@
 
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DriverActionController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\WebhooksController;
 use App\Http\Controllers\WhatsAppWebhookController;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", function () {
-    //    $result = app(
-    //        \App\Services\WhatsApp\WhatsAppUpdateTemplateService::class
-    //    )->updateTemplate(
-    //        \App\Services\WhatsApp\Customer\Payment\CPaymentLinkHandler::class
-    //    );
-    //    dd($result);
     return view("welcome");
 });
 
@@ -56,3 +51,8 @@ Route::controller(PaymentController::class)->group(function () {
     );
     Route::get("/payments/success", "success")->name("payment.success");
 });
+
+Route::get("/payments/invoice", [
+    InvoiceController::class,
+    "downloadInvoice",
+])->name("payment.invoice");
