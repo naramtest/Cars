@@ -2,7 +2,6 @@
 
 namespace App\Services\WhatsApp\Customer\Payment;
 
-use App\Models\Payment;
 use App\Services\Invoice\InvoiceService;
 use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
 
@@ -13,16 +12,13 @@ class CInvoiceDownloadHandler extends WhatsAppAbstractHandler
      */
     public function prepareBodyData($modelData): array
     {
-        /** @var Payment $modelData */
-        $payment = $modelData;
-        $payable = $payment->payable;
-        $customer = $payable->getCustomer();
-        $modelType = class_basename($payable);
+        $payment = $modelData->payment;
+        $modelType = class_basename($modelData);
 
         return $this->formatBodyParameters([
-            $customer->name, // 1 - Customer name
+            $modelData->getCustomer()->name, // 1 - Customer name
             $modelType, // 2 - Service type (Booking, Rent, Shipping)
-            $payable->reference_number ?? $payable->id, // 3 - Reference number
+            $payable->reference_number ?? $modelData->id, // 3 - Reference number
             $payment->formatted_amount, // 4 - Payment amount
             $payment->paid_at
                 ? $payment->paid_at->format("Y-m-d H:i")
@@ -35,8 +31,7 @@ class CInvoiceDownloadHandler extends WhatsAppAbstractHandler
      */
     public function prepareButtonData($modelData): array
     {
-        /** @var Payment $modelData */
-        $payment = $modelData;
+        $payment = $modelData->payment;
 
         $token = app(InvoiceService::class)->generateInvoiceToken($payment);
 
@@ -127,8 +122,6 @@ class CInvoiceDownloadHandler extends WhatsAppAbstractHandler
      */
     public function phoneNumbers($data)
     {
-        /** @var Payment $data */
-        $payment = $data;
-        return $payment->payable->getCustomer()->phone_number;
+        return $data->getCustomer()->phone_number;
     }
 }

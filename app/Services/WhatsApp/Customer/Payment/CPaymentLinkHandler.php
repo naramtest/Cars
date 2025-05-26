@@ -2,7 +2,6 @@
 
 namespace App\Services\WhatsApp\Customer\Payment;
 
-use App\Models\Abstract\Payable;
 use App\Models\Payment;
 use App\Services\WhatsApp\Abstract\WhatsAppAbstractHandler;
 
@@ -99,7 +98,6 @@ class CPaymentLinkHandler extends WhatsAppAbstractHandler
 
     public function phoneNumbers($data)
     {
-        /** @var Payable $data */
         return $data->getCustomer()->phone_number;
     }
 }

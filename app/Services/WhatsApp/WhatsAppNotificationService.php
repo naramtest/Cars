@@ -32,7 +32,6 @@ class WhatsAppNotificationService
         bool $isUpdate = false
     ): void {
         $handler = HandlerResolver::resolve($handlerClass);
-
         // Check if this notification type is enabled
         if (!$handler->isEnabled()) {
             throw new Exception(

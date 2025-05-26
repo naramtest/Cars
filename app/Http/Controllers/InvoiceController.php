@@ -3,15 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
-use App\Services\Invoice\InvoiceService;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
-    public function downloadInvoice(
-        Request $request,
-        InvoiceService $invoiceService
-    ) {
+    public function downloadInvoice(Request $request)
+    {
         // Get the signed token from request
         $paymentId = $request->get("payment");
         if (!$paymentId) {

@@ -3,7 +3,10 @@
 namespace App\Services\Payments\Webhooks;
 
 use App\Enums\Payments\PaymentStatus;
+use App\Enums\Payments\PaymentType;
 use App\Models\Payment;
+use App\Services\WhatsApp\Customer\Payment\CInvoiceDownloadHandler;
+use App\Services\WhatsApp\WhatsAppNotificationService;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -21,6 +24,7 @@ class StripeWebhookService
         $endpointSecret =
             "whsec_a79ea5ac3ca1ace533d5c9b599b4fa263615a97e75a6a93604d1e65caec818ef";
 
+        //TODO: handle charge webhooks
         try {
             // Verify the webhook signature
             $event = Webhook::constructEvent(
@@ -74,8 +78,6 @@ class StripeWebhookService
      */
     protected function findPaymentFromSession($session): Payment
     {
-        logger($session);
-
         if (isset($session->metadata->payment_id)) {
             return Payment::find($session->metadata->payment_id);
         }
@@ -100,9 +102,18 @@ class StripeWebhookService
         try {
             $payment = $this->findPaymentFromSession($paymentIntent);
             // Update status to paid
-            return $payment->updatePaymentToPaid([
-                "stripe_payment_intent_id" => $paymentIntent->id,
-            ]);
+            $result = $payment->updatePaymentToPaid(
+                [
+                    "stripe_payment_intent_id" => $paymentIntent->id,
+                ],
+                paymentMethod: PaymentType::STRIPE_ELEMENTS
+            );
+            $payment->refresh();
+            app(WhatsAppNotificationService::class)->sendAndSave(
+                CInvoiceDownloadHandler::class,
+                $payment->payable
+            );
+            return $result;
         } catch (Exception) {
             return ["status" => "error", "message" => "Payment not found"];
         }

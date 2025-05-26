@@ -74,23 +74,27 @@ class Payment extends MoneyModel
 
     public function updatePaymentToPaid(
         array $metadataUpdates = [],
-        $paid_at = null
+        $paid_at = null,
+        ?PaymentType $paymentMethod = null
     ): array {
         return $this->updatePaymentStatus(
             PaymentStatus::PAID,
             $metadataUpdates,
-            $paid_at ?? now()->toIso8601String()
+            $paid_at ?? now()->toIso8601String(),
+            $paymentMethod
         );
     }
 
     public function updatePaymentStatus(
         PaymentStatus $newStatus,
         array $metadataUpdates = [],
-        $paid_at = null
+        $paid_at = null,
+        ?PaymentType $paymentType = null
     ): array {
         $oldStatus = $this->status;
         $this->status = $newStatus;
         $this->paid_at = $paid_at;
+        $this->payment_method = $paymentType;
 
         // Update metadata
         $this->metadata = array_merge($this->metadata ?? [], $metadataUpdates);

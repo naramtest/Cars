@@ -9,15 +9,6 @@ use App\Http\Controllers\WhatsAppWebhookController;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", function () {
-    $route = URL::temporarySignedRoute(
-        "payment.invoice", // route name
-        now()->addDays(2), // expiration
-        ["payment" => \App\Models\Payment::first()->id]
-    );
-    dd(getQuery($route));
-    dd(
-        app(\App\Services\Invoice\InvoiceService::class)->generateInvoiceToken()
-    );
     return view("welcome");
 });
 
