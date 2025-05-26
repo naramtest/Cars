@@ -55,3 +55,15 @@ Route::controller(PaymentController::class)->group(function () {
 Route::get("/payments/invoice", [InvoiceController::class, "downloadInvoice"])
     ->name("payment.invoice")
     ->middleware("signed");
+
+Route::middleware(["auth"])->group(function () {
+    Route::get("/admin/payment/{payment}/invoice/preview", [
+        InvoiceController::class,
+        "previewInvoice",
+    ])->name("admin.payment.invoice.preview");
+
+    Route::get("/admin/payment/{payment}/invoice/download", [
+        InvoiceController::class,
+        "downloadInvoice",
+    ])->name("admin.payment.invoice.download");
+});

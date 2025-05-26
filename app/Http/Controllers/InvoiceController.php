@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
+use App\Services\Invoice\InvoiceService;
+use Exception;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
+    public function __construct(protected InvoiceService $invoiceService) {}
+
     public function downloadInvoice(Request $request)
     {
         // Get the signed token from request
@@ -26,19 +30,20 @@ class InvoiceController extends Controller
             abort(404, "Invoice not available - payment not completed");
         }
 
-        // TODO: Generate and return PDF invoice
-        // For now, return a simple response
-        return response()->json([
-            "message" => "Invoice download will be implemented here",
-            "payment" => [
-                "id" => $payment->id,
-                "amount" => $payment->formatted_amount,
-                "reference" =>
-                    $payment->payable->reference_number ??
-                    $payment->payable->id,
-                "type" => class_basename($payment->payable),
-                "customer" => $payment->payable->getCustomer()->name,
-            ],
-        ]);
+        try {
+            // Generate and download the invoice
+            return $this->invoiceService->downloadInvoice($payment);
+        } catch (Exception) {
+            abort(500, "Failed to generate invoice. Please try again later.");
+        }
+    }
+
+    public function previewInvoice(Payment $payment)
+    {
+        try {
+            return $this->invoiceService->streamInvoice($payment);
+        } catch (Exception) {
+            abort(500, "Failed to generate invoice preview.");
+        }
     }
 }
