@@ -4,7 +4,19 @@ if (!function_exists("templateUrl")) {
     {
         $templateDomain = config("services.whatsapp.production_app_base_url");
         $parsedUrl = parse_url($route);
-        return $templateDomain . $parsedUrl["path"];
+
+        $path = $parsedUrl["path"] ?? "";
+        $query = isset($parsedUrl["query"]) ? "?" . $parsedUrl["query"] : "";
+
+        return Str::finish($templateDomain, "/") . ltrim($path, "/") . $query;
+    }
+}
+
+if (!function_exists("getQuery")) {
+    function getQuery(string $route): string
+    {
+        $parsedUrl = parse_url($route);
+        return $parsedUrl["query"] ?? "";
     }
 }
 
@@ -14,6 +26,7 @@ if (!function_exists("templateUrlReplaceParameter")) {
         return str_replace("PLACEHOLDER_VALUE", "{{1}}", templateUrl($route));
     }
 }
+
 if (!function_exists("notDriver")) {
     function notDriver(): string
     {

@@ -13,9 +13,8 @@ class InvoiceController extends Controller
         InvoiceService $invoiceService
     ) {
         // Get the signed token from request
-        $token = $request->get("token");
-        $paymentId = $request->get("payment_id");
-        if (!$token || !$paymentId) {
+        $paymentId = $request->get("payment");
+        if (!$paymentId) {
             abort(404, "Invalid invoice link");
         }
 
@@ -23,11 +22,6 @@ class InvoiceController extends Controller
         $payment = Payment::find($paymentId);
         if (!$payment) {
             abort(404, "Payment not found");
-        }
-
-        // Verify the token
-        if (!$invoiceService->verifyInvoiceToken($token, $payment)) {
-            abort(403, "Unauthorized access to invoice");
         }
 
         // Check if payment is paid
