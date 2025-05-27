@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Payments\PaymentStatus;
+use App\Filament\Resources\BookingResource;
+use App\Filament\Resources\RentResource;
+use App\Filament\Resources\ShippingResource;
 use App\Models\Payment;
 use App\Settings\InfoSettings;
 use Illuminate\Http\Request;
@@ -41,5 +44,21 @@ class PaymentController extends Controller
             return view("payment.final", ["payment" => $payment]);
         }
         return view("payment.pay", ["payment" => $payment]);
+    }
+
+    public function adminRedirect(Payment $payment)
+    {
+        $model = $payment->payable;
+        $route = match (class_basename($model)) {
+            "Booking" => BookingResource::getUrl("edit", [
+                "record" => $model->id,
+            ]),
+            "Rent" => RentResource::getUrl("edit", ["record" => $model->id]),
+            "Shipping" => ShippingResource::getUrl("edit", [
+                "record" => $model->id,
+            ]),
+            default => "/admin",
+        };
+        return redirect($route);
     }
 }

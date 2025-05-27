@@ -50,20 +50,26 @@ Route::controller(PaymentController::class)->group(function () {
         "payment.pay.show"
     );
     Route::get("/payments/success", "success")->name("payment.success");
+
+    Route::get("/payable-redirect/{payment}", "adminRedirect")->name(
+        "payable.redirect"
+    );
 });
 
-Route::get("/payments/invoice", [InvoiceController::class, "downloadInvoice"])
-    ->name("payment.invoice")
-    ->middleware("signed");
+Route::controller(InvoiceController::class)->group(function () {
+    Route::get("/payments/invoice", "downloadInvoice")
+        ->name("payment.invoice")
+        ->middleware("signed");
 
-Route::middleware(["auth"])->group(function () {
-    Route::get("/admin/payment/{payment}/invoice/preview", [
-        InvoiceController::class,
-        "previewInvoice",
-    ])->name("admin.payment.invoice.preview");
+    Route::middleware(["auth"])->group(function () {
+        Route::get(
+            "/admin/payment/{payment}/invoice/preview",
+            "previewInvoice"
+        )->name("admin.payment.invoice.preview");
 
-    Route::get("/admin/payment/{payment}/invoice/download", [
-        InvoiceController::class,
-        "downloadInvoice",
-    ])->name("admin.payment.invoice.download");
+        Route::get(
+            "/admin/payment/{payment}/invoice/download",
+            "downloadInvoice"
+        )->name("admin.payment.invoice.download");
+    });
 });

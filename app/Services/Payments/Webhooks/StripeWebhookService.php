@@ -5,6 +5,7 @@ namespace App\Services\Payments\Webhooks;
 use App\Enums\Payments\PaymentStatus;
 use App\Enums\Payments\PaymentType;
 use App\Models\Payment;
+use App\Services\WhatsApp\Admin\Payment\APaymentSuccessHandler;
 use App\Services\WhatsApp\Customer\Payment\CInvoiceDownloadHandler;
 use App\Services\WhatsApp\WhatsAppNotificationService;
 use Exception;
@@ -97,6 +98,7 @@ class StripeWebhookService
         );
     }
 
+    //TODO:Organize and clean
     protected function handlePaymentIntentSucceeded($paymentIntent): array
     {
         try {
@@ -111,6 +113,10 @@ class StripeWebhookService
             $payment->refresh();
             app(WhatsAppNotificationService::class)->sendAndSave(
                 CInvoiceDownloadHandler::class,
+                $payment->payable
+            );
+            app(WhatsAppNotificationService::class)->sendAndSave(
+                APaymentSuccessHandler::class,
                 $payment->payable
             );
             return $result;

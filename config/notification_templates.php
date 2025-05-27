@@ -44,6 +44,8 @@ return [
         "admin_shipping_new" => ASNewHandler::class,
         "admin_shipping_reminder" => ASReminderHandler::class,
         "admin_shipping_delivered" => ASDeliveredHandler::class,
+        "admin_payment_success" =>
+            App\Services\WhatsApp\Admin\Payment\APaymentSuccessHandler::class,
     ],
     "customer" => [
         "customer_booking_new" => CBNewHandler::class,
