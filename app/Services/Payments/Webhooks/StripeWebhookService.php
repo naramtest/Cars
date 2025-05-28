@@ -22,8 +22,7 @@ class StripeWebhookService
         $payload = $request->getContent();
         $sigHeader = $request->header("Stripe-Signature");
         //        $endpointSecret = config("payment.providers.stripe.webhook");
-        $endpointSecret =
-            "whsec_a79ea5ac3ca1ace533d5c9b599b4fa263615a97e75a6a93604d1e65caec818ef";
+        $endpointSecret = config("payment.providers.stripe.webhook");
 
         //TODO: handle charge webhooks
         try {
