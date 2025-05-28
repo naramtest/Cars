@@ -18,6 +18,7 @@ use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 use Illuminate\Support\HtmlString;
 use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
@@ -115,6 +116,19 @@ class PaymentsRelationManager extends RelationManager
                 ),
                 Tables\Actions\DeleteAction::make(),
 
+                Tables\Actions\Action::make("download")
+                    ->url(function (Payment $record) {
+                        return route("admin.payment.invoice.preview", [
+                            "payment" => $record,
+                        ]);
+                    })
+                    ->visible(
+                        fn(Payment $record) => $record->isPaid() or
+                            $record->isRefunded()
+                    )
+                    ->color("info")
+                    ->icon("gmdi-download-o"),
+
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\Action::make("sendPaymentLink")
                         ->label("Send Link")
@@ -122,10 +136,24 @@ class PaymentsRelationManager extends RelationManager
                         ->color("primary")
                         ->action(function (Payment $record) {
                             $this->send($record);
-                        })
-                        ->visible(
-                            fn(Payment $record) => !empty($record->payment_link)
-                        ),
+                        }),
+
+                    Action::make("copy")
+                        ->icon("heroicon-s-clipboard-document-check")
+                        ->action(function ($livewire, Payment $record) {
+                            $url = route("payment.pay.show", [
+                                "payment" => $record,
+                            ]);
+
+                            $livewire->js(
+                                'window.navigator.clipboard.writeText("' .
+                                    $url .
+                                    '");
+                    $tooltip("' .
+                                    __("Copied to clipboard") .
+                                    '", { timeout: 1500 });'
+                            );
+                        }),
                     Tables\Actions\Action::make("markAsPaid")
                         ->label("Mark as Paid")
                         ->icon("heroicon-o-check-circle")
@@ -145,7 +173,10 @@ class PaymentsRelationManager extends RelationManager
                                 PaymentStatus::PENDING or
                                 $record->status === PaymentStatus::PROCESSING
                         ),
-                ]),
+                ])->visible(
+                    fn(Payment $record) => !$record->isPaid() and
+                        !$record->isRefunded()
+                ),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
