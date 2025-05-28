@@ -6,7 +6,6 @@ use App\Enums\Payments\PaymentStatus;
 use App\Enums\Payments\PaymentType;
 use App\Models\Abstract\MoneyModel;
 use Deligoez\LaravelModelHashId\Traits\HasHashId;
-use Deligoez\LaravelModelHashId\Traits\HasHashIdRouting;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Money\Money;
@@ -14,7 +13,6 @@ use Money\Money;
 class Payment extends MoneyModel
 {
     use HasHashId;
-    use HasHashIdRouting;
 
     protected $fillable = [
         "amount",
