@@ -22,7 +22,7 @@ trait BookingNotificationData
             $modelData->reference_number ?: "Undefined", // 2 - Booking ref
             $modelData->getCustomer()->name, // 3 - Customer name
             $modelData->getCustomer()->phone_number, // 4 - Customer phone
-            $vehicle->model, // 5 - Vehicle model
+            $vehicle->name, // 5 - Vehicle model
             $vehicle->license_plate, // 6 - Vehicle plate
             $modelData->start_datetime->format("Y-m-d"), // 7 - Pickup date
             $modelData->start_datetime->format("H:i"), // 8 - Pickup time

@@ -89,11 +89,7 @@ class CInvoiceDownloadHandler extends WhatsAppAbstractHandler
                         [
                             "type" => "URL",
                             "text" => "Download Invoice",
-                            "url" => templateUrlReplaceParameter(
-                                route("payment.invoice", [
-                                    "token" => "PLACEHOLDER_VALUE",
-                                ])
-                            ), // The secure URL will be inserted here
+                            "url" => route("payment.invoice") . "?{{1}}", // The secure URL will be inserted here
                             "example" => [
                                 "expires=1748415640&payment=5&signature=4d311de193e818b5b51ca7fe1e76dc16ec188481c1753c7ff887e890a4181390",
                             ],
