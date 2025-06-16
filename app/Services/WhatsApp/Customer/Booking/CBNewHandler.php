@@ -22,7 +22,8 @@ class CBNewHandler extends WhatsAppAbstractHandler
             $modelData->start_datetime->format("Y-m-d"), // 6 - Pickup date
             $modelData->start_datetime->format("H:i"), // 7 - Pickup time
             $modelData->pickup_address, // 8 - Pickup location
-            $modelData->formatted_total_price, // 9 - Price
+            $modelData->destination_address ?: "Undefined", // 9 - Dropoff location
+            $modelData->formatted_total_price, // 10 - Price
         ]);
     }
 
@@ -73,7 +74,8 @@ class CBNewHandler extends WhatsAppAbstractHandler
                         "👨‍✈️ Driver: {{5}}\n" .
                         "📅 Pickup Time: {{6}} at {{7}}\n" .
                         "📍 Pickup Location: {{8}}\n" .
-                        "💵 Total Price: {{9}}\n\n" .
+                        "🏁 Drop-off Location: {{9}}\n" .
+                        "💵 Total Price: {{10}}\n\n" .
                         "If you have any questions, feel free to contact us.\n\n" .
                         "🚫 Note: This is an automated message. Please do not reply directly.",
                     "example" => [
@@ -87,7 +89,8 @@ class CBNewHandler extends WhatsAppAbstractHandler
                                 "2025-04-05", // {{6}} Pickup date
                                 "10:00 AM", // {{7}} Pickup time
                                 "Downtown Station", // {{8}} Pickup address
-                                "$75.00", // {{9}} Price
+                                "Uptown Station", // {{9}} Pickup address
+                                "$75.00", // {{10}} Price
                             ],
                         ],
                     ],

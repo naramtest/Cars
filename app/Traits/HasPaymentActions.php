@@ -39,7 +39,7 @@ trait HasPaymentActions
                 "amount" => $data["amount"],
                 "currency_code" => config("app.money_currency"),
                 "status" => PaymentStatus::PENDING,
-                "note" => $data["amount"],
+                "note" => $data["note"],
             ]);
             // TODO: Add note to payment and send with the notification
         } catch (Exception $e) {
