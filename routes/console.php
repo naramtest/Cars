@@ -20,6 +20,7 @@ if (App::isProduction()) {
     Schedule::command("notifications:driver-vehicle-inspections")->dailyAt(
         "09:30"
     );
+    Schedule::command('notifications:fine-reminders')->dailyAt('09:00');
     Schedule::command(
         "notifications:shipping-driver-reminders"
     )->everyTwoMinutes();
