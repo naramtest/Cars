@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Forms\Rent\RentFormSchema;
 use App\Filament\Resources\RentResource\Pages;
+use App\Filament\Resources\RentResource\RelationManagers\FinesRelationManager;
 use App\Filament\Tables\Rent\RentTableSchema;
 use App\Models\Rent;
 use Filament\Forms\Form;
@@ -36,8 +37,8 @@ class RentResource extends Resource
     public static function getRelations(): array
     {
         return [
-                //
-            ];
+            FinesRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

@@ -8,6 +8,7 @@ use App\Traits\CheckStatus;
 use App\Traits\HasNotifications;
 use App\Traits\HasReferenceNumber;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Money\Money;
 
@@ -56,8 +57,8 @@ class Rent extends Payable
         }
 
         return $this->rental_start_date
-            ->startOfDay()
-            ->diffInDays($this->rental_end_date->startOfDay()) + 1;
+                ->startOfDay()
+                ->diffInDays($this->rental_end_date->startOfDay()) + 1;
     }
 
     public function getFormattedDurationAttribute(): string
@@ -123,6 +124,11 @@ class Rent extends Payable
         return $this->morphToMany(Customer::class, "customerable")
             ->withTimestamps()
             ->limit(1); // Limit to one customer
+    }
+
+    public function fines(): HasMany
+    {
+        return $this->hasMany(Fine::class);
     }
 
     protected function getReferenceNumberPrefix(): string

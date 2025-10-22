@@ -6,7 +6,7 @@ use App\Services\WhatsApp\Admin\Shipping\{ASDeliveredHandler, ASNewHandler, ASRe
 use App\Services\WhatsApp\Admin\Vehicle\{VehicleInspectionReminderHandler, VehicleRegistrationExpiryHandler};
 use App\Services\WhatsApp\Customer\Booking\{CBNewHandler, CBUpdateHandler};
 use App\Services\WhatsApp\Customer\Payment\{CInvoiceDownloadHandler, CPaymentLinkHandler};
-use App\Services\WhatsApp\Customer\Rent\{CREndReminderHandler, CRNewHandler, CRUpdateHandler};
+use App\Services\WhatsApp\Customer\Rent\{CREndReminderHandler, CRFineReminderHandler, CRNewHandler, CRUpdateHandler};
 use App\Services\WhatsApp\Customer\Shipping\{CSDeliveredHandler, CSNewHandler, CSPickedUpHandler, CSUpdateHandler};
 use App\Services\WhatsApp\Driver\Booking\{DBNewHandler, DBReminderHandler, DBUpdatedHandler};
 use App\Services\WhatsApp\Driver\Shipping\{DSDeliveryHandler, DSNewHandler, DSReminderHandler};
@@ -62,6 +62,8 @@ return [
 
         //Payment
         "customer_payment_link" => CPaymentLinkHandler::class,
+        "customer_rent_fine_reminder" => CRFineReminderHandler::class,
+
 
         "customer_invoice_download" => CInvoiceDownloadHandler::class, // Add this line
     ],
